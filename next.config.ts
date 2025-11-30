@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  productionBrowserSourceMaps: false, // ✅ disables source map errors in dev
 };
 
 export default nextConfig;

@@ -1,0 +1,152 @@
+.categoriesSection {
+  padding: var(--section-padding);
+  background: var(--primary-white);
+}
+
+.sectionTitle {
+  text-align: center;
+  margin-bottom: 1rem;
+  position: relative;
+  font-size: 2.5rem;
+  font-family: var(--font-serif);
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: var(--accent-gold);
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: var(--gray-500);
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.categoryCard {
+  background: var(--primary-white);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+.categoryCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--gray-300);
+}
+
+.categoryIcon {
+  width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.categoryCard:hover .categoryIcon {
+  transform: scale(1.1);
+}
+
+.icon {
+  font-size: 2rem;
+  transition: var(--transition-smooth);
+}
+
+.categoryContent {
+  flex: 1;
+}
+
+.categoryName {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 0.5rem;
+  transition: var(--transition-smooth);
+}
+
+.categoryCard:hover .categoryName {
+  color: var(--accent-gold);
+}
+
+.categoryCount {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.categoryArrow {
+  color: var(--gray-400);
+  transition: var(--transition-smooth);
+}
+
+.categoryCard:hover .categoryArrow {
+  color: var(--accent-gold);
+  transform: translateX(3px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .categoriesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .categoryCard {
+    padding: 1.5rem;
+    gap: 1.2rem;
+  }
+  
+  .categoryIcon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .icon {
+    font-size: 1.8rem;
+  }
+  
+  .categoryName {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .categoryCard {
+    padding: 1.2rem;
+    gap: 1rem;
+  }
+  
+  .categoryIcon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .icon {
+    font-size: 1.5rem;
+  }
+  
+  .categoryName {
+    font-size: 1.1rem;
+  }
+}

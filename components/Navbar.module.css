@@ -1,0 +1,271 @@
+/* Import modern fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 1rem 0;
+  z-index: 1000;
+  transition: var(--transition-smooth);
+}
+
+.navbarScrolled {
+  padding: 0.8rem 0;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+.navContainer {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo Styles */
+.navLogo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.logoSerif {
+  font-family: var(--font-serif);
+  color: var(--primary-black);
+}
+
+.logoSans {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: var(--gray-600);
+  margin-left: 2px;
+}
+
+/* Center Navigation */
+.navCenter {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.navLink {
+  text-decoration: none;
+  color: var(--gray-600);
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  transition: var(--transition-smooth);
+  padding: 0.5rem 0;
+}
+
+.navLink:hover {
+  color: var(--primary-black);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--primary-black);
+  transition: var(--transition-smooth);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+/* Right Actions */
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navIconBtn {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navIconBtn:hover {
+  color: var(--primary-black);
+  background: var(--gray-100);
+}
+
+.signInBtn {
+  background: none;
+  border: 1px solid var(--gray-300);
+  color: var(--primary-black);
+  padding: 0.6rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  margin-left: 0.5rem;
+}
+
+.signInBtn:hover {
+  border-color: var(--primary-black);
+  background: var(--primary-black);
+  color: var(--primary-white);
+}
+
+/* Mobile Menu Button */
+.mobileMenuBtn {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  gap: 4px;
+}
+
+.mobileMenuBtn span {
+  width: 20px;
+  height: 2px;
+  background: var(--primary-black);
+  transition: var(--transition-smooth);
+  transform-origin: center;
+}
+
+.mobileMenuBtn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobileMenuBtn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobileMenuBtn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Menu */
+.mobileMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--primary-white);
+  border-top: 1px solid var(--gray-200);
+  padding: 1rem 0;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.mobileMenu.active {
+  display: flex;
+}
+
+.mobileNavLink {
+  padding: 1rem 2rem;
+  text-decoration: none;
+  color: var(--gray-600);
+  font-weight: 500;
+  border-bottom: 1px solid var(--gray-100);
+  transition: var(--transition-smooth);
+}
+
+.mobileNavLink:hover {
+  color: var(--primary-black);
+  background: var(--gray-100);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .navCenter {
+    gap: 1.5rem;
+  }
+  
+  .navLink {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navCenter {
+    display: none;
+  }
+  
+  .navActions {
+    gap: 0.5rem;
+  }
+  
+  .signInBtn {
+    display: none;
+  }
+  
+  .mobileMenuBtn {
+    display: flex;
+  }
+  
+  .navLogo {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navContainer {
+    padding: 0 15px;
+  }
+  
+  .navLogo {
+    font-size: 1.3rem;
+  }
+}
+
+/* Add to existing Navbar.module.css */
+
+.navLink.active {
+  color: var(--primary-black);
+}
+
+.navLink.active::after {
+  width: 100%;
+  background: var(--accent-gold);
+}
+
+.mobileNavLink.active {
+  color: var(--primary-black);
+  background: var(--gray-100);
+  border-left: 3px solid var(--accent-gold);
+}
+
+/* Add these to your existing Navbar.module.css */
+
+/* Active state for desktop navigation */
+.navLink.active {
+  color: var(--primary-black);
+}
+
+.navLink.active::after {
+  width: 100%;
+  background: var(--accent-gold);
+}
+
+/* Active state for mobile navigation */
+.mobileNavLink.active {
+  color: var(--primary-black);
+  background: var(--gray-100);
+  border-left: 3px solid var(--accent-gold);
+}

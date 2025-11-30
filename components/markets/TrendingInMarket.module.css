@@ -1,0 +1,215 @@
+.trendingInTech6 {
+  padding: 80px 0;
+  background: var(--primary-white);
+}
+
+.sectionHeader6 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionTitle6 {
+  font-size: 2.5rem;
+  font-family: var(--font-serif);
+  color: var(--primary-black);
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.sectionTitle6::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: var(--accent-gold);
+}
+
+.sectionSubtitle6 {
+  font-size: 1.1rem;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.trendingGrid6 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.trendingCard6 {
+  background: var(--primary-white);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+  border: 1px solid var(--gray-200);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.trendingCard6:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--gray-300);
+}
+
+.trendingBadge6 {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  background: var(--accent-gold);
+  color: var(--primary-black);
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  z-index: 2;
+}
+
+.cardImage6 {
+  position: relative;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image6 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-smooth);
+}
+
+.trendingCard6:hover .image6 {
+  transform: scale(1.05);
+}
+
+.categoryTag6 {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: var(--primary-white);
+  color: var(--primary-black);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cardContent6 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.cardTitle6 {
+  font-size: 1.2rem;
+  line-height: 1.3;
+  color: var(--primary-black);
+  margin: 0;
+  transition: var(--transition-smooth);
+}
+
+.trendingCard6:hover .cardTitle6 {
+  color: var(--accent-gold);
+}
+
+.cardMeta6 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.author6 {
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.separator6 {
+  color: var(--gray-300);
+}
+
+.cardStats6 {
+  margin-top: auto;
+}
+
+.views6 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Mobile Horizontal Scroll */
+@media (max-width: 768px) {
+  .trendingGrid6 {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gray-300) transparent;
+  }
+  
+  .trendingGrid6::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .trendingGrid6::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .trendingGrid6::-webkit-scrollbar-thumb {
+    background: var(--gray-300);
+    border-radius: 2px;
+  }
+  
+  .trendingCard6 {
+    min-width: 280px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .trendingInTech6 {
+    padding: 60px 0;
+  }
+  
+  .sectionTitle6 {
+    font-size: 2rem;
+  }
+  
+  .sectionSubtitle6 {
+    font-size: 1rem;
+  }
+  
+  .trendingCard6 {
+    padding: 1.2rem;
+    gap: 1rem;
+  }
+  
+  .cardImage6 {
+    height: 160px;
+  }
+  
+  .cardTitle6 {
+    font-size: 1.1rem;
+  }
+}
