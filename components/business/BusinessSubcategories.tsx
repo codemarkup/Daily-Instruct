@@ -1,63 +1,69 @@
 import React from "react";
 import styles from "./BusinessSubcategories.module.css";
+import Link from "next/link";
+import { businessArticles } from "./BusinessArticlesGrid";
 
 const BusinessSubcategories: React.FC = () => {
   const subcategories = [
     {
       id: 1,
       name: "Startup News",
-      slug: "startup",
+      slug: "startup-news", // Changed to match filter logic
       description: "Latest updates on new startups, launches, and funding rounds",
-      articleCount: "142 Articles",
       icon: "newspaper.svg",
       color: "#3B82F6",
     },
     {
       id: 2,
       name: "Company Updates",
-      slug: "company_updates",
+      slug: "company-updates", // Changed to match filter logic
       description: "Big company announcements, strategy changes, and business moves",
-      articleCount: "89 Articles",
       icon: "bell.svg",
       color: "#10B981",
     },
     {
       id: 3,
       name: "Market Trends",
-      slug: "market_trends",
+      slug: "market-trends", // Changed to match filter logic
       description: "Insights into rising industries, shifting markets, and economic patterns",
-      articleCount: "156 Articles",
       icon: "chart.svg",
       color: "#F59E0B",
     },
     {
       id: 4,
       name: "Business Tips",
-      slug: "business_tips",
+      slug: "business-tips", // Changed to match filter logic
       description: "Simple guides and actionable advice for growing and managing a business",
-      articleCount: "78 Articles",
       icon: "note.svg",
       color: "#EF4444",
     },
     {
       id: 5,
       name: "Personal Finance",
-      slug: "personal_finance",
+      slug: "personal-finance", // Changed to match filter logic
       description: "Easy money tips, budgeting advice, and beginner-level investing basics",
-      articleCount: "63 Articles",
       icon: "data.svg",
       color: "#8B5CF6",
     },
     {
       id: 6,
       name: "Work & Productivity",
-      slug: "work_productivity",
+      slug: "work-productivity", // Changed to match filter logic
       description: "Tips on work habits, improving focus, and boosting daily productivity",
-      articleCount: "54 Articles",
       icon: "gear.svg",
       color: "#06B6D4",
     },
   ];
+
+  const updatedSubcategories = subcategories.map((subcat) => {
+    const count = businessArticles.filter(
+      (article) => article.specific === subcat.name
+    ).length;
+    return {
+      ...subcat,
+      articleCount: `${count} Articles`,
+    };
+  });
 
   return (
     <section className={styles.techSubcategories55}>
@@ -65,15 +71,15 @@ const BusinessSubcategories: React.FC = () => {
         <div className={styles.sectionHeader55}>
           <h2 className={styles.sectionTitle55}>Explore Categories</h2>
           <p className={styles.sectionSubtitle55}>
-            Dive deeper into specific technology domains
+            Dive deeper into specific business domains
           </p>
         </div>
 
         <div className={styles.categoriesGrid55}>
-          {subcategories.map((category) => (
-            <a
+          {updatedSubcategories.map((category) => (
+            <Link
               key={category.id}
-              href={`/tech/${category.slug}`}
+              href={`/business/${category.slug}`} // Updated to /business/ path
               className={styles.categoryCard55}
             >
               <div
@@ -108,7 +114,7 @@ const BusinessSubcategories: React.FC = () => {
                   />
                 </svg>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

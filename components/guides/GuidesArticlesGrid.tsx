@@ -2,77 +2,90 @@ import React from 'react';
 import Image from 'next/image';
 import styles from './GuidesArticlesGrid.module.css';
 
-const GuidesArticlesGrid: React.FC = () => {
-  const techArticles = [
-    {
-      id: 1,
-      title: "Quantum Computing Breakthrough: What It Means for Encryption",
-      description: "Recent advancements in quantum processing are challenging traditional security systems and opening new possibilities.",
-      author: "Dr. Michael Torres",
-      date: "March 15, 2024",
-      readTime: "8 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    },
-    {
-      id: 2,
-      title: "The Future of Web Development: Beyond React and Vue",
-      description: "Exploring emerging frameworks and tools that are shaping the next generation of web applications.",
-      author: "Alex Johnson",
-      date: "March 14, 2024",
-      readTime: "6 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    },
-    {
-      id: 3,
-      title: "Sustainable Tech: How Companies Are Reducing Digital Carbon Footprints",
-      description: "Innovative approaches to making technology more environmentally friendly and energy efficient.",
-      author: "Lisa Park",
-      date: "March 14, 2024",
-      readTime: "10 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    },
-    {
-      id: 4,
-      title: "The Rise of Edge Computing in IoT Ecosystems",
-      description: "How edge computing is transforming data processing and enabling real-time IoT applications.",
-      author: "Robert Kim",
-      date: "March 13, 2024",
-      readTime: "7 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    },
-    {
-      id: 5,
-      title: "Blockchain Beyond Cryptocurrency: Real-World Applications",
-      description: "From supply chain management to digital identity, blockchain technology is finding practical uses.",
-      author: "Sarah Williams",
-      date: "March 13, 2024",
-      readTime: "9 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    },
-    {
-      id: 6,
-      title: "The Evolution of Programming Languages: What's Next?",
-      description: "A look at emerging programming languages and how they're addressing modern development challenges.",
-      author: "David Chen",
-      date: "March 12, 2024",
-      readTime: "11 min read",
-      image: "/images/tech/2.png",
-      category: "Tech"
-    }
-  ];
+// ✅ Export articles with trending flag and specific categories
+export const guidesArticles = [
+  {
+    id: 1,
+    title: "Complete Guide to React 18: New Features and Best Practices",
+    description: "Step-by-step tutorial covering all the new React 18 features including concurrent rendering, automatic batching, and new hooks.",
+    author: "Sarah Johnson",
+    date: "March 15, 2024",
+    readTime: "15 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Technology Guides",
+    trending: true
+  },
+  {
+    id: 2,
+    title: "Beginner's Guide to Stock Market Investing: From Zero to First Trade",
+    description: "Complete walkthrough for absolute beginners on how to start investing in stocks, understand market basics, and build a portfolio.",
+    author: "Michael Chen",
+    date: "March 14, 2024",
+    readTime: "12 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Finance & Investing Guides",
+    trending: true
+  },
+  {
+    id: 3,
+    title: "How to Start a Business: Legal Steps and Funding Options",
+    description: "Comprehensive guide covering business registration, legal requirements, and various funding sources for new entrepreneurs.",
+    author: "Emma Rodriguez",
+    date: "March 14, 2024",
+    readTime: "18 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Business & Entrepreneurship Guides",
+    trending: false
+  },
+  {
+    id: 4,
+    title: "Ultimate Productivity System: Tools and Techniques That Actually Work",
+    description: "Step-by-step guide to building a personalized productivity system using proven methods and modern tools.",
+    author: "David Park",
+    date: "March 13, 2024",
+    readTime: "14 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Productivity & Work-Life Guides",
+    trending: true
+  },
+  {
+    id: 5,
+    title: "Mastering Excel: Advanced Formulas and Data Analysis Techniques",
+    description: "Comprehensive tutorial covering advanced Excel functions, pivot tables, and data visualization for business analysis.",
+    author: "Lisa Martinez",
+    date: "March 13, 2024",
+    readTime: "20 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Software & Tools How-Tos",
+    trending: false
+  },
+  {
+    id: 6,
+    title: "Career Change Guide: How to Successfully Transition Industries",
+    description: "Step-by-step plan for researching, preparing, and executing a successful career change with practical examples.",
+    author: "James Wilson",
+    date: "March 12, 2024",
+    readTime: "16 min read",
+    image: "/images/tech/2.png",
+    category: "Guides",
+    specific: "Career & Skills Development Guides",
+    trending: true
+  }
+];
 
+const GuidesArticlesGrid: React.FC = () => {
   return (
     <section className={styles.techArticlesGrid333}>
       <div className="container">
         <h2 className={styles.sectionTitle333}>Latest in Guides</h2>
         
         <div className={styles.articlesGrid333}>
-          {techArticles.map((article) => (
+          {guidesArticles.map((article) => (
             <article key={article.id} className={styles.articleCard333}>
               <div className={styles.cardImage333}>
                 <Image 
@@ -83,6 +96,7 @@ const GuidesArticlesGrid: React.FC = () => {
                   className={styles.image333}
                 />
                 <div className={styles.categoryTag333}>{article.category}</div>
+                {article.trending && <div className={styles.trendingBadge333}>Trending</div>}
               </div>
               
               <div className={styles.cardContent333}>

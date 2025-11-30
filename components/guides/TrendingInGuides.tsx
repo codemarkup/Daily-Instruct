@@ -1,71 +1,20 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './TrendingInGuides.module.css';
+import { guidesArticles } from './GuidesArticlesGrid';
 
 const TrendingInGuides: React.FC = () => {
-  const trendingArticles = [
-    {
-      id: 1,
-      title: "Apple's New AR Glasses: First Look",
-      category: "Gadgets",
-      author: "Emma Rodriguez",
-      date: "March 16, 2024",
-      views: "15.2K",
-      image: "/images/tech/2.png",
-    },
-    {
-      id: 2,
-      title: "OpenAI's Latest Breakthrough in Natural Language",
-      category: "AI",
-      author: "Dr. Benjamin Carter",
-      date: "March 15, 2024",
-      views: "12.8K",
-      image: "/images/tech/2.png",
-    },
-    {
-      id: 3,
-      title: "The Future of Quantum Internet",
-      category: "Innovation",
-      author: "Sarah Kim",
-      date: "March 15, 2024",
-      views: "9.7K",
-      image: "/images/tech/2.png",
-    },
-    {
-      id: 4,
-      title: "Microsoft's AI-Powered Developer Tools",
-      category: "Software",
-      author: "Alex Thompson",
-      date: "March 14, 2024",
-      views: "8.4K",
-      image: "/images/tech/2.png",
-    },
-    {
-      id: 5,
-      title: "Cybersecurity Threats in 2024",
-      category: "Security",
-      author: "Lisa Wong",
-      date: "March 14, 2024",
-      views: "11.3K",
-      image: "/images/tech/2.png",
-    },
-    {
-      id: 6,
-      title: "The Rise of Neural Interfaces",
-      category: "Innovation",
-      author: "Dr. Michael Park",
-      date: "March 13, 2024",
-      views: "7.9K",
-      image: "/images/tech/2.png",
-    }
-  ];
+  // ✅ Filter only trending guides articles
+  const trendingArticles = guidesArticles
+    .filter(article => article.trending)
+    .slice(0, 6); // Limit to 6 trending articles
 
   return (
     <section className={styles.trendingInTech444}>
       <div className="container">
         <div className={styles.sectionHeader444}>
           <h2 className={styles.sectionTitle444}>Trending in Guides</h2>
-          <p className={styles.sectionSubtitle444}>Most popular tech stories this week</p>
+          <p className={styles.sectionSubtitle444}>Most popular guides this week</p>
         </div>
         
         <div className={styles.trendingGrid444}>
@@ -96,7 +45,7 @@ const TrendingInGuides: React.FC = () => {
                 </div>
                 
                 <div className={styles.cardStats444}>
-                  <span className={styles.views444}>{article.views} views</span>
+                  <span className={styles.readTime444}>{article.readTime}</span>
                 </div>
               </div>
             </article>

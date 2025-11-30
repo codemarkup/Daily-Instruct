@@ -1,63 +1,69 @@
-import React from 'react';
-import styles from './GuidesSubcategories.module.css';
+import React from "react";
+import styles from "./GuidesSubcategories.module.css";
+import Link from "next/link";
+import { guidesArticles } from "./GuidesArticlesGrid"; 
 
 const GuidesSubcategories: React.FC = () => {
   const subcategories = [
     {
       id: 1,
       name: "Technology Guides",
-      slug: "tech_guides",
+      slug: "technology-guides", 
       description: "Step-by-step tutorials for software, apps, tools, and gadgets",
-      articleCount: "142 Articles",
       icon: "desktop.svg",
       color: "#3B82F6"
     },
     {
       id: 2,
       name: "Finance & Investing Guides",
-      slug: "finance_guides",
+      slug: "finance-investing-guides", 
       description: "Easy-to-follow guides on personal finance, investing, and money management",
-      articleCount: "89 Articles",
       icon: "coins.svg",
       color: "#10B981"
     },
     {
       id: 3,
       name: "Business & Entrepreneurship Guides",
-      slug: "business_guides",
-      description: "Easy-to-follow guides on personal finance, investing, and money management",
-      articleCount: "156 Articles",
+      slug: "business-entrepreneurship-guides", 
+      description: "Practical guides for starting and growing businesses",
       icon: "business.svg",
       color: "#F59E0B"
     },
     {
       id: 4,
       name: "Productivity & Work-Life Guides",
-      slug: "productivity_guides",
+      slug: "productivity-work-life-guides", 
       description: "Tips, hacks, and tutorials to improve productivity, remote work, and workflow",
-      articleCount: "78 Articles",
       icon: "book.svg",
       color: "#EF4444"
     },
     {
       id: 5,
       name: "Software & Tools How-Tos",
-      slug: "software_guides",
+      slug: "software-tools-how-tos", 
       description: "Tutorials for popular software, online tools, and platforms",
-      articleCount: "63 Articles",
       icon: "gear.svg",
       color: "#8B5CF6"
     },
     {
       id: 6,
       name: "Career & Skills Development Guides",
-      slug: "career_guides",
+      slug: "career-skills-development-guides", 
       description: "Guides on upskilling, career growth, certifications, and job search strategies",
-      articleCount: "54 Articles",
       icon: "career.svg",
       color: "#06B6D4"
     }
   ];
+
+  const updatedSubcategories = subcategories.map((subcat) => {
+    const count = guidesArticles.filter(
+      (article) => article.specific === subcat.name
+    ).length;
+    return {
+      ...subcat,
+      articleCount: `${count} Articles`,
+    };
+  });
 
   return (
     <section className={styles.techSubcategories555}>
@@ -68,10 +74,10 @@ const GuidesSubcategories: React.FC = () => {
         </div>
         
         <div className={styles.categoriesGrid555}>
-          {subcategories.map((category) => (
-            <a 
+          {updatedSubcategories.map((category) => (
+            <Link
               key={category.id} 
-              href={`/tech/${category.slug}`}
+              href={`/guides/${category.slug}`} 
               className={styles.categoryCard555}
             >
               <div 
@@ -97,7 +103,7 @@ const GuidesSubcategories: React.FC = () => {
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
