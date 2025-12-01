@@ -43,7 +43,7 @@ const CategoriesSection: React.FC = () => {
     {
       id: 4,
       name: "Markets",
-      slug: "markets",
+      slug: "market",
       count: marketArticlesData.articles.length,
       icon: "chart.svg",
       color: "#EF4444",
