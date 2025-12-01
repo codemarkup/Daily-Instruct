@@ -1,6 +1,7 @@
 import React from "react";
-import { businessArticles } from "@/components/business/BusinessArticlesGrid";
+import businessArticlesData from "@/data/business-articles.json"; // Import from JSON instead
 import Image from "next/image";
+import Link from "next/link"; // Don't forget to import Link
 import BusinessHeader from "@/components/business/BusinessHeader";
 import styles from "@/components/business/BusinessArticlesGrid.module.css";
 
@@ -12,6 +13,9 @@ export default async function BusinessSubcategoryPage({ params }: SubcategoryPag
   const { slug } = await params;
   
   if (!slug) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>;
+
+  // Use businessArticlesData.articles instead of businessArticles
+  const businessArticles = businessArticlesData.articles;
 
   const filteredArticles = businessArticles.filter((article) => {
     const articleSlug = article.specific
@@ -48,32 +52,38 @@ export default async function BusinessSubcategoryPage({ params }: SubcategoryPag
           ) : (
             <div className={styles.articlesGrid33}>
               {filteredArticles.map((article) => (
-                <article key={article.id} className={styles.articleCard33}>
-                  <div className={styles.cardImage33}>
-                    <Image
-                      src={article.image}
-                      alt={article.title}
-                      width={400}
-                      height={250}
-                      className={styles.image33}
-                    />
-                    <div className={styles.categoryTag33}>{article.category}</div>
-                    {article.trending && <div className={styles.trendingBadge33}>Trending</div>}
-                  </div>
+                <Link 
+                  key={article.id} 
+                  href={`/articles/${article.slug}`}
+                  className={styles.articleLink33}
+                >
+                  <article className={styles.articleCard33}>
+                    <div className={styles.cardImage33}>
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        width={400}
+                        height={250}
+                        className={styles.image33}
+                      />
+                      <div className={styles.categoryTag33}>{article.category}</div>
+                      {article.trending && <div className={styles.trendingBadge33}>Trending</div>}
+                    </div>
 
-                  <div className={styles.cardContent33}>
-                    <h3 className={styles.cardTitle33}>{article.title}</h3>
-                    <p className={styles.cardDescription33}>{article.description}</p>
+                    <div className={styles.cardContent33}>
+                      <h3 className={styles.cardTitle33}>{article.title}</h3>
+                      <p className={styles.cardDescription33}>{article.description}</p>
 
-                    <div className={styles.cardMeta33}>
-                      <span className={styles.cardAuthor33}>{article.author}</span>
-                      <div className={styles.metaDetails33}>
-                        <span className={styles.cardDate33}>{article.date}</span>
-                        <span className={styles.cardReadTime33}>{article.readTime}</span>
+                      <div className={styles.cardMeta33}>
+                        <span className={styles.cardAuthor33}>{article.author}</span>
+                        <div className={styles.metaDetails33}>
+                          <span className={styles.cardDate33}>{article.date}</span>
+                          <span className={styles.cardReadTime33}>{article.readTime}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </article>
+                  </article>
+                </Link>
               ))}
             </div>
           )}
