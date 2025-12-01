@@ -4,12 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import techArticlesData from "@/data/tech-articles.json";
 import businessArticlesData from "@/data/business-articles.json";
+import marketArticlesData from "@/data/markets-articles.json"; // Add these
+import guidesArticlesData from "@/data/guides-articles.json"; // Add these
 
 const LatestArticles: React.FC = () => {
-  // Combine articles from both categories and get latest articles for homepage
+  // Combine articles from ALL categories
   const allArticles = [
     ...techArticlesData.articles,
     ...businessArticlesData.articles,
+    ...marketArticlesData.articles, // Add these
+    ...guidesArticlesData.articles  // Add these
   ];
 
   const latestArticles = allArticles
