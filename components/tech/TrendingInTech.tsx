@@ -1,11 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './TrendingInTech.module.css';
-import { techArticles } from './TechArticlesGrid';
+
+// Import from JSON
+import techArticlesData from '@/data/tech-articles.json';
 
 const TrendingInTech: React.FC = () => {
-  // ✅ Filter only trending articles
-  const trendingArticles = techArticles
+  // Filter only trending articles
+  const trendingArticles = techArticlesData.articles
     .filter(article => article.trending)
     .slice(0, 6); // Limit to 6 trending articles
 
@@ -19,36 +22,42 @@ const TrendingInTech: React.FC = () => {
         
         <div className={styles.trendingGrid}>
           {trendingArticles.map((article, index) => (
-            <article key={article.id} className={styles.trendingCard}>
-              <div className={styles.trendingBadge}>
-                #{index + 1}
-              </div>
-              
-              <div className={styles.cardImage}>
-                <Image 
-                  src={article.image}
-                  alt={article.title}
-                  width={300}
-                  height={180}
-                  className={styles.image}
-                />
-                <div className={styles.categoryTag}>{article.category}</div>
-              </div>
-              
-              <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{article.title}</h3>
-                
-                <div className={styles.cardMeta}>
-                  <span className={styles.author}>{article.author}</span>
-                  <span className={styles.separator}>•</span>
-                  <span className={styles.date}>{article.date}</span>
+            <Link 
+              key={article.id} 
+              href={`/articles/${article.slug}`}
+              className={styles.trendingLink}
+            >
+              <article className={styles.trendingCard}>
+                <div className={styles.trendingBadge}>
+                  #{index + 1}
                 </div>
                 
-                <div className={styles.cardStats}>
-                  <span className={styles.readTime}>{article.readTime}</span>
+                <div className={styles.cardImage}>
+                  <Image 
+                    src={article.image}
+                    alt={article.title}
+                    width={300}
+                    height={180}
+                    className={styles.image}
+                  />
+                  {/* <div className={styles.categoryTag}>{article.category}</div> */}
                 </div>
-              </div>
-            </article>
+                
+                <div className={styles.cardContent}>
+                  <h3 className={styles.cardTitle}>{article.title}</h3>
+                  
+                  <div className={styles.cardMeta}>
+                    <span className={styles.author}>{article.author}</span>
+                    <span className={styles.separator}>•</span>
+                    <span className={styles.date}>{article.date}</span>
+                  </div>
+                  
+                  <div className={styles.cardStats}>
+                    <span className={styles.readTime}>{article.readTime}</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
       </div>

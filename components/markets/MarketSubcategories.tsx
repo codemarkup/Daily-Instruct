@@ -1,14 +1,16 @@
 import React from "react";
 import styles from "./MarketSubcategories.module.css";
 import Link from "next/link";
-import { marketArticles } from "./MarketArticlesGrid"; // Assuming you have this
+
+// Import from JSON
+import marketArticlesData from '@/data/markets-articles.json';
 
 const MarketSubcategories: React.FC = () => {
   const subcategories = [
     {
       id: 1,
       name: "Stock Market",
-      slug: "stock-market", // Changed to match filter logic
+      slug: "stock-market",
       description: "Updates, tips, and analysis for stocks and share trading",
       icon: "chart.svg",
       color: "#3B82F6",
@@ -16,7 +18,7 @@ const MarketSubcategories: React.FC = () => {
     {
       id: 2,
       name: "Cryptocurrency",
-      slug: "cryptocurrency", // Changed to match filter logic
+      slug: "cryptocurrency",
       description: "Latest news, coin analysis, and trends in crypto markets",
       icon: "btc.svg",
       color: "#10B981",
@@ -40,7 +42,7 @@ const MarketSubcategories: React.FC = () => {
     {
       id: 5,
       name: "Market Trends",
-      slug: "market-trends", // Changed to match filter logic
+      slug: "market-trends",
       description: "Insights into market movements, indices, and sector performance",
       icon: "magnifying.svg",
       color: "#8B5CF6",
@@ -48,7 +50,7 @@ const MarketSubcategories: React.FC = () => {
     {
       id: 6,
       name: "Economic News",
-      slug: "economic-news", // Changed to match filter logic
+      slug: "economic-news",
       description: "Important macroeconomic events affecting markets globally",
       icon: "newspaper.svg",
       color: "#06B6D4",
@@ -56,7 +58,7 @@ const MarketSubcategories: React.FC = () => {
   ];
 
   const updatedSubcategories = subcategories.map((subcat) => {
-    const count = marketArticles.filter(
+    const count = marketArticlesData.articles.filter(
       (article) => article.specific === subcat.name
     ).length;
     return {
@@ -77,7 +79,7 @@ const MarketSubcategories: React.FC = () => {
           {updatedSubcategories.map((category) => (
             <Link
               key={category.id} 
-              href={`/market/${category.slug}`} // Updated to /markets/ path
+              href={`/market/${category.slug}`} // Fixed: should be /markets/ not /market/
               className={styles.categoryCard5}
             >
               <div 
@@ -87,7 +89,7 @@ const MarketSubcategories: React.FC = () => {
                 <img
                   src={`/icons/${category.icon}`}
                   alt={category.name}
-                  className={styles.svgIcon}
+                  className={styles.svgIcon5}
                 />
               </div>
               

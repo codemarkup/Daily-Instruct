@@ -1,5 +1,5 @@
 import React from "react";
-import { guidesArticles } from "@/components/guides/GuidesArticlesGrid";
+import guidesArticlesData from "@/data/guides-articles.json"; // Import from JSON instead
 import Image from "next/image";
 import GuidesHeader from "@/components/guides/GuidesHeader";
 import styles from "@/components/guides/GuidesArticlesGrid.module.css";
@@ -12,6 +12,9 @@ export default async function GuidesSubcategoryPage({ params }: SubcategoryPageP
   const { slug } = await params;
   
   if (!slug) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>;
+
+  // Use guidesArticlesData.articles instead of guidesArticles
+  const guidesArticles = guidesArticlesData.articles;
 
   const filteredArticles = guidesArticles.filter((article) => {
     const articleSlug = article.specific

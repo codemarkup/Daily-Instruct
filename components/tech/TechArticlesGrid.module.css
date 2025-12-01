@@ -158,6 +158,7 @@
 }
 
 .loadMoreBtn {
+  display: inline-block;
   background: transparent;
   border: 2px solid var(--gray-300);
   color: var(--primary-black);
@@ -169,6 +170,8 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 0.9rem;
+  text-decoration: none;
+  text-align: center;
 }
 
 .loadMoreBtn:hover {
@@ -224,4 +227,10 @@
   .metaDetails {
     align-items: flex-start;
   }
+}
+
+.articleLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }

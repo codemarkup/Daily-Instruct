@@ -1,11 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './TrendingInBusiness.module.css';
-import { businessArticles } from './BusinessArticlesGrid';
+
+// Import from JSON
+import businessArticlesData from '@/data/business-articles.json';
 
 const TrendingInBusiness: React.FC = () => {
-  // ✅ Filter only trending business articles
-  const trendingArticles = businessArticles
+  // Filter only trending articles
+  const trendingArticles = businessArticlesData.articles
     .filter(article => article.trending)
     .slice(0, 6); // Limit to 6 trending articles
 
@@ -19,36 +22,42 @@ const TrendingInBusiness: React.FC = () => {
         
         <div className={styles.trendingGrid44}>
           {trendingArticles.map((article, index) => (
-            <article key={article.id} className={styles.trendingCard44}>
-              <div className={styles.trendingBadge44}>
-                #{index + 1}
-              </div>
-              
-              <div className={styles.cardImage44}>
-                <Image 
-                  src={article.image}
-                  alt={article.title}
-                  width={300}
-                  height={180}
-                  className={styles.image44}
-                />
-                <div className={styles.categoryTag44}>{article.category}</div>
-              </div>
-              
-              <div className={styles.cardContent44}>
-                <h3 className={styles.cardTitle44}>{article.title}</h3>
-                
-                <div className={styles.cardMeta44}>
-                  <span className={styles.author44}>{article.author}</span>
-                  <span className={styles.separator44}>•</span>
-                  <span className={styles.date44}>{article.date}</span>
+            <Link 
+              key={article.id} 
+              href={`/articles/${article.slug}`}
+              className={styles.trendingLink44}
+            >
+              <article className={styles.trendingCard44}>
+                <div className={styles.trendingBadge44}>
+                  #{index + 1}
                 </div>
                 
-                <div className={styles.cardStats44}>
-                  <span className={styles.readTime44}>{article.readTime}</span>
+                <div className={styles.cardImage44}>
+                  <Image 
+                    src={article.image}
+                    alt={article.title}
+                    width={300}
+                    height={180}
+                    className={styles.image44}
+                  />
+                  {/* <div className={styles.categoryTag44}>{article.category}</div> */}
                 </div>
-              </div>
-            </article>
+                
+                <div className={styles.cardContent44}>
+                  <h3 className={styles.cardTitle44}>{article.title}</h3>
+                  
+                  <div className={styles.cardMeta44}>
+                    <span className={styles.author44}>{article.author}</span>
+                    <span className={styles.separator44}>•</span>
+                    <span className={styles.date44}>{article.date}</span>
+                  </div>
+                  
+                  <div className={styles.cardStats44}>
+                    <span className={styles.readTime44}>{article.readTime}</span>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
       </div>

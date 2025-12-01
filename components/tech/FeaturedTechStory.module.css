@@ -41,7 +41,7 @@
   position: absolute;
   top: 25px;
   left: 25px;
-  background: var(--primary-white);
+   background: linear-gradient(135deg, var(--accent-gold) 0%, #d4af37 100%);
   color: var(--primary-black);
   padding: 0.6rem 1.2rem;
   border-radius: 20px;

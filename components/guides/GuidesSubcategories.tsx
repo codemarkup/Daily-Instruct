@@ -1,7 +1,9 @@
 import React from "react";
 import styles from "./GuidesSubcategories.module.css";
 import Link from "next/link";
-import { guidesArticles } from "./GuidesArticlesGrid"; 
+
+// Import from JSON
+import guidesArticlesData from '@/data/guides-articles.json';
 
 const GuidesSubcategories: React.FC = () => {
   const subcategories = [
@@ -56,7 +58,7 @@ const GuidesSubcategories: React.FC = () => {
   ];
 
   const updatedSubcategories = subcategories.map((subcat) => {
-    const count = guidesArticles.filter(
+    const count = guidesArticlesData.articles.filter(
       (article) => article.specific === subcat.name
     ).length;
     return {
@@ -87,7 +89,7 @@ const GuidesSubcategories: React.FC = () => {
                 <img
                   src={`/icons/${category.icon}`}
                   alt={category.name}
-                  className={styles.svgIcon}
+                  className={styles.svgIcon555}
                 />
               </div>
               

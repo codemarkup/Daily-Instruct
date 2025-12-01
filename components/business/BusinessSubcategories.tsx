@@ -1,14 +1,16 @@
 import React from "react";
 import styles from "./BusinessSubcategories.module.css";
 import Link from "next/link";
-import { businessArticles } from "./BusinessArticlesGrid";
+
+// Import from JSON
+import businessArticlesData from '@/data/business-articles.json';
 
 const BusinessSubcategories: React.FC = () => {
   const subcategories = [
     {
       id: 1,
       name: "Startup News",
-      slug: "startup-news", // Changed to match filter logic
+      slug: "startup-news",
       description: "Latest updates on new startups, launches, and funding rounds",
       icon: "newspaper.svg",
       color: "#3B82F6",
@@ -16,7 +18,7 @@ const BusinessSubcategories: React.FC = () => {
     {
       id: 2,
       name: "Company Updates",
-      slug: "company-updates", // Changed to match filter logic
+      slug: "company-updates",
       description: "Big company announcements, strategy changes, and business moves",
       icon: "bell.svg",
       color: "#10B981",
@@ -24,7 +26,7 @@ const BusinessSubcategories: React.FC = () => {
     {
       id: 3,
       name: "Market Trends",
-      slug: "market-trends", // Changed to match filter logic
+      slug: "market-trends",
       description: "Insights into rising industries, shifting markets, and economic patterns",
       icon: "chart.svg",
       color: "#F59E0B",
@@ -32,7 +34,7 @@ const BusinessSubcategories: React.FC = () => {
     {
       id: 4,
       name: "Business Tips",
-      slug: "business-tips", // Changed to match filter logic
+      slug: "business-tips",
       description: "Simple guides and actionable advice for growing and managing a business",
       icon: "note.svg",
       color: "#EF4444",
@@ -40,7 +42,7 @@ const BusinessSubcategories: React.FC = () => {
     {
       id: 5,
       name: "Personal Finance",
-      slug: "personal-finance", // Changed to match filter logic
+      slug: "personal-finance",
       description: "Easy money tips, budgeting advice, and beginner-level investing basics",
       icon: "data.svg",
       color: "#8B5CF6",
@@ -48,7 +50,7 @@ const BusinessSubcategories: React.FC = () => {
     {
       id: 6,
       name: "Work & Productivity",
-      slug: "work-productivity", // Changed to match filter logic
+      slug: "work-productivity",
       description: "Tips on work habits, improving focus, and boosting daily productivity",
       icon: "gear.svg",
       color: "#06B6D4",
@@ -56,7 +58,7 @@ const BusinessSubcategories: React.FC = () => {
   ];
 
   const updatedSubcategories = subcategories.map((subcat) => {
-    const count = businessArticles.filter(
+    const count = businessArticlesData.articles.filter(
       (article) => article.specific === subcat.name
     ).length;
     return {
@@ -79,7 +81,7 @@ const BusinessSubcategories: React.FC = () => {
           {updatedSubcategories.map((category) => (
             <Link
               key={category.id}
-              href={`/business/${category.slug}`} // Updated to /business/ path
+              href={`/business/${category.slug}`}
               className={styles.categoryCard55}
             >
               <div
@@ -89,7 +91,7 @@ const BusinessSubcategories: React.FC = () => {
                 <img
                   src={`/icons/${category.icon}`}
                   alt={category.name}
-                  className={styles.svgIcon}
+                  className={styles.svgIcon55}
                 />
               </div>
 

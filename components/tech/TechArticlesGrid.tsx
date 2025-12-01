@@ -1,122 +1,63 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './TechArticlesGrid.module.css';
 
-// ✅ Export articles with trending flag
-export const techArticles = [
-  {
-    id: 1,
-    title: "Quantum Computing Breakthrough: What It Means for Encryption",
-    description: "Recent advancements in quantum processing are challenging traditional security systems and opening new possibilities.",
-    author: "Dr. Michael Torres",
-    date: "March 15, 2024",
-    readTime: "8 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Artificial Intelligence",
-    trending: true // ✅ New flag
-  },
-  {
-    id: 2,
-    title: "The Future of Web Development: Beyond React and Vue",
-    description: "Exploring emerging frameworks and tools that are shaping the next generation of web applications.",
-    author: "Alex Johnson",
-    date: "March 14, 2024",
-    readTime: "6 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Software Development",
-    trending: false
-  },
-  {
-    id: 3,
-    title: "Sustainable Tech: How Companies Are Reducing Digital Carbon Footprints",
-    description: "Innovative approaches to making technology more environmentally friendly and energy efficient.",
-    author: "Lisa Park",
-    date: "March 14, 2024",
-    readTime: "10 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Artificial Intelligence",
-    trending: true
-  },
-  {
-    id: 4,
-    title: "The Rise of Edge Computing in IoT Ecosystems",
-    description: "How edge computing is transforming data processing and enabling real-time IoT applications.",
-    author: "Robert Kim",
-    date: "March 13, 2024",
-    readTime: "7 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Software Development",
-    trending: false
-  },
-  {
-    id: 5,
-    title: "Blockchain Beyond Cryptocurrency: Real-World Applications",
-    description: "From supply chain management to digital identity, blockchain technology is finding practical uses.",
-    author: "Sarah Williams",
-    date: "March 13, 2024",
-    readTime: "9 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Cybersecurity",
-    trending: true
-  },
-  {
-    id: 6,
-    title: "The Evolution of Programming Languages: What's Next?",
-    description: "A look at emerging programming languages and how they're addressing modern development challenges.",
-    author: "David Chen",
-    date: "March 12, 2024",
-    readTime: "11 min read",
-    image: "/images/tech/2.png",
-    category: "Tech",
-    specific: "Data & Analytics",
-    trending: true
-  }
-];
+// Import from JSON instead of local array
+import techArticlesData from '@/data/tech-articles.json';
 
 const TechArticlesGrid: React.FC = () => {
+  // Get only articles that should appear in the grid (limit to 6 for homepage)
+  const gridArticles = techArticlesData.articles
+    .filter(article => article.grid)
+    .slice(0, 6); // Show only 6 articles on homepage
+
   return (
     <section className={styles.techArticlesGrid}>
       <div className="container">
         <h2 className={styles.sectionTitle}>Latest in Technology</h2>
         
         <div className={styles.articlesGrid}>
-          {techArticles.map((article) => (
-            <article key={article.id} className={styles.articleCard}>
-              <div className={styles.cardImage}>
-                <Image 
-                  src={article.image}
-                  alt={article.title}
-                  width={400}
-                  height={250}
-                  className={styles.image}
-                />
-                <div className={styles.categoryTag}>{article.category}</div>
-                {article.trending && <div className={styles.trendingBadge}>Trending</div>}
-              </div>
-              
-              <div className={styles.cardContent}>
-                <h3 className={styles.cardTitle}>{article.title}</h3>
-                <p className={styles.cardDescription}>{article.description}</p>
+          {gridArticles.map((article) => (
+            <Link 
+              key={article.id} 
+              href={`/articles/${article.slug}`}
+              className={styles.articleLink}
+            >
+              <article className={styles.articleCard}>
+                <div className={styles.cardImage}>
+                  <Image 
+                    src={article.image}
+                    alt={article.title}
+                    width={400}
+                    height={250}
+                    className={styles.image}
+                  />
+                  {/* <div className={styles.categoryTag}>{article.category}</div> */}
+                  {article.trending && <div className={styles.trendingBadge}>Trending</div>}
+                </div>
                 
-                <div className={styles.cardMeta}>
-                  <span className={styles.cardAuthor}>{article.author}</span>
-                  <div className={styles.metaDetails}>
-                    <span className={styles.cardDate}>{article.date}</span>
-                    <span className={styles.cardReadTime}>{article.readTime}</span>
+                <div className={styles.cardContent}>
+                  <h3 className={styles.cardTitle}>{article.title}</h3>
+                  <p className={styles.cardDescription}>{article.description}</p>
+                  
+                  <div className={styles.cardMeta}>
+                    <span className={styles.cardAuthor}>{article.author}</span>
+                    <div className={styles.metaDetails}>
+                      <span className={styles.cardDate}>{article.date}</span>
+                      <span className={styles.cardReadTime}>{article.readTime}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
         
         <div className={styles.loadMoreContainer}>
-          <button className={styles.loadMoreBtn}>Load More Articles</button>
+          <Link href="/tech/news" className={styles.loadMoreBtn}>
+            View All Tech Articles
+          </Link>
         </div>
       </div>
     </section>

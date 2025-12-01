@@ -1,14 +1,16 @@
 import React from "react";
 import styles from "./TechSubcategories.module.css";
 import Link from "next/link";
-import { techArticles } from "./TechArticlesGrid";
+
+// Import from JSON
+import techArticlesData from '@/data/tech-articles.json';
 
 const TechSubcategories: React.FC = () => {
   const subcategories = [
     {
       id: 1,
       name: "Artificial Intelligence",
-      slug: "artificial-intelligence", // Changed to match the filter logic
+      slug: "artificial-intelligence",
       description: "Machine learning, neural networks, and AI applications",
       icon: "robot.svg",
       color: "#3B82F6",
@@ -48,7 +50,7 @@ const TechSubcategories: React.FC = () => {
   ];
 
   const updatedSubcategories = subcategories.map((subcat) => {
-    const count = techArticles.filter(
+    const count = techArticlesData.articles.filter(
       (article) => article.specific === subcat.name
     ).length;
     return {

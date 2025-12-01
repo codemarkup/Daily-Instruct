@@ -1,5 +1,5 @@
 import React from "react";
-import { marketArticles } from "@/components/markets/MarketArticlesGrid";
+import marketArticlesData from "@/data/markets-articles.json"; // Import from JSON instead
 import Image from "next/image";
 import MarketHeader from "@/components/markets/MarketHeader";
 import styles from "@/components/markets/MarketArticlesGrid.module.css";
@@ -12,6 +12,9 @@ export default async function MarketSubcategoryPage({ params }: SubcategoryPageP
   const { slug } = await params;
   
   if (!slug) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>;
+
+  // Use marketArticlesData.articles instead of marketArticles
+  const marketArticles = marketArticlesData.articles;
 
   // Add debugging to see what's happening
   console.log("🔍 Market Slug:", slug);
