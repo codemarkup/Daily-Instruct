@@ -4,12 +4,16 @@ import Image from 'next/image';
 import Link from 'next/link';
 import techArticlesData from '@/data/tech-articles.json';
 import businessArticlesData from '@/data/business-articles.json';
+import marketArticlesData from '@/data/markets-articles.json';
+import guidesArticlesData from '@/data/guides-articles.json';
 
 const TrendingSection: React.FC = () => {
-  // Combine articles from both categories and get trending articles for homepage
+  // Combine articles from ALL categories
   const allArticles = [
     ...techArticlesData.articles,
-    ...businessArticlesData.articles
+    ...businessArticlesData.articles,
+    ...marketArticlesData.articles,
+    ...guidesArticlesData.articles
   ];
   
   const trendingArticles = allArticles
@@ -25,7 +29,7 @@ const TrendingSection: React.FC = () => {
         <div className={styles.trendingGrid}>
           {trendingArticles.map((article, index) => (
             <Link 
-              key={article.slug} 
+              key={`${article.category}-${article.id}`} 
               href={`/articles/${article.slug}`}
               className={styles.trendingLink}
             >

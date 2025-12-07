@@ -10,7 +10,6 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 1,
       name: "Technology Guides",
-      slug: "technology-guides", 
       description: "Step-by-step tutorials for software, apps, tools, and gadgets",
       icon: "desktop.svg",
       color: "#3B82F6"
@@ -18,7 +17,6 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 2,
       name: "Finance & Investing Guides",
-      slug: "finance-investing-guides", 
       description: "Easy-to-follow guides on personal finance, investing, and money management",
       icon: "coins.svg",
       color: "#10B981"
@@ -26,7 +24,6 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 3,
       name: "Business & Entrepreneurship Guides",
-      slug: "business-entrepreneurship-guides", 
       description: "Practical guides for starting and growing businesses",
       icon: "business.svg",
       color: "#F59E0B"
@@ -34,7 +31,6 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 4,
       name: "Productivity & Work-Life Guides",
-      slug: "productivity-work-life-guides", 
       description: "Tips, hacks, and tutorials to improve productivity, remote work, and workflow",
       icon: "book.svg",
       color: "#EF4444"
@@ -42,7 +38,6 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 5,
       name: "Software & Tools How-Tos",
-      slug: "software-tools-how-tos", 
       description: "Tutorials for popular software, online tools, and platforms",
       icon: "gear.svg",
       color: "#8B5CF6"
@@ -50,19 +45,29 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 6,
       name: "Career & Skills Development Guides",
-      slug: "career-skills-development-guides", 
       description: "Guides on upskilling, career growth, certifications, and job search strategies",
       icon: "career.svg",
       color: "#06B6D4"
     }
   ];
 
+  // Generate slugs using the SAME logic as GuidesSubcategoryPage
   const updatedSubcategories = subcategories.map((subcat) => {
+    // Generate slug - MUST match the logic in GuidesSubcategoryPage
+    const slug = subcat.name
+      .toLowerCase()
+      .replace(/&/g, 'and') // Convert "&" to "and"
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]/g, '');
+    
+    // Count articles - check if specific field matches
     const count = guidesArticlesData.articles.filter(
       (article) => article.specific === subcat.name
     ).length;
+    
     return {
       ...subcat,
+      slug: slug, // Use generated slug
       articleCount: `${count} Articles`,
     };
   });

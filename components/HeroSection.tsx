@@ -4,18 +4,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import techArticlesData from '@/data/tech-articles.json';
 import businessArticlesData from '@/data/business-articles.json';
+import marketArticlesData from '@/data/markets-articles.json';
+import guidesArticlesData from '@/data/guides-articles.json';
 
 const HeroSection: React.FC = () => {
-  // Combine articles from both categories
+  // Combine articles from ALL categories
   const allArticles = [
     ...techArticlesData.articles,
-    ...businessArticlesData.articles
+    ...businessArticlesData.articles,
+    ...marketArticlesData.articles,
+    ...guidesArticlesData.articles
   ];
   
-  // Get featured article for homepage (can be from either category)
+  // Get featured article for homepage (can be from any category)
   const featuredArticle = allArticles.find(article => article.homeFeatured);
   
-  // Get top stories for homepage (limit to 4, can be from either category)
+  // Get top stories for homepage (limit to 4, can be from any category)
   const topStories = allArticles
     .filter(article => article.homeTopStory)
     .slice(0, 4);
@@ -74,7 +78,7 @@ const HeroSection: React.FC = () => {
             <div className={styles.storiesList}>
               {topStories.map((story, index) => (
                 <Link 
-                  key={story.id} 
+                  key={`${story.category}-${story.id}`} 
                   href={`/articles/${story.slug}`}
                   className={styles.storyLink}
                 >

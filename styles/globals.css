@@ -14,11 +14,11 @@
   -webkit-tap-highlight-color: transparent;
   outline: none;
   box-shadow: none;
-  -webkit-user-select: none; /* Chrome, Safari, newer Android */
-  -moz-user-select: none;    /* Firefox */
-  -ms-user-select: none;     /* IE/Edge */
-  user-select: none;         /* standard */
-  -webkit-touch-callout: none; /* disable long-press menu on iOS */
+  /* -webkit-user-select: none; 
+  -moz-user-select: none;  
+  -ms-user-select: none;     
+  user-select: none;         
+  -webkit-touch-callout: none;  */
   /* cursor: default;   */
 }
 
@@ -115,14 +115,15 @@ h6 {
 }
 
 .section-title::after {
-  content: '';
+  /* content: '';
   position: absolute;
   bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
   width: 60px;
   height: 2px;
-  background: var(--accent-gold);
+  background: var(--accent-gold); */
+  display: none;
 }
 
 /* Animations */
@@ -150,5 +151,3 @@ a {
   text-decoration: none;
   color: inherit;
 }
-
-
