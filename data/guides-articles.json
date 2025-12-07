@@ -26,6 +26,34 @@
         }
       ],
       "updatedAt": "2025-12-07T19:01:21.211Z"
+    },
+    {
+      "title": "test article for guides",
+      "slug": "test-article-for-guides",
+      "description": "test article for guides",
+      "author": "Admin",
+      "date": "December 8, 2025",
+      "readTime": "5 min read",
+      "image": "/images/guides/1.png",
+      "category": "guides",
+      "specific": "Technology Guides",
+      "trending": true,
+      "featured": false,
+      "topStory": true,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
+      "content": [
+        {
+          "type": "heading",
+          "text": "testing.............."
+        }
+      ],
+      "id": 2,
+      "createdAt": "2025-12-07T19:02:40.158Z",
+      "updatedAt": "2025-12-07T19:02:40.158Z"
     }
   ]
 }
