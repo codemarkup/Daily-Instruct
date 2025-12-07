@@ -1,27 +1,29 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import ArticleForm from '@/components/admin/ArticleForm';
-import ConfirmationModal from '@/components/admin/ConfirmationModal';
-import { AdminService, Article } from '@/services/admin-service';
-import '../../../../../styles/admin/components.css';
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import ArticleForm from "@/components/admin/ArticleForm";
+import ConfirmationModal from "@/components/admin/ConfirmationModal";
+import { AdminService, Article } from "@/services/admin-service";
+import "../../../../../styles/admin/components.css";
 
 const EditArticlePage = () => {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
-  
-  const [article, setArticle] = useState<Partial<Article> & { category: string }>({
-    title: '',
-    slug: '',
-    description: '',
-    author: '',
-    date: '',
-    readTime: '',
-    image: '',
-    category: '',
-    specific: '',
+
+  const [article, setArticle] = useState<
+    Partial<Article> & { category: string }
+  >({
+    title: "",
+    slug: "",
+    description: "",
+    author: "",
+    date: "",
+    readTime: "",
+    image: "",
+    category: "",
+    specific: "",
     trending: false,
     featured: false,
     topStory: false,
@@ -30,15 +32,16 @@ const EditArticlePage = () => {
     homeLatest: false,
     homeTrending: false,
     homeTopStory: false,
-    content: []
+    content: [],
   });
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
-  const [originalArticle, setOriginalArticle] = useState<Partial<Article> | null>(null);
+  const [originalArticle, setOriginalArticle] =
+    useState<Partial<Article> | null>(null);
 
   useEffect(() => {
     loadArticle();
@@ -47,17 +50,18 @@ const EditArticlePage = () => {
   const loadArticle = async () => {
     try {
       setLoading(true);
-      const { article: fetchedArticle, category } = await AdminService.getArticleBySlug(slug);
-      
+      const fetchedArticle = await AdminService.getArticleBySlug(slug);
+      const category = fetchedArticle?.category || "";
+
       setArticle({
         ...fetchedArticle,
-        category
+        category,
       });
       setOriginalArticle(fetchedArticle);
     } catch (error) {
-      console.error('Error loading article:', error);
-      alert('Article not found!');
-      router.push('/admin/articles');
+      console.error("Error loading article:", error);
+      alert("Article not found!");
+      router.push("/admin/articles");
     } finally {
       setLoading(false);
     }
@@ -71,20 +75,19 @@ const EditArticlePage = () => {
   const handleSave = async () => {
     try {
       setSaving(true);
-      
+
       // Update article
       await AdminService.updateArticle(slug, article);
-      
+
       setShowSaveModal(false);
       setHasChanges(false);
-      alert('Article updated successfully!');
-      
+      alert("Article updated successfully!");
+
       // Refresh the data
       loadArticle();
-      
     } catch (error) {
-      console.error('Error updating article:', error);
-      alert('Failed to update article. Please try again.');
+      console.error("Error updating article:", error);
+      alert("Failed to update article. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -92,29 +95,31 @@ const EditArticlePage = () => {
 
   const handleDelete = async () => {
     try {
-      await AdminService.deleteArticle(slug, article.category);
+      await AdminService.deleteArticle(slug);
       setShowDeleteModal(false);
-      alert('Article deleted successfully!');
-      router.push('/admin/articles');
+      alert("Article deleted successfully!");
+      router.push("/admin/articles");
     } catch (error) {
-      console.error('Error deleting article:', error);
-      alert('Failed to delete article. Please try again.');
+      console.error("Error deleting article:", error);
+      alert("Failed to delete article. Please try again.");
     }
   };
 
   const handleUpdate = (updatedArticle: Partial<Article>) => {
     const newArticle = { ...article, ...updatedArticle };
     setArticle(newArticle);
-    
+
     // Check if there are changes
     if (originalArticle) {
-      const hasChanges = JSON.stringify(newArticle) !== JSON.stringify({ ...originalArticle, category: article.category });
+      const hasChanges =
+        JSON.stringify(newArticle) !==
+        JSON.stringify({ ...originalArticle, category: article.category });
       setHasChanges(hasChanges);
     }
   };
 
   const handlePreview = () => {
-    window.open(`/articles/${slug}`, '_blank');
+    window.open(`/articles/${slug}`, "_blank");
   };
 
   if (loading) {
@@ -148,7 +153,9 @@ const EditArticlePage = () => {
             </h1>
             <p className="page-description">
               Editing: <span className="article-slug">/{article.slug}</span>
-              {hasChanges && <span className="unsaved-changes"> • Unsaved changes</span>}
+              {hasChanges && (
+                <span className="unsaved-changes"> • Unsaved changes</span>
+              )}
             </p>
           </div>
           <div className="header-actions">
@@ -166,7 +173,7 @@ const EditArticlePage = () => {
               disabled={!hasChanges || saving}
             >
               <span className="button-icon">💾</span>
-              {saving ? 'Saving...' : 'Save Changes'}
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>
@@ -194,9 +201,9 @@ const EditArticlePage = () => {
                   </div>
                 </div>
                 <div className="card-body">
-                  <ArticleForm 
-                    article={article} 
-                    onUpdate={handleUpdate} 
+                  <ArticleForm
+                    article={article}
+                    onUpdate={handleUpdate}
                     isEditing={true}
                   />
                 </div>
@@ -218,29 +225,32 @@ const EditArticlePage = () => {
                     <div className="stat-item">
                       <span className="stat-icon">📝</span>
                       <span className="stat-value">
-                        {article.content?.filter((b: any) => b.type === 'paragraph').length || 0}
+                        {article.content?.filter(
+                          (b: any) => b.type === "paragraph"
+                        ).length || 0}
                       </span>
                       <span className="stat-label">Paragraphs</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-icon">#</span>
                       <span className="stat-value">
-                        {article.content?.filter((b: any) => b.type === 'heading').length || 0}
+                        {article.content?.filter(
+                          (b: any) => b.type === "heading"
+                        ).length || 0}
                       </span>
                       <span className="stat-label">Headings</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-icon">💬</span>
                       <span className="stat-value">
-                        {article.content?.filter((b: any) => b.type === 'quote').length || 0}
+                        {article.content?.filter((b: any) => b.type === "quote")
+                          .length || 0}
                       </span>
                       <span className="stat-label">Quotes</span>
                     </div>
                     <div className="stat-item">
                       <span className="stat-icon">📏</span>
-                      <span className="stat-value">
-                        {article.readTime}
-                      </span>
+                      <span className="stat-value">{article.readTime}</span>
                       <span className="stat-label">Read Time</span>
                     </div>
                   </div>
@@ -257,22 +267,19 @@ const EditArticlePage = () => {
                 </div>
                 <div className="card-body">
                   <div className="preview-actions">
-                    <button
-                      onClick={handlePreview}
-                      className="preview-button"
-                    >
+                    <button onClick={handlePreview} className="preview-button">
                       🔗 Live Preview
                     </button>
                     <div className="preview-info">
                       <p className="info-text">
-                        Last saved: <span className="info-value">
-                          {originalArticle ? 'Recently' : 'Never'}
+                        Last saved:{" "}
+                        <span className="info-value">
+                          {originalArticle ? "Recently" : "Never"}
                         </span>
                       </p>
                       <p className="info-text">
-                        Created: <span className="info-value">
-                          {article.date}
-                        </span>
+                        Created:{" "}
+                        <span className="info-value">{article.date}</span>
                       </p>
                     </div>
                   </div>
