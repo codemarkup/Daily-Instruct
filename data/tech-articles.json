@@ -11,10 +11,10 @@
       "image": "/images/tech/1765098177855-2.png",
       "category": "tech",
       "specific": "Artificial Intelligence",
-      "trending": false,
+      "trending": true,
       "featured": false,
-      "topStory": false,
-      "grid": false,
+      "topStory": true,
+      "grid": true,
       "homeFeatured": true,
       "homeLatest": true,
       "homeTrending": true,
@@ -24,7 +24,36 @@
           "type": "heading",
           "text": "Tech Test Article"
         }
-      ]
+      ],
+      "updatedAt": "2025-12-07T19:14:55.534Z"
+    },
+    {
+      "title": "test article git",
+      "slug": "test-article-git",
+      "description": "test article for git",
+      "author": "Admin",
+      "date": "December 7, 2025",
+      "readTime": "5 min read",
+      "image": "/images/guides/1.png",
+      "category": "tech",
+      "specific": "Artificial Intelligence",
+      "trending": true,
+      "featured": true,
+      "topStory": true,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "testing..............................."
+        }
+      ],
+      "id": 2,
+      "createdAt": "2025-12-07T17:26:11.150Z",
+      "updatedAt": "2025-12-07T18:15:16.016Z"
     }
   ]
 }
