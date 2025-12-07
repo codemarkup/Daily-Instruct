@@ -25,34 +25,6 @@
           "text": "Tech Test Article"
         }
       ]
-    },
-    {
-      "title": "del",
-      "slug": "del",
-      "description": "del",
-      "author": "Admin",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/guides/1.png",
-      "category": "tech",
-      "specific": "Programming",
-      "trending": false,
-      "featured": false,
-      "topStory": false,
-      "grid": true,
-      "homeFeatured": false,
-      "homeLatest": false,
-      "homeTrending": false,
-      "homeTopStory": false,
-      "content": [
-        {
-          "type": "heading",
-          "text": "programming"
-        }
-      ],
-      "id": 2,
-      "createdAt": "2025-12-07T16:21:44.644Z",
-      "updatedAt": "2025-12-07T16:21:44.644Z"
     }
   ]
 }
