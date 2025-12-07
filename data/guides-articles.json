@@ -11,10 +11,10 @@
       "image": "/images/guides/1765098655347-1.png",
       "category": "guides",
       "specific": "Technology Guides",
-      "trending": false,
-      "featured": false,
-      "topStory": false,
-      "grid": false,
+      "trending": true,
+      "featured": true,
+      "topStory": true,
+      "grid": true,
       "homeFeatured": false,
       "homeLatest": true,
       "homeTrending": true,
@@ -24,7 +24,8 @@
           "type": "heading",
           "text": "Guides Article"
         }
-      ]
+      ],
+      "updatedAt": "2025-12-07T19:01:21.211Z"
     }
   ]
 }
