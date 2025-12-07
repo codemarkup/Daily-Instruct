@@ -1,8 +1,91 @@
 // /lib/json-utils.ts
-import fs from 'fs';
-import path from 'path';
+interface GitHubFile {
+  path: string;
+  content: string;
+  sha?: string;
+}
 
-const DATA_DIRECTORY = path.join(process.cwd(), 'data');
+class GitHubStorage {
+  private owner = process.env.GITHUB_OWNER || 'codemarkup';
+  private repo = process.env.GITHUB_REPO || 'Daily-Instruct';
+  private token = process.env.GITHUB_TOKEN;
+  private baseURL = 'https://api.github.com';
+
+  private async request(endpoint: string, options: RequestInit = {}) {
+    if (!this.token) {
+      throw new Error('GITHUB_TOKEN is not configured');
+    }
+
+    const response = await fetch(`${this.baseURL}${endpoint}`, {
+      ...options,
+      headers: {
+        'Authorization': `token ${this.token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        ...options.headers,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error(`GitHub API error (${response.status}):`, error);
+      throw new Error(`GitHub API error: ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  // Read JSON file from GitHub
+  async readJSONFile(path: string): Promise<any> {
+    try {
+      const data = await this.request(`/repos/${this.owner}/${this.repo}/contents/${path}`);
+      
+      // Decode base64 content
+      const content = atob(data.content.replace(/\n/g, ''));
+      return JSON.parse(content);
+    } catch (error: any) {
+      // If file doesn't exist, return default structure
+      if (error.message.includes('404')) {
+        return { articles: [] };
+      }
+      throw error;
+    }
+  }
+
+  // Write JSON file to GitHub
+  async writeJSONFile(path: string, content: any, sha?: string): Promise<any> {
+    const fileContent = JSON.stringify(content, null, 2);
+    const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
+
+    const payload: any = {
+      message: `Update ${path}`,
+      content: encodedContent,
+      committer: {
+        name: 'Daily Instruct Admin',
+        email: 'admin@dailyinstruct.com',
+      },
+      branch: 'main',
+    };
+
+    if (sha) {
+      payload.sha = sha;
+    }
+
+    return this.request(`/repos/${this.owner}/${this.repo}/contents/${path}`, {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // Get file SHA (needed for updates)
+  async getFileSHA(path: string): Promise<string | null> {
+    try {
+      const data = await this.request(`/repos/${this.owner}/${this.repo}/contents/${path}`);
+      return data.sha;
+    } catch {
+      return null;
+    }
+  }
+}
 
 export interface Article {
   id: number;
@@ -32,7 +115,7 @@ export interface Article {
 
 export interface HomeArticles {
   homeArticles: {
-    featured: number[];  // Array of article IDs
+    featured: number[];
     topStories: number[];
     latest: number[];
     trending: number[];
@@ -41,7 +124,6 @@ export interface HomeArticles {
 
 // Helper to get category filename
 export function getCategoryFilename(category: string): string {
-  // Convert to lowercase for consistent file matching
   const lowerCategory = category.toLowerCase();
   
   const categoryMap: Record<string, string> = {
@@ -55,8 +137,26 @@ export function getCategoryFilename(category: string): string {
   return categoryMap[lowerCategory] || `${lowerCategory}-articles.json`;
 }
 
+// Use GitHub storage if token exists, otherwise fallback to local files
+const githubStorage = new GitHubStorage();
+
 // Read JSON file
 export async function readJsonFile<T>(filename: string): Promise<T> {
+  // If we have GitHub token and we're not in development, use GitHub
+  if (process.env.GITHUB_TOKEN && process.env.NODE_ENV !== 'development') {
+    try {
+      const data = await githubStorage.readJSONFile(`data/${filename}`);
+      return data as T;
+    } catch (error) {
+      console.error(`GitHub read failed for ${filename}, using fallback:`, error);
+      // Fall through to local file system
+    }
+  }
+  
+  // Fallback to local file system
+  const fs = await import('fs');
+  const path = await import('path');
+  const DATA_DIRECTORY = path.join(process.cwd(), 'data');
   const filePath = path.join(DATA_DIRECTORY, filename);
   
   try {
@@ -74,6 +174,22 @@ export async function readJsonFile<T>(filename: string): Promise<T> {
 
 // Write JSON file
 export async function writeJsonFile<T>(filename: string, data: T): Promise<void> {
+  // If we have GitHub token and we're not in development, use GitHub
+  if (process.env.GITHUB_TOKEN && process.env.NODE_ENV !== 'development') {
+    try {
+      const sha = await githubStorage.getFileSHA(`data/${filename}`);
+      await githubStorage.writeJSONFile(`data/${filename}`, data, sha || undefined);
+      return;
+    } catch (error) {
+      console.error(`GitHub write failed for ${filename}, using fallback:`, error);
+      // Fall through to local file system
+    }
+  }
+  
+  // Fallback to local file system
+  const fs = await import('fs');
+  const path = await import('path');
+  const DATA_DIRECTORY = path.join(process.cwd(), 'data');
   const filePath = path.join(DATA_DIRECTORY, filename);
   
   try {
@@ -87,7 +203,6 @@ export async function writeJsonFile<T>(filename: string, data: T): Promise<void>
 }
 
 // Get all articles from all categories
-// In /lib/json-utils.ts, update getAllArticles:
 export async function getAllArticles(): Promise<Article[]> {
   const categories = ['tech', 'business', 'markets', 'guides'];
   const allArticles: Article[] = [];
@@ -96,12 +211,11 @@ export async function getAllArticles(): Promise<Article[]> {
     const filename = getCategoryFilename(category);
     const data = await readJsonFile<{ articles: Article[] }>(filename);
     
-    // Use the category from the JSON file, not the loop variable
     if (data.articles.length > 0) {
-      const firstCategory = data.articles[0].category; // Get actual case from first article
+      const firstCategory = data.articles[0].category;
       const articlesWithCategory = data.articles.map(article => ({
         ...article,
-        category: article.category || firstCategory // Use article's category if exists
+        category: article.category || firstCategory
       }));
       
       allArticles.push(...articlesWithCategory);
@@ -139,4 +253,79 @@ export async function getNextArticleId(category: string): Promise<number> {
   
   const maxId = Math.max(...data.articles.map(article => article.id));
   return maxId + 1;
+}
+
+// Create article
+export async function createArticle(articleData: Omit<Article, 'id'>): Promise<Article> {
+  const category = articleData.category.toLowerCase();
+  const filename = getCategoryFilename(category);
+  
+  // Read existing articles
+  const data = await readJsonFile<{ articles: Article[] }>(filename);
+  
+  // Get next ID
+  const nextId = data.articles.length > 0 
+    ? Math.max(...data.articles.map(a => a.id)) + 1 
+    : 1;
+  
+  // Create article with ID
+  const article: Article = {
+    ...articleData,
+    id: nextId
+  };
+  
+  // Add to array
+  data.articles.push(article);
+  
+  // Write back to file
+  await writeJsonFile(filename, data);
+  
+  return article;
+}
+
+// Update article
+export async function updateArticle(slug: string, articleData: Partial<Article>): Promise<Article | null> {
+  const categories = ['tech', 'business', 'markets', 'guides'];
+  
+  for (const category of categories) {
+    const filename = getCategoryFilename(category);
+    const data = await readJsonFile<{ articles: Article[] }>(filename);
+    
+    const index = data.articles.findIndex(a => a.slug === slug);
+    if (index !== -1) {
+      // Update article
+      data.articles[index] = {
+        ...data.articles[index],
+        ...articleData
+      };
+      
+      // Write back to file
+      await writeJsonFile(filename, data);
+      
+      return data.articles[index];
+    }
+  }
+  
+  return null;
+}
+
+// Delete article
+export async function deleteArticle(slug: string): Promise<boolean> {
+  const categories = ['tech', 'business', 'markets', 'guides'];
+  
+  for (const category of categories) {
+    const filename = getCategoryFilename(category);
+    const data = await readJsonFile<{ articles: Article[] }>(filename);
+    
+    const initialLength = data.articles.length;
+    data.articles = data.articles.filter(a => a.slug !== slug);
+    
+    if (data.articles.length !== initialLength) {
+      // Article was found and removed
+      await writeJsonFile(filename, data);
+      return true;
+    }
+  }
+  
+  return false;
 }
