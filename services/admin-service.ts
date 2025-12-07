@@ -1,6 +1,6 @@
-// services/admin-service.ts
-import * as jsonUtils from '@/lib/json-utils';
+const API_BASE = '/api/admin';
 
+// KEEP your interface definition:
 export interface Article {
   id: number;
   slug: string;
@@ -29,53 +29,69 @@ export interface Article {
 
 export const AdminService = {
   async createArticle(articleData: Omit<Article, 'id'>): Promise<Article> {
-    try {
-      // Use the jsonUtils.createArticle function
-      const article = await jsonUtils.createArticle(articleData);
-      return article;
-    } catch (error: any) {
-      console.error('Error in createArticle:', error);
-      throw new Error(`Failed to create article: ${error.message}`);
+    const response = await fetch(`${API_BASE}/articles`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(articleData),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to create article: ${error}`);
     }
+    
+    const data = await response.json();
+    return data.article;
+  },
+
+  async getAllArticles(): Promise<Article[]> {
+    return this.getArticles(); // Just calls getArticles()
   },
 
   async getArticles(category?: string): Promise<Article[]> {
-    try {
-      if (category) {
-        const filename = jsonUtils.getCategoryFilename(category);
-        const data = await jsonUtils.readJsonFile<{ articles: Article[] }>(filename);
-        return data.articles;
-      } else {
-        return await jsonUtils.getAllArticles();
-      }
-    } catch (error) {
-      console.error('Error fetching articles:', error);
-      return [];
+    const url = category ? `${API_BASE}/articles?category=${category}` : `${API_BASE}/articles`;
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch articles: ${response.status}`);
     }
+    
+    return await response.json();
   },
 
-  async updateArticle(slug: string, articleData: Partial<Article>): Promise<Article | null> {
-    try {
-      return await jsonUtils.updateArticle(slug, articleData);
-    } catch (error) {
-      console.error('Error updating article:', error);
-      return null;
+  async updateArticle(slug: string, articleData: Partial<Article>): Promise<Article> {
+    const response = await fetch(`${API_BASE}/articles?slug=${slug}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(articleData),
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to update article: ${error}`);
     }
+    
+    const data = await response.json();
+    return data.article;
   },
 
-  async deleteArticle(slug: string): Promise<boolean> {
-    try {
-      return await jsonUtils.deleteArticle(slug);
-    } catch (error) {
-      console.error('Error deleting article:', error);
-      return false;
+  async deleteArticle(slug: string): Promise<{ success: boolean }> {
+    const response = await fetch(`${API_BASE}/articles?slug=${slug}`, {
+      method: 'DELETE',
+    });
+    
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`Failed to delete article: ${error}`);
     }
+    
+    return await response.json();
   },
 
   async getArticleBySlug(slug: string): Promise<Article | null> {
     try {
-      const result = await jsonUtils.findArticleBySlug(slug);
-      return result?.article || null;
+      const articles = await this.getArticles();
+      return articles.find(article => article.slug === slug) || null;
     } catch (error) {
       console.error('Error getting article by slug:', error);
       return null;

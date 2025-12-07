@@ -216,18 +216,20 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteArticle = async (slug: string, category: string) => {
-    if (confirm("Are you sure you want to delete this article?")) {
-      try {
-        await AdminService.deleteArticle(slug, category);
-        // Refresh data
-        fetchDashboardData();
-        alert("Article deleted successfully!");
-      } catch (err) {
-        console.error("Error deleting article:", err);
-        alert("Failed to delete article. Please try again.");
-      }
+  if (confirm("Are you sure you want to delete this article?")) {
+    try {
+      // FIX: Remove category parameter
+      await AdminService.deleteArticle(slug); // ✅ CORRECT
+      
+      // Refresh data
+      fetchDashboardData();
+      alert("Article deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting article:", err);
+      alert("Failed to delete article. Please try again.");
     }
-  };
+  }
+};
 
   const handlePreviewArticle = (slug: string) => {
     window.open(`/articles/${slug}`, "_blank");
