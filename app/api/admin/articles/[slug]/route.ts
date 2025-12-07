@@ -8,7 +8,7 @@ import {
   Article 
 } from '@/lib/json-utils';
 
-// Helper to extract slug from URL
+// Helper to extract slug from URL (keep as backup)
 function extractSlugFromPath(pathname: string): string | null {
   const match = pathname.match(/\/api\/admin\/articles\/([^\/?]+)/);
   return match ? match[1] : null;
@@ -17,20 +17,13 @@ function extractSlugFromPath(pathname: string): string | null {
 // GET: Get single article by slug
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await context.params; // Await params
+    
     console.log('GET request URL:', request.url);
-    console.log('GET params:', params);
-    
-    // Try multiple ways to get slug
-    const slugFromParams = params?.slug;
-    const slugFromUrl = extractSlugFromPath(request.nextUrl.pathname);
-    const slug = slugFromParams || slugFromUrl;
-    
-    console.log('Slug from params:', slugFromParams);
-    console.log('Slug from URL:', slugFromUrl);
-    console.log('Using slug:', slug);
+    console.log('GET params slug:', slug);
     
     if (!slug) {
       console.error('No slug found!');
@@ -67,20 +60,14 @@ export async function GET(
 // DELETE: Delete article - SIMPLIFIED VERSION
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await context.params; // Await params
+    
     console.log('=== DELETE REQUEST ===');
     console.log('Request URL:', request.url);
-    console.log('Pathname:', request.nextUrl.pathname);
-    console.log('Full params:', params);
-    
-    // Get slug from URL directly
-    const pathname = request.nextUrl.pathname;
-    const slugMatch = pathname.match(/\/api\/admin\/articles\/([^\/?]+)/);
-    const slug = slugMatch ? slugMatch[1] : params?.slug;
-    
-    console.log('Extracted slug:', slug);
+    console.log('Slug from params:', slug);
     
     if (!slug) {
       console.error('ERROR: No slug found in URL');
@@ -145,13 +132,13 @@ export async function DELETE(
 // PUT: Update article
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
+    const { slug } = await context.params; // Await params
+    
     console.log('PUT request URL:', request.url);
-    const pathname = request.nextUrl.pathname;
-    const slugMatch = pathname.match(/\/api\/admin\/articles\/([^\/?]+)/);
-    const slug = slugMatch ? slugMatch[1] : params?.slug;
+    console.log('Slug from params:', slug);
     
     if (!slug) {
       return NextResponse.json(
