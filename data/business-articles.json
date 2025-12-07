@@ -25,6 +25,45 @@
           "text": "Business Article"
         }
       ]
+    },
+    {
+      "title": "Test Article 2",
+      "slug": "test-article-2",
+      "description": "test article for business page",
+      "author": "Admin",
+      "date": "December 7, 2025",
+      "readTime": "5 min read",
+      "image": "/images/guides/1.png",
+      "category": "business",
+      "specific": "Business Tips",
+      "trending": true,
+      "featured": true,
+      "topStory": true,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
+      "content": [
+        {
+          "type": "heading",
+          "text": "test article for business page"
+        },
+        {
+          "id": "block-1765125462100-l4mcptbl9",
+          "type": "paragraph",
+          "text": "testing is going good"
+        },
+        {
+          "id": "block-1765125472228-5llflh8t9",
+          "type": "quote",
+          "text": "Tested and looks perfect",
+          "author": "saad mehmood"
+        }
+      ],
+      "id": 2,
+      "createdAt": "2025-12-07T16:38:12.032Z",
+      "updatedAt": "2025-12-07T16:38:12.032Z"
     }
   ]
 }
