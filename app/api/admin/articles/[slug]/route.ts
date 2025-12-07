@@ -8,21 +8,21 @@ import {
   Article 
 } from '@/lib/json-utils';
 
+// Type-safe way to handle Next.js 15 params
+async function getParams(context: any): Promise<{ slug: string }> {
+  return context.params;
+}
+
 // GET: Get single article by slug
-export async function GET(
-  request: NextRequest,
-  context: { params: { slug: string } }
-) {
+export async function GET(request: NextRequest, context: any) {
+  const params = await getParams(context);
+  const slug = params.slug;
+
   try {
-    // Dynamic workaround for Next.js 15
-    const params = await (context.params as any);
-    const slug = params.slug || params?.slug;
-    
     console.log('GET request URL:', request.url);
     console.log('GET params slug:', slug);
     
     if (!slug) {
-      console.error('No slug found!');
       return NextResponse.json(
         { success: false, error: 'Slug parameter is required' },
         { status: 400 }
@@ -32,7 +32,6 @@ export async function GET(
     const result = await findArticleBySlug(slug);
     
     if (!result) {
-      console.log('Article not found for slug:', slug);
       return NextResponse.json(
         { success: false, error: 'Article not found' },
         { status: 404 }
@@ -45,7 +44,6 @@ export async function GET(
       category: result.category
     });
   } catch (error) {
-    console.error('Error fetching article:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to fetch article' },
       { status: 500 }
@@ -53,31 +51,14 @@ export async function GET(
   }
 }
 
-// DELETE: Delete article - SIMPLIFIED VERSION
-export async function DELETE(
-  request: NextRequest,
-  context: { params: { slug: string } }
-) {
+// DELETE: Delete article
+export async function DELETE(request: NextRequest, context: any) {
+  const params = await getParams(context);
+  const slug = params.slug;
+
   try {
-    // Dynamic workaround for Next.js 15
-    const params = await (context.params as any);
-    const slug = params.slug || params?.slug;
-    
-    console.log('=== DELETE REQUEST ===');
-    console.log('Request URL:', request.url);
-    console.log('Slug from params:', slug);
-    
-    if (!slug) {
-      console.error('ERROR: No slug found in URL');
-      return NextResponse.json(
-        { success: false, error: 'Slug parameter is missing from URL' },
-        { status: 400 }
-      );
-    }
-    
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
-    console.log('Category from query:', category);
     
     if (!category) {
       return NextResponse.json(
@@ -87,39 +68,27 @@ export async function DELETE(
     }
     
     const filename = getCategoryFilename(category);
-    console.log('Looking in file:', filename);
-    
     const data = await readJsonFile<{ articles: Article[] }>(filename);
-    console.log(`Found ${data.articles.length} articles`);
     
-    // Find and delete
     const articleIndex = data.articles.findIndex(a => 
       a.slug.toLowerCase() === slug.toLowerCase()
     );
     
     if (articleIndex === -1) {
-      console.log(`Article "${slug}" not found in ${filename}`);
       return NextResponse.json(
         { success: false, error: `Article "${slug}" not found` },
         { status: 404 }
       );
     }
     
-    console.log(`Found article at index ${articleIndex}:`, data.articles[articleIndex]);
-    
-    // Remove the article
     data.articles.splice(articleIndex, 1);
-    
     await writeJsonFile(filename, data);
-    
-    console.log(`SUCCESS: Article "${slug}" deleted`);
     
     return NextResponse.json({ 
       success: true, 
       message: 'Article deleted successfully' 
     });
   } catch (error) {
-    console.error('Error deleting article:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to delete article' },
       { status: 500 }
@@ -128,25 +97,11 @@ export async function DELETE(
 }
 
 // PUT: Update article
-export async function PUT(
-  request: NextRequest,
-  context: { params: { slug: string } }
-) {
+export async function PUT(request: NextRequest, context: any) {
+  const params = await getParams(context);
+  const slug = params.slug;
+
   try {
-    // Dynamic workaround for Next.js 15
-    const params = await (context.params as any);
-    const slug = params.slug || params?.slug;
-    
-    console.log('PUT request URL:', request.url);
-    console.log('Slug from params:', slug);
-    
-    if (!slug) {
-      return NextResponse.json(
-        { success: false, error: 'Slug parameter is missing' },
-        { status: 400 }
-      );
-    }
-    
     const updateData = await request.json();
     const { category, ...articleUpdates } = updateData;
     
@@ -184,7 +139,6 @@ export async function PUT(
       message: 'Article updated successfully'
     });
   } catch (error) {
-    console.error('Error updating article:', error);
     return NextResponse.json(
       { success: false, error: 'Failed to update article' },
       { status: 500 }
