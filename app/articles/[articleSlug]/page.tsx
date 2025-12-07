@@ -1,40 +1,148 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import TechHeader from "@/components/tech/TechHeader";
 import BusinessHeader from "@/components/business/BusinessHeader";
 import MarketHeader from "@/components/markets/MarketHeader";
 import GuidesHeader from "@/components/guides/GuidesHeader";
 import styles from "./article.module.css";
 
-// Import JSON data from ALL categories
-import techArticlesData from "@/data/tech-articles.json";
-import businessArticlesData from "@/data/business-articles.json";
-import marketArticlesData from "@/data/markets-articles.json";
-import guidesArticlesData from "@/data/guides-articles.json";
-
-interface ArticlePageProps {
-  params: Promise<{ articleSlug: string }>;
+interface ContentSection {
+  type: 'paragraph' | 'heading' | 'quote';
+  text: string;
+  author?: string;
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  const { articleSlug } = await params;
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: ContentSection[];
+}
 
-  // Search for article in ALL data sources
-  const allArticles = [
-    ...techArticlesData.articles,
-    ...businessArticlesData.articles,
-    ...marketArticlesData.articles,
-    ...guidesArticlesData.articles
-  ];
-  const article = allArticles.find((article) => article.slug === articleSlug);
+interface ArticlesResponse {
+  articles: Article[];
+}
 
-  if (!article) {
-    notFound();
+export default function ArticlePage() {
+  const params = useParams();
+  const articleSlug = params.articleSlug as string;
+  
+  const [article, setArticle] = useState<Article | null>(null);
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        
+        // Fetch ALL articles from GitHub
+        const categories = ['tech', 'business', 'markets', 'guides'];
+        let allArticles: Article[] = [];
+        
+        for (const cat of categories) {
+          const filename = cat === 'markets' ? 'markets-articles.json' : `${cat}-articles.json`;
+          try {
+            const response = await fetch(
+              `/api/github/articles?category=${cat}`, // Create this API route
+              { cache: 'no-store' }
+            );
+            
+            if (response.ok) {
+              const data: ArticlesResponse = await response.json();
+              allArticles = [...allArticles, ...data.articles];
+            }
+          } catch (error) {
+            console.error(`Error fetching ${cat} articles:`, error);
+          }
+        }
+        
+        // Find current article
+        const foundArticle = allArticles.find(a => a.slug === articleSlug);
+        
+        if (foundArticle) {
+          setArticle(foundArticle);
+          
+          // Find related articles
+          const related = allArticles
+            .filter(a => a.category === foundArticle.category && 
+                        a.specific === foundArticle.specific && 
+                        a.id !== foundArticle.id)
+            .slice(0, 3);
+          setRelatedArticles(related);
+        } else {
+          // Article not found - you can redirect to 404
+          console.error('Article not found:', articleSlug);
+        }
+      } catch (error) {
+        console.error('Error loading article:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchArticles();
+  }, [articleSlug]);
+
+  // Create API route first: /app/api/github/articles/route.ts
+  async function fetchFromGitHub(category: string): Promise<ArticlesResponse> {
+    const owner = process.env.NEXT_PUBLIC_GITHUB_OWNER || 'codemarkup';
+    const repo = process.env.NEXT_PUBLIC_GITHUB_REPO || 'Daily-Instruct';
+    const filename = category === 'markets' ? 'markets-articles.json' : `${category}-articles.json`;
+    
+    const response = await fetch(
+      `https://raw.githubusercontent.com/${owner}/${repo}/main/data/${filename}`,
+      { cache: 'no-store' }
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${category} articles`);
+    }
+    
+    return await response.json();
   }
 
-  // Determine which header to use based on category
+  if (loading) {
+    return (
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p>Loading article...</p>
+      </div>
+    );
+  }
+
+  if (!article) {
+    return (
+      <div className={styles.notFoundContainer}>
+        <h1>Article Not Found</h1>
+        <p>The article you're looking for doesn't exist.</p>
+        <Link href="/" className={styles.homeLink}>
+          Go back home
+        </Link>
+      </div>
+    );
+  }
+
+  // Determine which header to use
   const HeaderComponent = article.category === "Business" 
     ? BusinessHeader 
     : article.category === "Markets" 
@@ -42,11 +150,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     : article.category === "Guides" 
     ? GuidesHeader 
     : TechHeader;
-
-  // Find related articles from the same category and specific subcategory
-  const relatedArticles = allArticles
-    .filter((a) => a.category === article.category && a.specific === article.specific && a.id !== article.id)
-    .slice(0, 3);
 
   return (
     <div className={styles.articlePage}>
@@ -89,7 +192,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <section className={styles.articleContent}>
         <div className="container">
           <div className={styles.contentWrapper}>
-            {article.content.map((section: any, index) => { // Add :any type here
+            {article.content.map((section, index) => {
               if (section.type === "paragraph") {
                 return (
                   <p key={index} className={styles.paragraph}>
@@ -106,7 +209,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 return (
                   <blockquote key={index} className={styles.quote}>
                     <p>{section.text}</p>
-                    {section.author && ( // This line is now safe because section is typed as 'any'
+                    {section.author && (
                       <cite>— {section.author}</cite>
                     )}
                   </blockquote>
@@ -153,8 +256,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
           </div>
         </section>
       )}
-
-      {/* You can add your footer component here */}
     </div>
   );
 }

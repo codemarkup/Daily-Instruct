@@ -1,37 +1,114 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import TechHeader from "@/components/tech/TechHeader";
 import styles from "@/components/tech/TechArticlesGrid.module.css";
+import { use } from "react";
 
-// Import from JSON instead of the component
-import techArticlesData from "@/data/tech-articles.json";
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: Array<{
+    type: 'paragraph' | 'heading' | 'quote';
+    text: string;
+    author?: string;
+  }>;
+}
 
 interface SubcategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function SubcategoryPage({ params }: SubcategoryPageProps) {
-  const { slug } = await params;
+export default function SubcategoryPage({ params }: SubcategoryPageProps) {
+  // Unwrap the Promise using React.use()
+  const { slug } = use(params);
   
-  if (!slug) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>;
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
 
-  // Use the articles from JSON data
-  const filteredArticles = techArticlesData.articles.filter((article) => {
-    const articleSlug = article.specific
-      .toLowerCase()
-      .replace(/&/g, '')  
-      .replace(/\s+/g, '-') 
-      .replace(/[^\w-]/g, ''); 
+  useEffect(() => {
+    const fetchTechArticles = async () => {
+      try {
+        const response = await fetch('/api/github/articles?category=tech');
+        const data = await response.json();
+        setArticles(data.articles || []);
+      } catch (error) {
+        console.error('Error fetching tech articles for subcategory page:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     
-    return articleSlug === slug;
-  });
+    fetchTechArticles();
+  }, []);
+
+  useEffect(() => {
+    if (articles.length > 0 && slug) {
+      const filtered = articles.filter((article) => {
+        const articleSlug = article.specific
+          .toLowerCase()
+          .replace(/&/g, '')  
+          .replace(/\s+/g, '-') 
+          .replace(/[^\w-]/g, ''); 
+        
+        return articleSlug === slug;
+      });
+      setFilteredArticles(filtered);
+    }
+  }, [articles, slug]);
 
   // Format the title for display
   const formattedTitle = slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+  if (loading) {
+    return (
+      <div>
+        <TechHeader />
+        <section className={styles.techArticlesGrid}>
+          <div className="container">
+            <h2 className={styles.sectionTitle}>
+              {formattedTitle} Articles
+            </h2>
+            <div className={styles.loadingPlaceholder}>
+              <div className={styles.loadingSpinner}></div>
+              <p>Loading {formattedTitle} articles...</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  if (!slug) {
+    return (
+      <div>
+        <TechHeader />
+        <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -46,9 +123,11 @@ export default async function SubcategoryPage({ params }: SubcategoryPageProps) 
           {filteredArticles.length === 0 ? (
             <div style={{ textAlign: "center", marginTop: "2rem", padding: "2rem" }}>
               <p>No articles found in "{formattedTitle}" category.</p>
-              <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                Slug: {slug} | Available: {techArticlesData.articles.map(a => a.specific).filter((v, i, a) => a.indexOf(v) === i).join(', ')}
-              </p>
+              {articles.length > 0 && (
+                <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
+                  Available categories: {articles.map(a => a.specific).filter((v, i, a) => a.indexOf(v) === i).join(', ')}
+                </p>
+              )}
             </div>
           ) : (
             <div className={styles.articlesGrid}>

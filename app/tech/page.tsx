@@ -1,10 +1,11 @@
+"use client";
+
 import React from 'react';
 import TechHeader from '../../components/tech/TechHeader';
 import FeaturedTechStory from '../../components/tech/FeaturedTechStory';
 import TechArticlesGrid from '../../components/tech/TechArticlesGrid';
 import TrendingInTech from '../../components/tech/TrendingInTech';
 import TechSubcategories from '../../components/tech/TechSubcategories';
-// import TechNewsletter from '../../components/tech/TechNewsletter';
 import styles from './tech.module.css';
 
 const TechPage: React.FC = () => {
@@ -15,7 +16,6 @@ const TechPage: React.FC = () => {
       <TechArticlesGrid />
       <TrendingInTech />
       <TechSubcategories />
-      {/* <TechNewsletter /> */}
     </div>
   );
 };

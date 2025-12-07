@@ -1,16 +1,87 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './BusinessArticlesGrid.module.css';
 
-// Import from JSON instead of local array
-import businessArticlesData from '@/data/business-articles.json';
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: Array<{
+    type: 'paragraph' | 'heading' | 'quote';
+    text: string;
+    author?: string;
+  }>;
+}
 
 const BusinessArticlesGrid: React.FC = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBusinessArticles = async () => {
+      try {
+        const response = await fetch('/api/github/articles?category=business');
+        const data = await response.json();
+        setArticles(data.articles || []);
+      } catch (error) {
+        console.error('Error fetching business articles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchBusinessArticles();
+  }, []);
+
   // Get only articles that should appear in the grid (limit to 6 for homepage)
-  const gridArticles = businessArticlesData.articles
-    .filter(article => article.grid)
+  const gridArticles = articles
+    .filter(article => Boolean(article.grid))
     .slice(0, 6); // Show only 6 articles on homepage
+
+  if (loading) {
+    return (
+      <section className={styles.techArticlesGrid33}>
+        <div className="container">
+          <h2 className={styles.sectionTitle33}>Latest in Business</h2>
+          <div className={styles.loadingPlaceholder}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading business articles...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (gridArticles.length === 0) {
+    return (
+      <section className={styles.techArticlesGrid33}>
+        <div className="container">
+          <h2 className={styles.sectionTitle33}>Latest in Business</h2>
+          <div className={styles.noArticles}>
+            <p>No business articles available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.techArticlesGrid33}>
@@ -34,7 +105,7 @@ const BusinessArticlesGrid: React.FC = () => {
                     className={styles.image33}
                   />
                   {/* <div className={styles.categoryTag33}>{article.category}</div> */}
-                  {article.trending && <div className={styles.trendingBadge33}>Trending</div>}
+                  {Boolean(article.trending) && <div className={styles.trendingBadge33}>Trending</div>}
                 </div>
                 
                 <div className={styles.cardContent33}>

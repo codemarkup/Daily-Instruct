@@ -1,18 +1,115 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './FeaturedGuidesStory.module.css';
 
-// Import from JSON
-import guidesArticlesData from '@/data/guides-articles.json';
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: Array<{
+    type: 'paragraph' | 'heading' | 'quote';
+    text: string;
+    author?: string;
+  }>;
+}
 
 const FeaturedGuidesStory: React.FC = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchGuidesArticles = async () => {
+      try {
+        const response = await fetch('/api/github/articles?category=guides');
+        const data = await response.json();
+        setArticles(data.articles || []);
+      } catch (error) {
+        console.error('Error fetching guides articles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchGuidesArticles();
+  }, []);
+
   // Get the first featured article
-  const featuredArticle = guidesArticlesData.articles.find(article => article.featured);
+  const featuredArticle = articles.find(article => Boolean(article.featured));
+
+  if (loading) {
+    return (
+      <section className={styles.featuredTechStory222}>
+        <div className="container">
+          <div className={styles.loadingPlaceholder}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading featured guide...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // If no featured article, use the first one as fallback
   if (!featuredArticle) {
-    return null; // or you can return a fallback component
+    if (articles.length > 0) {
+      const firstArticle = articles[0];
+      return (
+        <section className={styles.featuredTechStory222}>
+          <div className="container">
+            <Link href={`/articles/${firstArticle.slug}`}>
+              <article className={styles.featuredArticle222}>
+                <div className={styles.articleImage222}>
+                  <Image 
+                    src={firstArticle.image}
+                    alt={firstArticle.title}
+                    width={800}
+                    height={500}
+                    className={styles.image222}
+                    priority
+                  />
+                  <div className={styles.categoryTag222}>Featured (Fallback)</div>
+                </div>
+                
+                <div className={styles.articleContent222}>
+                  <h2 className={styles.articleTitle222}>{firstArticle.title}</h2>
+                  <p className={styles.articleDescription222}>{firstArticle.description}</p>
+                  
+                  <div className={styles.articleMeta222}>
+                    <span className={styles.author222}>{firstArticle.author}</span>
+                    <span className={styles.separator222}>•</span>
+                    <span className={styles.date222}>{firstArticle.date}</span>
+                    <span className={styles.separator222}>•</span>
+                    <span className={styles.readTime222}>{firstArticle.readTime}</span>
+                  </div>
+                  
+                  <button className={styles.readButton222}>Read Full Analysis</button>
+                </div>
+              </article>
+            </Link>
+          </div>
+        </section>
+      );
+    } else {
+      return null; // or you can return a fallback component
+    }
   }
 
   return (

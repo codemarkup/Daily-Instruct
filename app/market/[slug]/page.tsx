@@ -1,62 +1,140 @@
-import React from "react";
-import marketArticlesData from "@/data/markets-articles.json";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link"; // Don't forget to import Link!
+import Link from "next/link";
 import MarketHeader from "@/components/markets/MarketHeader";
 import styles from "@/components/markets/MarketArticlesGrid.module.css";
+import { use } from "react";
+
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: Array<{
+    type: 'paragraph' | 'heading' | 'quote';
+    text: string;
+    author?: string;
+  }>;
+}
 
 interface SubcategoryPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function MarketSubcategoryPage({ params }: SubcategoryPageProps) {
-  const { slug } = await params;
+export default function MarketSubcategoryPage({ params }: SubcategoryPageProps) {
+  // Unwrap the Promise using React.use()
+  const { slug } = use(params);
   
-  if (!slug) return <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>;
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
 
-  const marketArticles = marketArticlesData.articles;
-
-  // Enhanced debug: Show all data
-  console.log("=== MARKET SUBCATEGORY DEBUG ===");
-  console.log("Requested slug:", slug);
-  
-  // Create a map of all possible slugs
-  const articleSlugMap = marketArticles.map(article => {
-    const articleSlug = article.specific
-      .toLowerCase()
-      .replace(/&/g, 'and')
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]/g, '');
-    
-    return {
-      id: article.id,
-      specific: article.specific,
-      slug: articleSlug,
-      matches: articleSlug === slug
+  useEffect(() => {
+    const fetchMarketArticles = async () => {
+      try {
+        const response = await fetch('/api/github/articles?category=markets');
+        const data = await response.json();
+        setArticles(data.articles || []);
+      } catch (error) {
+        console.error('Error fetching market articles for subcategory page:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-  });
-  
-  console.log("Article slug mapping:", articleSlugMap);
-  console.log("Unique specifics:", [...new Set(marketArticles.map(a => a.specific))]);
-
-  const filteredArticles = marketArticles.filter((article) => {
-    const articleSlug = article.specific
-      .toLowerCase()
-      .replace(/&/g, 'and') // Handle "&" as "and"
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]/g, '');
     
-    return articleSlug === slug;
-  });
+    fetchMarketArticles();
+  }, []);
 
-  console.log("Filtered articles count:", filteredArticles.length);
-  console.log("Filtered articles:", filteredArticles.map(a => ({ title: a.title, specific: a.specific })));
+  useEffect(() => {
+    if (articles.length > 0 && slug) {
+      console.log("=== MARKET SUBCATEGORY DEBUG ===");
+      console.log("Requested slug:", slug);
+      
+      // Create a map of all possible slugs
+      const articleSlugMap = articles.map(article => {
+        const articleSlug = article.specific
+          .toLowerCase()
+          .replace(/&/g, 'and')
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]/g, '');
+        
+        return {
+          id: article.id,
+          specific: article.specific,
+          slug: articleSlug,
+          matches: articleSlug === slug
+        };
+      });
+      
+      console.log("Article slug mapping:", articleSlugMap);
+      console.log("Unique specifics:", [...new Set(articles.map(a => a.specific))]);
+
+      const filtered = articles.filter((article) => {
+        const articleSlug = article.specific
+          .toLowerCase()
+          .replace(/&/g, 'and')
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]/g, '');
+        
+        return articleSlug === slug;
+      });
+
+      console.log("Filtered articles count:", filtered.length);
+      console.log("Filtered articles:", filtered.map(a => ({ title: a.title, specific: a.specific })));
+      
+      setFilteredArticles(filtered);
+    }
+  }, [articles, slug]);
 
   // Format the title for display
   const formattedTitle = slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+  if (loading) {
+    return (
+      <div>
+        <MarketHeader />
+        <section className={styles.techArticlesGrid3}>
+          <div className="container">
+            <h2 className={styles.sectionTitle3}>
+              {formattedTitle} Articles
+            </h2>
+            <div className={styles.loadingPlaceholder}>
+              <div className={styles.loadingSpinner}></div>
+              <p>Loading {formattedTitle} articles...</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  if (!slug) {
+    return (
+      <div>
+        <MarketHeader />
+        <p style={{ textAlign: "center", marginTop: "2rem" }}>Slug not found</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -71,26 +149,16 @@ export default async function MarketSubcategoryPage({ params }: SubcategoryPageP
           {filteredArticles.length === 0 ? (
             <div style={{ textAlign: "center", marginTop: "2rem", padding: "2rem" }}>
               <p>No articles found in "{formattedTitle}" category.</p>
-              <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                <strong>Requested Slug:</strong> {slug}
-              </p>
-              <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                <strong>Available Specifics:</strong> {[...new Set(marketArticles.map(a => a.specific))].join(', ')}
-              </p>
-              <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                <strong>Generated Slugs:</strong> {articleSlugMap
-                  .filter((v, i, a) => a.findIndex(t => t.slug === v.slug) === i)
-                  .map(item => item.slug)
-                  .join(', ')}
-              </p>
-              <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                <strong>Example conversions:</strong>
-                <ul style={{ textAlign: "left", marginTop: "0.5rem" }}>
-                  {articleSlugMap.slice(0, 3).map(item => (
-                    <li key={item.id}>"{item.specific}" → "{item.slug}"</li>
-                  ))}
-                </ul>
-              </p>
+              {articles.length > 0 && (
+                <>
+                  <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
+                    <strong>Requested Slug:</strong> {slug}
+                  </p>
+                  <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
+                    <strong>Available Specifics:</strong> {[...new Set(articles.map(a => a.specific))].join(', ')}
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <div className={styles.articlesGrid3}>
