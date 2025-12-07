@@ -40,9 +40,9 @@
       "featured": true,
       "topStory": true,
       "grid": false,
-      "homeFeatured": false,
+      "homeFeatured": true,
       "homeLatest": false,
-      "homeTrending": false,
+      "homeTrending": true,
       "homeTopStory": false,
       "content": [
         {
@@ -52,7 +52,7 @@
       ],
       "id": 2,
       "createdAt": "2025-12-07T16:28:39.364Z",
-      "updatedAt": "2025-12-07T16:32:38.356Z"
+      "updatedAt": "2025-12-07T16:47:58.576Z"
     }
   ]
 }
