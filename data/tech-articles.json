@@ -36,7 +36,7 @@
       "image": "/images/guides/1.png",
       "category": "tech",
       "specific": "Artificial Intelligence",
-      "trending": false,
+      "trending": true,
       "featured": true,
       "topStory": true,
       "grid": true,
@@ -52,7 +52,7 @@
       ],
       "id": 2,
       "createdAt": "2025-12-07T17:26:11.150Z",
-      "updatedAt": "2025-12-07T18:07:06.736Z"
+      "updatedAt": "2025-12-07T18:15:16.016Z"
     }
   ]
 }
