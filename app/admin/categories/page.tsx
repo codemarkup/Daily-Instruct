@@ -138,7 +138,7 @@ const CategoriesPage = () => {
   const handleDeleteArticle = async (slug: string, category: string) => {
     if (confirm("Are you sure you want to delete this article?")) {
       try {
-        await AdminService.deleteArticle(slug, category);
+        await AdminService.deleteArticle(slug);
         // Refresh stats
         fetchCategoryStats();
         // Refresh articles in modal if open
