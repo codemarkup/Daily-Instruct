@@ -11,10 +11,10 @@
       "image": "/images/tech/1765098177855-2.png",
       "category": "tech",
       "specific": "Artificial Intelligence",
-      "trending": false,
+      "trending": true,
       "featured": false,
-      "topStory": false,
-      "grid": false,
+      "topStory": true,
+      "grid": true,
       "homeFeatured": true,
       "homeLatest": true,
       "homeTrending": true,
@@ -24,7 +24,8 @@
           "type": "heading",
           "text": "Tech Test Article"
         }
-      ]
+      ],
+      "updatedAt": "2025-12-07T19:14:55.534Z"
     },
     {
       "title": "test article git",
