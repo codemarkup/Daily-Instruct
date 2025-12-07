@@ -42,7 +42,7 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <div className={styles.navLogo}>
           <span className={styles.logoSerif}>Daily</span>
-          <span className={styles.logoSans}>Instruct</span>
+          <span className={styles.logoSans}>Inst</span>
         </div>
 
         {/* Desktop Navigation */}
