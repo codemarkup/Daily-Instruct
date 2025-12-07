@@ -85,7 +85,7 @@ const ArticlesPage = () => {
         
         // Delete each article
         const deletePromises = articlesToDelete.map(async (article) => {
-          await AdminService.deleteArticle(article.slug, article.category);
+          await AdminService.deleteArticle(article.slug); 
         });
         
         await Promise.all(deletePromises);
@@ -127,7 +127,7 @@ const ArticlesPage = () => {
       setSelectedArticles(prev => prev.filter(slug => slug !== articleToDelete.slug));
       
       // Then call API
-      await AdminService.deleteArticle(slug, category);
+      await AdminService.deleteArticle(slug); // Remove category parameter
       
       console.log('Article deleted successfully');
       
