@@ -8,19 +8,15 @@ import {
   Article 
 } from '@/lib/json-utils';
 
-// Helper to extract slug from URL (keep as backup)
-function extractSlugFromPath(pathname: string): string | null {
-  const match = pathname.match(/\/api\/admin\/articles\/([^\/?]+)/);
-  return match ? match[1] : null;
-}
-
 // GET: Get single article by slug
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ slug: string }> }
+  context: { params: { slug: string } }
 ) {
   try {
-    const { slug } = await context.params; // Await params
+    // Dynamic workaround for Next.js 15
+    const params = await (context.params as any);
+    const slug = params.slug || params?.slug;
     
     console.log('GET request URL:', request.url);
     console.log('GET params slug:', slug);
@@ -60,10 +56,12 @@ export async function GET(
 // DELETE: Delete article - SIMPLIFIED VERSION
 export async function DELETE(
   request: NextRequest,
-  context: { params: Promise<{ slug: string }> }
+  context: { params: { slug: string } }
 ) {
   try {
-    const { slug } = await context.params; // Await params
+    // Dynamic workaround for Next.js 15
+    const params = await (context.params as any);
+    const slug = params.slug || params?.slug;
     
     console.log('=== DELETE REQUEST ===');
     console.log('Request URL:', request.url);
@@ -132,10 +130,12 @@ export async function DELETE(
 // PUT: Update article
 export async function PUT(
   request: NextRequest,
-  context: { params: Promise<{ slug: string }> }
+  context: { params: { slug: string } }
 ) {
   try {
-    const { slug } = await context.params; // Await params
+    // Dynamic workaround for Next.js 15
+    const params = await (context.params as any);
+    const slug = params.slug || params?.slug;
     
     console.log('PUT request URL:', request.url);
     console.log('Slug from params:', slug);
