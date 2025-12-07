@@ -5,14 +5,14 @@ import { notFound } from "next/navigation";
 import TechHeader from "@/components/tech/TechHeader";
 import BusinessHeader from "@/components/business/BusinessHeader";
 import MarketHeader from "@/components/markets/MarketHeader";
-import GuidesHeader from "@/components/guides/GuidesHeader"; // Add GuidesHeader
+import GuidesHeader from "@/components/guides/GuidesHeader";
 import styles from "./article.module.css";
 
 // Import JSON data from ALL categories
 import techArticlesData from "@/data/tech-articles.json";
 import businessArticlesData from "@/data/business-articles.json";
 import marketArticlesData from "@/data/markets-articles.json";
-import guidesArticlesData from "@/data/guides-articles.json"; // Add Guides data
+import guidesArticlesData from "@/data/guides-articles.json";
 
 interface ArticlePageProps {
   params: Promise<{ articleSlug: string }>;
@@ -26,7 +26,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     ...techArticlesData.articles,
     ...businessArticlesData.articles,
     ...marketArticlesData.articles,
-    ...guidesArticlesData.articles // Add Guides articles
+    ...guidesArticlesData.articles
   ];
   const article = allArticles.find((article) => article.slug === articleSlug);
 
@@ -89,7 +89,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       <section className={styles.articleContent}>
         <div className="container">
           <div className={styles.contentWrapper}>
-            {article.content.map((section, index) => {
+            {article.content.map((section: any, index) => { // Add :any type here
               if (section.type === "paragraph") {
                 return (
                   <p key={index} className={styles.paragraph}>
@@ -106,7 +106,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 return (
                   <blockquote key={index} className={styles.quote}>
                     <p>{section.text}</p>
-                    {section.author && (
+                    {section.author && ( // This line is now safe because section is typed as 'any'
                       <cite>— {section.author}</cite>
                     )}
                   </blockquote>
