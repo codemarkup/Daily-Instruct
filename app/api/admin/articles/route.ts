@@ -65,6 +65,18 @@ export async function POST(request: NextRequest) {
   try {
     const articleData = await request.json();
     
+    // Check if GitHub is configured (BEFORE validation)
+    if (!process.env.GITHUB_TOKEN) {
+      console.error('GITHUB_TOKEN missing in environment variables');
+      return NextResponse.json(
+        { 
+          error: 'GitHub integration not configured',
+          message: 'Please set GITHUB_TOKEN environment variable in Vercel'
+        },
+        { status: 500 }
+      );
+    }
+    
     // Validate required fields
     const requiredFields = ['title', 'slug', 'description', 'category', 'specific'];
     for (const field of requiredFields) {
@@ -75,6 +87,8 @@ export async function POST(request: NextRequest) {
         );
       }
     }
+
+    // ... rest of your existing code continues ...
 
     const category = articleData.category.toLowerCase();
     const filename = getCategoryFilename(category);
