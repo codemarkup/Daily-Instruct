@@ -107,14 +107,26 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   };
 
   // Handle flag changes from FlagControlPanel
-  const handleFlagUpdate = (flags: any) => {
-    console.log("FlagControlPanel updating flags:", flags);
-    // Update all flags at once
-    onUpdate({
-      ...article,
-      ...flags
-    });
-  };
+  // Handle flag changes from FlagControlPanel
+const handleFlagUpdate = (flags: any) => {
+  console.log("FlagControlPanel updating flags:", flags);
+  
+  // Only update the flag fields, not the entire article
+  // Create an update object with only the changed flags
+  const updateObj: Partial<Article> = {};
+  
+  // Map each flag to the correct article field
+  if (flags.featured !== undefined) updateObj.featured = flags.featured;
+  if (flags.trending !== undefined) updateObj.trending = flags.trending;
+  if (flags.topStory !== undefined) updateObj.topStory = flags.topStory;
+  if (flags.grid !== undefined) updateObj.grid = flags.grid;
+  if (flags.homeFeatured !== undefined) updateObj.homeFeatured = flags.homeFeatured;
+  if (flags.homeLatest !== undefined) updateObj.homeLatest = flags.homeLatest;
+  if (flags.homeTrending !== undefined) updateObj.homeTrending = flags.homeTrending;
+  if (flags.homeTopStory !== undefined) updateObj.homeTopStory = flags.homeTopStory;
+  
+  onUpdate(updateObj);
+};
 
   // Get current flags for FlagControlPanel
   const getCurrentFlags = () => ({
