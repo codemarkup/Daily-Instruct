@@ -1,44 +1,17 @@
 {
   "articles": [
     {
-      "id": 1,
-      "slug": "test-guides",
-      "title": "TEST Guides",
-      "description": "Test Guides Articles",
-      "author": "Saad",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/guides/1765098655347-1.png",
-      "category": "guides",
-      "specific": "Technology Guides",
-      "trending": true,
-      "featured": true,
-      "topStory": true,
-      "grid": true,
-      "homeFeatured": false,
-      "homeLatest": true,
-      "homeTrending": true,
-      "homeTopStory": true,
-      "content": [
-        {
-          "type": "heading",
-          "text": "Guides Article"
-        }
-      ],
-      "updatedAt": "2025-12-07T19:01:21.211Z"
-    },
-    {
-      "title": "test article for guides",
-      "slug": "test-article-for-guides",
-      "description": "test article for guides",
+      "title": "guides 123",
+      "slug": "guides-123",
+      "description": "guide guide guide",
       "author": "Admin",
       "date": "December 8, 2025",
       "readTime": "5 min read",
       "image": "/images/guides/1.png",
       "category": "guides",
-      "specific": "Technology Guides",
+      "specific": "Software & Tools How-Tos",
       "trending": true,
-      "featured": false,
+      "featured": true,
       "topStory": true,
       "grid": true,
       "homeFeatured": false,
@@ -47,13 +20,13 @@
       "homeTopStory": false,
       "content": [
         {
-          "type": "heading",
-          "text": "testing.............."
+          "type": "paragraph",
+          "text": "guides test"
         }
       ],
-      "id": 2,
-      "createdAt": "2025-12-07T19:02:40.158Z",
-      "updatedAt": "2025-12-07T19:02:40.158Z"
+      "id": 1,
+      "createdAt": "2025-12-07T19:41:16.559Z",
+      "updatedAt": "2025-12-07T19:41:16.559Z"
     }
   ]
 }
