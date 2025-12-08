@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../styles/admin/components.css";
 import { Article } from "@/services/admin-service";
+import FlagControlPanel from "@/components/admin/FlagControlPanel";
 
 interface ContentBlock {
   id: string;
@@ -29,7 +30,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // FIX: Changed "market" to "markets" to match your JSON files
+  // Categories remain the same
   const categories = [
     {
       value: "tech",
@@ -54,7 +55,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       ],
     },
     {
-      value: "markets", // CHANGED FROM "market" TO "markets"
+      value: "markets",
       label: "Markets",
       subcategories: [
         "Stock Market",
@@ -99,11 +100,33 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     }
   }, [article.title, isEditing]);
 
-  // FIX: Send only the changed field, not the entire article
+  // Handle field changes
   const handleChange = (field: keyof Article, value: any) => {
     console.log(`Form changing ${field} to:`, value);
     onUpdate({ [field]: value });
   };
+
+  // Handle flag changes from FlagControlPanel
+  const handleFlagUpdate = (flags: any) => {
+    console.log("FlagControlPanel updating flags:", flags);
+    // Update all flags at once
+    onUpdate({
+      ...article,
+      ...flags
+    });
+  };
+
+  // Get current flags for FlagControlPanel
+  const getCurrentFlags = () => ({
+    featured: article.featured || false,
+    trending: article.trending || false,
+    topStory: article.topStory || false,
+    grid: article.grid || false,
+    homeFeatured: article.homeFeatured || false,
+    homeLatest: article.homeLatest || false,
+    homeTrending: article.homeTrending || false,
+    homeTopStory: article.homeTopStory || false,
+  });
 
   const getSubcategories = () => {
     const category = categories.find((cat) => cat.value === article.category);
@@ -162,29 +185,25 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     }
   };
 
-  // Image Upload Functions
+  // Image Upload Functions (keep as is)
   const handleImageUpload = async (file: File) => {
     if (!file) return;
 
-    // Reset error state
     setUploadError(null);
     setUploading(true);
     setUploadProgress(0);
 
     try {
-      // Validate file
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
       if (!allowedTypes.includes(file.type)) {
         throw new Error('Invalid file type. Only JPG, PNG, WebP, GIF, and AVIF are allowed.');
       }
 
-      // Validate size (5MB max)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error('File size too large. Maximum size is 5MB.');
       }
 
-      // Simulate upload progress
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
           if (prev >= 90) {
@@ -195,12 +214,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         });
       }, 100);
 
-      // Prepare form data
       const formData = new FormData();
       formData.append('file', file);
       formData.append('category', article.category || 'uncategorized');
 
-      // Upload to API
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -215,13 +232,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
       const data = await response.json();
       
-      // Update progress to 100%
       setUploadProgress(100);
-      
-      // Update the article with the new image URL
       handleChange("image", data.url);
       
-      // Show success message briefly
       setTimeout(() => {
         setUploadProgress(0);
       }, 1000);
@@ -232,7 +245,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       setUploadProgress(0);
     } finally {
       setUploading(false);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -271,6 +283,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
   return (
     <div className="article-form-fields">
+      {/* ========== ALL EXISTING FORM FIELDS (KEEP EXACTLY AS IS) ========== */}
+      
+      {/* Article Title */}
       <div className="form-group">
         <label className="form-label required">
           Article Title
@@ -290,6 +305,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
+      {/* URL Slug */}
       <div className="form-group">
         <label className="form-label required">
           URL Slug
@@ -320,6 +336,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
+      {/* Description */}
       <div className="form-group">
         <label className="form-label required">
           Description
@@ -341,7 +358,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
-      {/* FIXED CATEGORY DROPDOWN */}
+      {/* Category & Subcategory */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required">Category</label>
@@ -380,7 +397,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
-      {/* IMAGE UPLOAD SECTION */}
+      {/* Image Upload Section (keep as is) */}
       <div className="form-group">
         <label className="form-label required">
           Article Cover Image
@@ -409,9 +426,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             />
             
             <div className="drag-drop-content">
-              <div className="drag-drop-icon">
-                {/* {uploading ? '⏳' : dragActive ? '📂' : '📤'} */}
-              </div>
               <div className="drag-drop-text">
                 {uploading ? (
                   <>
@@ -426,7 +440,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 ) : (
                   <>
                     <strong>Drag & drop your image here</strong>
-                    {/* <p>or click to browse</p> */}
                   </>
                 )}
               </div>
@@ -439,8 +452,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 Browse Files
               </label>
             </div>
-            
-            
           </div>
 
           {/* Progress Bar */}
@@ -522,13 +533,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 </div>
               ) : (
                 <div className="no-image-placeholder">
-                  {/* <div className="placeholder-icon">🖼️</div>
-                  <div className="placeholder-text">
-                    <p>No image selected</p>
-                    <p className="placeholder-subtext">
-                      Upload an image or use default: <code>/images/default.png</code>
-                    </p>
-                  </div> */}
+                  {/* Image placeholder */}
                 </div>
               )}
             </div>
@@ -556,12 +561,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 ?
               </button>
             </div>
-            <div className="url-hint">
-            </div>
           </div>
         </div>
       </div>
 
+      {/* Author, Date, Read Time */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required">Author Name</label>
@@ -609,101 +613,34 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         />
       </div>
 
-      <div className="form-section">
+      {/* ========== FLAG CONTROL PANEL SECTION ========== */}
+      <div className="form-section flag-section-integrated">
         <h3 className="section-title">Article Flags</h3>
-        <div className="flags-grid">
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.trending || false}
-                onChange={(e) => handleChange("trending", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Trending</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.featured || false}
-                onChange={(e) => handleChange("featured", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Featured</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.topStory || false}
-                onChange={(e) => handleChange("topStory", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Top Story</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.grid || false}
-                onChange={(e) => handleChange("grid", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Grid</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeFeatured || false}
-                onChange={(e) => handleChange("homeFeatured", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Featured</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeLatest || false}
-                onChange={(e) => handleChange("homeLatest", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Latest</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeTrending || false}
-                onChange={(e) => handleChange("homeTrending", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Trending</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeTopStory || false}
-                onChange={(e) => handleChange("homeTopStory", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Top Story</span>
-            </label>
-          </div>
+        <div className="flag-control-container">
+          <FlagControlPanel
+            flags={getCurrentFlags()}
+            onUpdate={handleFlagUpdate}
+          />
         </div>
       </div>
 
+      {/* ========== CONTENT EDITOR SECTION ========== */}
       <div className="form-section">
+        <div className="flags-status-counter">
+          {
+            [
+              article.trending,
+              article.featured,
+              article.topStory,
+              article.grid,
+              article.homeFeatured,
+              article.homeLatest,
+              article.homeTrending,
+              article.homeTopStory,
+            ].filter(Boolean).length
+          }
+          /8
+        </div>
         <h3 className="section-title required">Article Content</h3>
         <p className="section-subtitle">Add paragraphs, headings, and quotes</p>
         <div className="content-editor">
