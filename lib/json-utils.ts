@@ -137,33 +137,31 @@ export function getCategoryFilename(category: string): string {
   return categoryMap[lowerCategory] || `${lowerCategory}-articles.json`;
 }
 
-// Use GitHub storage if token exists, otherwise fallback to local files
-const githubStorage = new GitHubStorage();
-
-// Read JSON file
+// Read JSON file - ALWAYS use GitHub API, fallback to local only in development
 export async function readJsonFile<T>(filename: string): Promise<T> {
-  // If we have GitHub token and we're not in development, use GitHub
-  if (process.env.GITHUB_TOKEN && process.env.NODE_ENV !== 'development') {
-    try {
-      const data = await githubStorage.readJSONFile(`data/${filename}`);
-      return data as T;
-    } catch (error) {
-      console.error(`GitHub read failed for ${filename}, using fallback:`, error);
-      // Fall through to local file system
-    }
-  }
-  
-  // Fallback to local file system
-  const fs = await import('fs');
-  const path = await import('path');
-  const DATA_DIRECTORY = path.join(process.cwd(), 'data');
-  const filePath = path.join(DATA_DIRECTORY, filename);
+  const githubStorage = new GitHubStorage();
   
   try {
-    const fileContent = await fs.promises.readFile(filePath, 'utf-8');
-    return JSON.parse(fileContent) as T;
-  } catch (error) {
-    console.error(`Error reading ${filename}:`, error);
+    const data = await githubStorage.readJSONFile(`data/${filename}`);
+    return data as T;
+  } catch (error: any) {
+    console.error(`GitHub read failed for ${filename}:`, error);
+    
+    // Only fallback to local file system in development
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const DATA_DIRECTORY = path.join(process.cwd(), 'data');
+        const filePath = path.join(DATA_DIRECTORY, filename);
+        
+        const fileContent = await fs.promises.readFile(filePath, 'utf-8');
+        return JSON.parse(fileContent) as T;
+      } catch (fsError) {
+        console.error(`Local file read also failed for ${filename}:`, fsError);
+      }
+    }
+    
     // Return empty/default structure if file doesn't exist
     if (filename.includes('home')) {
       return { homeArticles: { featured: [], topStories: [], latest: [], trending: [] } } as T;
@@ -172,33 +170,37 @@ export async function readJsonFile<T>(filename: string): Promise<T> {
   }
 }
 
-// Write JSON file
+// Write JSON file - ALWAYS use GitHub API, fallback to local only in development
 export async function writeJsonFile<T>(filename: string, data: T): Promise<void> {
-  // If we have GitHub token and we're not in development, use GitHub
-  if (process.env.GITHUB_TOKEN && process.env.NODE_ENV !== 'development') {
-    try {
-      const sha = await githubStorage.getFileSHA(`data/${filename}`);
-      await githubStorage.writeJSONFile(`data/${filename}`, data, sha || undefined);
-      return;
-    } catch (error) {
-      console.error(`GitHub write failed for ${filename}, using fallback:`, error);
-      // Fall through to local file system
-    }
-  }
-  
-  // Fallback to local file system
-  const fs = await import('fs');
-  const path = await import('path');
-  const DATA_DIRECTORY = path.join(process.cwd(), 'data');
-  const filePath = path.join(DATA_DIRECTORY, filename);
+  const githubStorage = new GitHubStorage();
   
   try {
-    // Ensure directory exists
-    await fs.promises.mkdir(DATA_DIRECTORY, { recursive: true });
-    await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (error) {
-    console.error(`Error writing ${filename}:`, error);
-    throw error;
+    const sha = await githubStorage.getFileSHA(`data/${filename}`);
+    await githubStorage.writeJSONFile(`data/${filename}`, data, sha || undefined);
+    console.log(`Successfully wrote ${filename} to GitHub`);
+  } catch (error: any) {
+    console.error(`GitHub write failed for ${filename}:`, error);
+    
+    // Only fallback to local file system in development
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const fs = await import('fs');
+        const path = await import('path');
+        const DATA_DIRECTORY = path.join(process.cwd(), 'data');
+        const filePath = path.join(DATA_DIRECTORY, filename);
+        
+        await fs.promises.mkdir(DATA_DIRECTORY, { recursive: true });
+        await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+        console.log(`Successfully wrote ${filename} to local file system`);
+        return;
+      } catch (fsError: any) {
+        console.error(`Local file write also failed for ${filename}:`, fsError);
+        throw new Error(`Failed to save file both on GitHub and locally: ${fsError.message}`);
+      }
+    }
+    
+    // In production/Vercel, throw the GitHub error
+    throw new Error(`Failed to save article to GitHub: ${error.message}`);
   }
 }
 
@@ -260,13 +262,18 @@ export async function createArticle(articleData: Omit<Article, 'id'>): Promise<A
   const category = articleData.category.toLowerCase();
   const filename = getCategoryFilename(category);
   
+  console.log(`Creating article in ${filename} for category: ${category}`);
+  
   // Read existing articles
   const data = await readJsonFile<{ articles: Article[] }>(filename);
+  console.log(`Existing articles count: ${data.articles.length}`);
   
   // Get next ID
   const nextId = data.articles.length > 0 
     ? Math.max(...data.articles.map(a => a.id)) + 1 
     : 1;
+  
+  console.log(`Next article ID: ${nextId}`);
   
   // Create article with ID
   const article: Article = {
@@ -276,9 +283,11 @@ export async function createArticle(articleData: Omit<Article, 'id'>): Promise<A
   
   // Add to array
   data.articles.push(article);
+  console.log(`Added article, total articles now: ${data.articles.length}`);
   
   // Write back to file
   await writeJsonFile(filename, data);
+  console.log(`Successfully created article: ${article.slug}`);
   
   return article;
 }
@@ -296,7 +305,9 @@ export async function updateArticle(slug: string, articleData: Partial<Article>)
       // Update article
       data.articles[index] = {
         ...data.articles[index],
-        ...articleData
+        ...articleData,
+        id: data.articles[index].id, // Preserve original ID
+        slug: data.articles[index].slug // Preserve original slug
       };
       
       // Write back to file
