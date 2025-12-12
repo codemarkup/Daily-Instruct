@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../styles/admin/components.css";
 import { Article } from "@/services/admin-service";
-import FlagControlPanel from "@/components/admin/FlagControlPanel";
 
 interface ContentBlock {
   id: string;
@@ -30,7 +29,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Categories remain the same
+  // FIX: Changed "market" to "markets" to match your JSON files
   const categories = [
     {
       value: "tech",
@@ -55,7 +54,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       ],
     },
     {
-      value: "markets",
+      value: "markets", // CHANGED FROM "market" TO "markets"
       label: "Markets",
       subcategories: [
         "Stock Market",
@@ -100,45 +99,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     }
   }, [article.title, isEditing]);
 
-  // Handle field changes
+  // FIX: Send only the changed field, not the entire article
   const handleChange = (field: keyof Article, value: any) => {
     console.log(`Form changing ${field} to:`, value);
     onUpdate({ [field]: value });
   };
-
-  // Handle flag changes from FlagControlPanel
-  // Handle flag changes from FlagControlPanel
-const handleFlagUpdate = (flags: any) => {
-  console.log("FlagControlPanel updating flags:", flags);
-  
-  // Only update the flag fields, not the entire article
-  // Create an update object with only the changed flags
-  const updateObj: Partial<Article> = {};
-  
-  // Map each flag to the correct article field
-  if (flags.featured !== undefined) updateObj.featured = flags.featured;
-  if (flags.trending !== undefined) updateObj.trending = flags.trending;
-  if (flags.topStory !== undefined) updateObj.topStory = flags.topStory;
-  if (flags.grid !== undefined) updateObj.grid = flags.grid;
-  if (flags.homeFeatured !== undefined) updateObj.homeFeatured = flags.homeFeatured;
-  if (flags.homeLatest !== undefined) updateObj.homeLatest = flags.homeLatest;
-  if (flags.homeTrending !== undefined) updateObj.homeTrending = flags.homeTrending;
-  if (flags.homeTopStory !== undefined) updateObj.homeTopStory = flags.homeTopStory;
-  
-  onUpdate(updateObj);
-};
-
-  // Get current flags for FlagControlPanel
-  const getCurrentFlags = () => ({
-    featured: article.featured || false,
-    trending: article.trending || false,
-    topStory: article.topStory || false,
-    grid: article.grid || false,
-    homeFeatured: article.homeFeatured || false,
-    homeLatest: article.homeLatest || false,
-    homeTrending: article.homeTrending || false,
-    homeTopStory: article.homeTopStory || false,
-  });
 
   const getSubcategories = () => {
     const category = categories.find((cat) => cat.value === article.category);
@@ -197,27 +162,40 @@ const handleFlagUpdate = (flags: any) => {
     }
   };
 
-  // Image Upload Functions (keep as is)
+  // Image Upload Functions
   const handleImageUpload = async (file: File) => {
     if (!file) return;
 
+    // Reset error state
     setUploadError(null);
     setUploading(true);
     setUploadProgress(0);
 
     try {
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
+      // Validate file
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "image/avif",
+      ];
       if (!allowedTypes.includes(file.type)) {
-        throw new Error('Invalid file type. Only JPG, PNG, WebP, GIF, and AVIF are allowed.');
+        throw new Error(
+          "Invalid file type. Only JPG, PNG, WebP, GIF, and AVIF are allowed."
+        );
       }
 
+      // Validate size (5MB max)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
-        throw new Error('File size too large. Maximum size is 5MB.');
+        throw new Error("File size too large. Maximum size is 5MB.");
       }
 
+      // Simulate upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
+        setUploadProgress((prev) => {
           if (prev >= 90) {
             clearInterval(progressInterval);
             return 90;
@@ -226,12 +204,14 @@ const handleFlagUpdate = (flags: any) => {
         });
       }, 100);
 
+      // Prepare form data
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('category', article.category || 'uncategorized');
+      formData.append("file", file);
+      formData.append("category", article.category || "uncategorized");
 
-      const response = await fetch('/api/upload', {
-        method: 'POST',
+      // Upload to API
+      const response = await fetch("/api/upload", {
+        method: "POST",
         body: formData,
       });
 
@@ -239,31 +219,37 @@ const handleFlagUpdate = (flags: any) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Upload failed');
+        throw new Error(errorData.error || "Upload failed");
       }
 
       const data = await response.json();
-      
+
+      // Update progress to 100%
       setUploadProgress(100);
+
+      // Update the article with the new image URL
       handleChange("image", data.url);
-      
+
+      // Show success message briefly
       setTimeout(() => {
         setUploadProgress(0);
       }, 1000);
-
     } catch (error: any) {
-      console.error('Upload error:', error);
-      setUploadError(error.message || 'Failed to upload image');
+      console.error("Upload error:", error);
+      setUploadError(error.message || "Failed to upload image");
       setUploadProgress(0);
     } finally {
       setUploading(false);
+      // Reset file input
       if (fileInputRef.current) {
-        fileInputRef.current.value = '';
+        fileInputRef.current.value = "";
       }
     }
   };
 
-  const handleFileInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       await handleImageUpload(file);
@@ -295,9 +281,6 @@ const handleFlagUpdate = (flags: any) => {
 
   return (
     <div className="article-form-fields">
-      {/* ========== ALL EXISTING FORM FIELDS (KEEP EXACTLY AS IS) ========== */}
-      
-      {/* Article Title */}
       <div className="form-group">
         <label className="form-label required">
           Article Title
@@ -317,7 +300,6 @@ const handleFlagUpdate = (flags: any) => {
         </div>
       </div>
 
-      {/* URL Slug */}
       <div className="form-group">
         <label className="form-label required">
           URL Slug
@@ -348,7 +330,6 @@ const handleFlagUpdate = (flags: any) => {
         </div>
       </div>
 
-      {/* Description */}
       <div className="form-group">
         <label className="form-label required">
           Description
@@ -370,7 +351,7 @@ const handleFlagUpdate = (flags: any) => {
         </div>
       </div>
 
-      {/* Category & Subcategory */}
+      {/* FIXED CATEGORY DROPDOWN */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required">Category</label>
@@ -409,7 +390,7 @@ const handleFlagUpdate = (flags: any) => {
         </div>
       </div>
 
-      {/* Image Upload Section (keep as is) */}
+      {/* IMAGE UPLOAD SECTION */}
       <div className="form-group">
         <label className="form-label required">
           Article Cover Image
@@ -417,11 +398,13 @@ const handleFlagUpdate = (flags: any) => {
             Upload a high-quality cover image (Max 5MB)
           </span>
         </label>
-        
+
         <div className="image-upload-container">
           {/* Drag & Drop Area */}
-          <div 
-            className={`drag-drop-area ${dragActive ? 'drag-active' : ''} ${uploading ? 'uploading' : ''}`}
+          <div
+            className={`drag-drop-area ${dragActive ? "drag-active" : ""} ${
+              uploading ? "uploading" : ""
+            }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
@@ -436,8 +419,11 @@ const handleFlagUpdate = (flags: any) => {
               id="image-upload"
               disabled={uploading}
             />
-            
+
             <div className="drag-drop-content">
+              <div className="drag-drop-icon">
+                {/* {uploading ? '⏳' : dragActive ? '📂' : '📤'} */}
+              </div>
               <div className="drag-drop-text">
                 {uploading ? (
                   <>
@@ -452,13 +438,14 @@ const handleFlagUpdate = (flags: any) => {
                 ) : (
                   <>
                     <strong>Drag & drop your image here</strong>
+                    {/* <p>or click to browse</p> */}
                   </>
                 )}
               </div>
-              
-              <label 
-                htmlFor="image-upload" 
-                className={`upload-button ${uploading ? 'uploading' : ''}`}
+
+              <label
+                htmlFor="image-upload"
+                className={`upload-button ${uploading ? "uploading" : ""}`}
               >
                 <span className="button-icon">📁</span>
                 Browse Files
@@ -470,8 +457,8 @@ const handleFlagUpdate = (flags: any) => {
           {uploading && (
             <div className="upload-progress-container">
               <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
+                <div
+                  className="progress-fill"
                   style={{ width: `${uploadProgress}%` }}
                 ></div>
               </div>
@@ -486,8 +473,8 @@ const handleFlagUpdate = (flags: any) => {
               <div className="error-content">
                 <strong>Upload Failed</strong>
                 <p>{uploadError}</p>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="error-retry-btn"
                   onClick={() => fileInputRef.current?.click()}
                 >
@@ -501,8 +488,8 @@ const handleFlagUpdate = (flags: any) => {
           <div className="image-preview-section">
             <div className="preview-header">
               {article.image && article.image !== "/images/default.png" && (
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="remove-image-btn"
                   onClick={() => handleChange("image", "/images/default.png")}
                   disabled={uploading}
@@ -512,7 +499,7 @@ const handleFlagUpdate = (flags: any) => {
                 </button>
               )}
             </div>
-            
+
             <div className="preview-container">
               {article.image && article.image !== "/images/default.png" ? (
                 <div className="image-preview">
@@ -521,8 +508,8 @@ const handleFlagUpdate = (flags: any) => {
                     alt="Cover preview"
                     className="preview-image"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                      (e.target as HTMLImageElement).parentElement!.innerHTML = 
+                      (e.target as HTMLImageElement).style.display = "none";
+                      (e.target as HTMLImageElement).parentElement!.innerHTML =
                         '<div class="image-error">❌ Failed to load image</div>';
                     }}
                   />
@@ -531,12 +518,12 @@ const handleFlagUpdate = (flags: any) => {
                       <span className="url-label">URL:</span>
                       <code className="url-text">{article.image}</code>
                     </div>
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       className="copy-url-btn"
                       onClick={() => {
-                        navigator.clipboard.writeText(article.image || '');
-                        alert('URL copied to clipboard!');
+                        navigator.clipboard.writeText(article.image || "");
+                        alert("URL copied to clipboard!");
                       }}
                     >
                       📋 Copy URL
@@ -545,7 +532,13 @@ const handleFlagUpdate = (flags: any) => {
                 </div>
               ) : (
                 <div className="no-image-placeholder">
-                  {/* Image placeholder */}
+                  {/* <div className="placeholder-icon">🖼️</div>
+                  <div className="placeholder-text">
+                    <p>No image selected</p>
+                    <p className="placeholder-subtext">
+                      Upload an image or use default: <code>/images/default.png</code>
+                    </p>
+                  </div> */}
                 </div>
               )}
             </div>
@@ -565,19 +558,19 @@ const handleFlagUpdate = (flags: any) => {
                 placeholder="/images/category/filename.png"
                 disabled={uploading}
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="url-help-btn"
                 title="Image URLs should be relative paths starting with /images/"
               >
                 ?
               </button>
             </div>
+            <div className="url-hint"></div>
           </div>
         </div>
       </div>
 
-      {/* Author, Date, Read Time */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required">Author Name</label>
@@ -625,18 +618,100 @@ const handleFlagUpdate = (flags: any) => {
         />
       </div>
 
-      {/* ========== FLAG CONTROL PANEL SECTION ========== */}
-      <div className="form-section flag-section-integrated">
+      <div className="form-section">
         <h3 className="section-title">Article Flags</h3>
-        <div className="flag-control-container">
-          <FlagControlPanel
-            flags={getCurrentFlags()}
-            onUpdate={handleFlagUpdate}
-          />
+        <div className="flags-grid">
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.trending || false}
+                onChange={(e) => handleChange("trending", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Trending</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.featured || false}
+                onChange={(e) => handleChange("featured", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Featured</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.topStory || false}
+                onChange={(e) => handleChange("topStory", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Top Story</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.grid || false}
+                onChange={(e) => handleChange("grid", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Grid</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.homeFeatured || false}
+                onChange={(e) => handleChange("homeFeatured", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Home Featured</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.homeLatest || false}
+                onChange={(e) => handleChange("homeLatest", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Home Latest</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.homeTrending || false}
+                onChange={(e) => handleChange("homeTrending", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Home Trending</span>
+            </label>
+          </div>
+          <div className="flag-group">
+            <label className="flag-label">
+              <input
+                type="checkbox"
+                checked={article.homeTopStory || false}
+                onChange={(e) => handleChange("homeTopStory", e.target.checked)}
+                className="flag-checkbox"
+              />
+              <span className="flag-text">Home Top Story</span>
+            </label>
+          </div>
         </div>
       </div>
 
-      {/* ========== CONTENT EDITOR SECTION ========== */}
       <div className="form-section">
         <div className="flags-status-counter">
           {
