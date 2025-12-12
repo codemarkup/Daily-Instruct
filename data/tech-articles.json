@@ -54,6 +54,34 @@
       "id": 2,
       "createdAt": "2025-12-07T17:26:11.150Z",
       "updatedAt": "2025-12-07T18:15:16.016Z"
+    },
+    {
+      "title": "article abc",
+      "slug": "article-abc",
+      "description": "article abc",
+      "author": "Admin",
+      "date": "December 12, 2025",
+      "readTime": "5 min read",
+      "image": "/images/guides/1.png",
+      "category": "tech",
+      "specific": "Gadgets",
+      "trending": true,
+      "featured": true,
+      "topStory": true,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": true,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "article abc"
+        }
+      ],
+      "id": 3,
+      "createdAt": "2025-12-12T15:10:26.550Z",
+      "updatedAt": "2025-12-12T15:10:26.550Z"
     }
   ]
 }
