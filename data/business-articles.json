@@ -16,15 +16,16 @@
       "topStory": false,
       "grid": false,
       "homeFeatured": false,
-      "homeLatest": true,
-      "homeTrending": true,
+      "homeLatest": false,
+      "homeTrending": false,
       "homeTopStory": true,
       "content": [
         {
           "type": "heading",
           "text": "Business Article"
         }
-      ]
+      ],
+      "updatedAt": "2025-12-12T15:53:31.726Z"
     },
     {
       "title": "Test Article 2",
