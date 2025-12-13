@@ -65,65 +65,6 @@
       "id": 2,
       "createdAt": "2025-12-07T16:38:12.032Z",
       "updatedAt": "2025-12-07T16:38:12.032Z"
-    },
-    {
-      "title": "Ahsan: The Man, The Myth, The Missed Messages",
-      "slug": "ahsan-the-man-the-myth-the-missed-messages",
-      "description": "A comedy-intro article roasting Ahsan, the guy who thinks he’s irresistible but gets treated like a “Seen Only” notification by the universe.",
-      "author": "Saad",
-      "date": "December 12, 2025",
-      "readTime": "5 min read",
-      "image": "/images/business/ahsan.png",
-      "category": "business",
-      "specific": "Personal Finance",
-      "trending": true,
-      "featured": true,
-      "topStory": true,
-      "grid": true,
-      "homeFeatured": true,
-      "homeLatest": true,
-      "homeTrending": true,
-      "homeTopStory": true,
-      "content": [
-        {
-          "type": "heading",
-          "text": "Meet Ahsan — A Walking Red Flag in HD"
-        },
-        {
-          "id": "block-1765565978795-euzo91aga",
-          "type": "paragraph",
-          "text": "Meet Ahsan, a guy who genuinely believes he’s the final boss of attractiveness just because he fixes his hair every 12 seconds. He enters a room like girls were waiting for him… but the only thing waiting is silence. His confidence is strong, but reality always slaps it back into factory settings."
-        },
-        {
-          "id": "block-1765565994059-cuwgac7w5",
-          "type": "heading",
-          "text": "The Man, The Myth, The Delusion"
-        },
-        {
-          "id": "block-1765566008939-kweuyb77o",
-          "type": "paragraph",
-          "text": "Ahsan’s biggest dream is girls replying fast, but even dreams have limits. His DMs look like a graveyard — quiet, empty, and full of unanswered hopes. He sends “hi” with the same energy as a proposal, and still gets ignored like a Terms & Conditions page. His friends call him consistent; others call it clown behavior."
-        },
-        {
-          "id": "block-1765566013243-w8czkd5rl",
-          "type": "heading",
-          "text": "Ahsan’s Daily Olympics: Simping"
-        },
-        {
-          "id": "block-1765566028667-98j4phq64",
-          "type": "paragraph",
-          "text": "Every day, Ahsan wakes up ready to risk his dignity again, retyping messages that will never see a reply. He treats every girl like royalty, but life treats him like a free trial version. Even WiFi signals are more stable than his chances. And yet… he never quits. Because delusion? Unlimited. Free trial? Forever."
-        },
-        {
-          "id": "block-1765566052755-r9gv4as1j",
-          "type": "quote",
-          "text": "Ahsan doesn’t get rejected — the universe just saves him from embarrassing himself twice.",
-          "author": "Rayyan Hassan"
-        }
-      ],
-      "id": 3,
-      "createdAt": "2025-12-12T19:00:50.314Z",
-      "updatedAt": "2025-12-12T19:00:50.314Z"
     }
   ]
 }
