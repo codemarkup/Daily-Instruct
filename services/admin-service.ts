@@ -1,6 +1,6 @@
 const API_BASE = '/api/admin';
 
-// KEEP your interface definition:
+// UPDATE THIS INTERFACE - ADD THE SEO FIELDS
 export interface Article {
   id: number;
   slug: string;
@@ -25,6 +25,9 @@ export interface Article {
     text: string;
     author?: string;
   }>;
+  // ADD THESE TWO SEO FIELDS:
+  keywords?: string;
+  metaDescription?: string;
 }
 
 export const AdminService = {

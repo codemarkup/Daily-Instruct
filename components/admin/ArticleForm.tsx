@@ -351,6 +351,46 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
+      {/* =========== SEO FIELDS ADDED HERE =========== */}
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label">
+            SEO Keywords
+            <span className="label-hint">Separate with commas</span>
+          </label>
+          <input
+            type="text"
+            value={article.keywords || ""}
+            onChange={(e) => handleChange("keywords", e.target.value)}
+            className="form-input"
+            placeholder="javascript, web development, coding tutorial"
+          />
+          <div className="input-hint">
+            <span className="hint-text">3-5 keywords people search for</span>
+            <span className="hint-count">{(article.keywords || "").length}/200</span>
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">
+            Meta Description
+            <span className="label-hint">For search results</span>
+          </label>
+          <textarea
+            value={article.metaDescription || ""}
+            onChange={(e) => handleChange("metaDescription", e.target.value)}
+            className="form-textarea"
+            placeholder="Best tutorial for beginners..."
+            rows={2}
+          />
+          <div className="input-hint">
+            <span className="hint-text">Optimal: 150-160 characters</span>
+            <span className="hint-count">{(article.metaDescription || "").length}/160</span>
+          </div>
+        </div>
+      </div>
+      {/* =========== END SEO FIELDS =========== */}
+
       {/* FIXED CATEGORY DROPDOWN */}
       <div className="form-row">
         <div className="form-group">

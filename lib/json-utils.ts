@@ -111,6 +111,9 @@ export interface Article {
     text: string;
     author?: string;
   }>;
+  // SEO FIELDS ADDED ↓
+  keywords?: string;           // For SEO meta keywords
+  metaDescription?: string;    // Custom meta description
 }
 
 export interface HomeArticles {
