@@ -18,6 +18,15 @@ interface CategoryStats {
 
 const CategoriesPage = () => {
   const router = useRouter();
+
+  useEffect(() => {
+    const hasCookie = document.cookie.includes('admin-auth=true');
+    if (!hasCookie) {
+      router.push('/login');
+    }
+  }, [router]);
+
+
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryStats[]>([
     {

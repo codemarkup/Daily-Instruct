@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
-import AdminHeader from '@/components/admin/AdminHeader';
+import AdminHeader from '@/components/admin/AdminHeader'; // No LogoutButton import
 import '../../styles/admin/admin.css';
 import '../../styles/admin/animations.css';
 
@@ -18,7 +18,8 @@ export default function AdminLayout({
     <div className="admin-container">
       <AdminSidebar />
       <div className="admin-main">
-        <AdminHeader />
+        {/* Remove the extra container and logout button */}
+        <AdminHeader /> {/* Logout is now inside AdminHeader */}
         <main className="admin-content">
           {children}
         </main>

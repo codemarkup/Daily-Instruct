@@ -17,11 +17,26 @@ const ArticlesPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [authChecking, setAuthChecking] = useState(true); // ADD THIS
 
-  // Load articles on mount
+  // =========== AUTH CHECK ===========
   useEffect(() => {
-    fetchArticles();
-  }, []);
+    const hasCookie = document.cookie.includes('admin-auth=true');
+    
+    if (!hasCookie) {
+      router.push('/login');
+    } else {
+      setAuthChecking(false); // Auth passed
+    }
+  }, [router]);
+  // =========== END AUTH CHECK ===========
+
+  // Load articles on mount (only if authenticated)
+  useEffect(() => {
+    if (!authChecking) {
+      fetchArticles();
+    }
+  }, [authChecking]);
 
   const fetchArticles = async () => {
     try {
@@ -36,6 +51,18 @@ const ArticlesPage = () => {
       setLoading(false);
     }
   };
+
+  // Show loading while checking auth
+  if (authChecking) {
+    return (
+      <div className="articles-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Filter articles based on search and filters
   const filteredArticles = articles.filter(article => {

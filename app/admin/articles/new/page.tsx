@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import ArticleForm from "@/components/admin/ArticleForm";
@@ -9,6 +10,17 @@ import "../../../../styles/admin/components.css";
 
 const AddArticlePage = () => {
   const router = useRouter();
+
+   useEffect(() => {
+    const hasCookie = document.cookie.includes('admin-auth=true');
+    if (!hasCookie) {
+      router.push('/login');
+    }
+  }, [router]);
+
+
+
+
   const [article, setArticle] = useState({
     title: "",
     slug: "",

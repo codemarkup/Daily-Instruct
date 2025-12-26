@@ -18,6 +18,25 @@ const AdminHeader = () => {
     setNotifications(notifications.map(n => ({ ...n, read: true })));
   };
 
+  // =========== ADD LOGOUT FUNCTION ===========
+  const handleLogout = async () => {
+    try {
+      // Clear the cookie on client side
+      document.cookie = 'admin-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      
+      // Also call API to clear server-side
+      await fetch("/api/admin/auth", { method: "DELETE" });
+      
+      router.push("/login");
+      router.refresh();
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Force redirect anyway
+      router.push("/login");
+    }
+  };
+  // =========== END LOGOUT FUNCTION ===========
+
   return (
     <header className="admin-header">
       {/* Breadcrumb */}
@@ -84,15 +103,15 @@ const AdminHeader = () => {
         </div>
 
         {/* Quick Actions */}
-      <div className="quick-actions">
-        <button 
-          className="quick-action-button gold-glow"
-          onClick={() => router.push('/admin/articles/new')} // ADD THIS
-        >
-          <span className="action-icon">⚡</span>
-          <span className="action-text">Quick Publish</span>
-        </button>
-      </div>
+        <div className="quick-actions">
+          <button 
+            className="quick-action-button gold-glow"
+            onClick={() => router.push('/admin/articles/new')}
+          >
+            <span className="action-icon">⚡</span>
+            <span className="action-text">Quick Publish</span>
+          </button>
+        </div>
 
         {/* User Menu */}
         <div className="user-menu">
@@ -129,7 +148,11 @@ const AdminHeader = () => {
                 <span className="dropdown-text">Dark Mode</span>
               </button>
               <div className="dropdown-divider"></div>
-              <button className="dropdown-item logout">
+              {/* UPDATED LOGOUT BUTTON */}
+              <button 
+                className="dropdown-item logout"
+                onClick={handleLogout}
+              >
                 <span className="dropdown-icon">🚪</span>
                 <span className="dropdown-text">Logout</span>
               </button>

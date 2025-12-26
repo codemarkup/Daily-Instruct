@@ -12,6 +12,14 @@ const EditArticlePage = () => {
   const router = useRouter();
   const slug = params.slug as string;
 
+
+  useEffect(() => {
+      const hasCookie = document.cookie.includes('admin-auth=true');
+      if (!hasCookie) {
+        router.push('/login');
+      }
+    }, [router]);
+
   const [article, setArticle] = useState<
     Partial<Article> & { category: string }
   >({
