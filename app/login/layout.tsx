@@ -1,10 +1,11 @@
 // /app/login/layout.tsx
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Admin Login - Daily Instruct",
   description: "Admin login page for Daily Instruct",
-  robots: "noindex, nofollow", // Don't index login page
+  robots: "noindex, nofollow",
 };
 
 export default function LoginLayout({
@@ -12,5 +13,9 @@ export default function LoginLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <Suspense fallback={<div>Loading login page...</div>}>
+      {children}
+    </Suspense>
+  );
 }
