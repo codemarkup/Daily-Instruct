@@ -323,7 +323,6 @@ export async function updateArticle(slug: string, articleData: Partial<Article>)
   return null;
 }
 
-// Delete article
 export async function deleteArticle(slug: string): Promise<boolean> {
   const categories = ['tech', 'business', 'markets', 'guides'];
   
