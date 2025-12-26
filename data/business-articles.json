@@ -65,6 +65,41 @@
       "id": 2,
       "createdAt": "2025-12-07T16:38:12.032Z",
       "updatedAt": "2025-12-07T16:38:12.032Z"
+    },
+    {
+      "title": "article for test only",
+      "slug": "article-for-test-only",
+      "description": "article created for test purpose only",
+      "author": "Admin",
+      "date": "December 26, 2025",
+      "readTime": "5 min read",
+      "image": "/images/guides/1.png",
+      "category": "business",
+      "specific": "Market Trends",
+      "trending": true,
+      "featured": true,
+      "topStory": true,
+      "grid": true,
+      "homeFeatured": true,
+      "homeLatest": true,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "article for test purpose only"
+        },
+        {
+          "id": "block-1766761056891-vqvdih2mc",
+          "type": "heading",
+          "text": "testing 123.........."
+        }
+      ],
+      "keywords": "javascript, technology",
+      "metaDescription": "best tutorial for beginners",
+      "id": 3,
+      "createdAt": "2025-12-26T14:57:12.407Z",
+      "updatedAt": "2025-12-26T14:57:12.407Z"
     }
   ]
 }
