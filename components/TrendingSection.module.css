@@ -235,3 +235,32 @@
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+/* Add these to your existing TrendingSection.module.css */
+
+.loadingPlaceholder {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.noArticles {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+  font-size: 1.1rem;
+}

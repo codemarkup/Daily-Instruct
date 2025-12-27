@@ -1,24 +1,107 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import styles from "./LatestArticles.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import techArticlesData from "@/data/tech-articles.json";
-import businessArticlesData from "@/data/business-articles.json";
-import marketArticlesData from "@/data/markets-articles.json"; // Add these
-import guidesArticlesData from "@/data/guides-articles.json"; // Add these
+
+interface Article {
+  id: number;
+  slug: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  readTime: string;
+  image: string;
+  category: string;
+  specific: string;
+  trending: boolean;
+  featured: boolean;
+  topStory: boolean;
+  grid: boolean;
+  homeFeatured: boolean;
+  homeLatest: boolean;
+  homeTrending: boolean;
+  homeTopStory: boolean;
+  content: Array<{
+    type: 'paragraph' | 'heading' | 'quote';
+    text: string;
+    author?: string;
+  }>;
+}
 
 const LatestArticles: React.FC = () => {
-  // Combine articles from ALL categories
-  const allArticles = [
-    ...techArticlesData.articles,
-    ...businessArticlesData.articles,
-    ...marketArticlesData.articles, // Add these
-    ...guidesArticlesData.articles  // Add these
-  ];
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const latestArticles = allArticles
+  useEffect(() => {
+    const fetchAllArticles = async () => {
+      try {
+        // Fetch from all categories
+        const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
+          fetch('/api/github/articles?category=tech'),
+          fetch('/api/github/articles?category=business'),
+          fetch('/api/github/articles?category=markets'),
+          fetch('/api/github/articles?category=guides')
+        ]);
+
+        const [techData, businessData, marketData, guidesData] = await Promise.all([
+          techRes.json(),
+          businessRes.json(),
+          marketRes.json(),
+          guidesRes.json()
+        ]);
+
+        // Combine all articles
+        const allArticles = [
+          ...(techData.articles || []),
+          ...(businessData.articles || []),
+          ...(marketData.articles || []),
+          ...(guidesData.articles || [])
+        ];
+
+        setArticles(allArticles);
+      } catch (error) {
+        console.error('Error fetching latest articles:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchAllArticles();
+  }, []);
+
+  const latestArticles = articles
     .filter((article) => article.homeLatest)
     .slice(0, 6); // Show 6 latest articles
+
+  if (loading) {
+    return (
+      <section className={styles.latestArticles}>
+        <div className="container">
+          <h2 className={styles.sectionTitle}>Latest Articles</h2>
+          <div className={styles.loadingPlaceholder}>
+            <div className={styles.loadingSpinner}></div>
+            <p>Loading articles...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (latestArticles.length === 0) {
+    return (
+      <section className={styles.latestArticles}>
+        <div className="container">
+          <h2 className={styles.sectionTitle}>Latest Articles</h2>
+          <div className={styles.noArticles}>
+            <p>No articles available at the moment.</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={styles.latestArticles}>
@@ -27,7 +110,7 @@ const LatestArticles: React.FC = () => {
         <div className={styles.articlesGrid}>
           {latestArticles.map((article) => (
             <Link
-              key={article.slug}
+              key={article.id}
               href={`/articles/${article.slug}`}
               className={styles.articleLink}
             >
