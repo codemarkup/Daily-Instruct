@@ -25,9 +25,12 @@
 
 .articlesGrid3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 2.5rem;
   margin-bottom: 4rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .articleCard3 {
@@ -38,6 +41,9 @@
   transition: var(--transition-smooth);
   cursor: pointer;
   border: 1px solid var(--gray-200);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .articleCard3:hover {
@@ -50,6 +56,7 @@
   position: relative;
   height: 220px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .image3 {
@@ -77,8 +84,25 @@
   letter-spacing: 0.5px;
 }
 
+.trendingBadge3 {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--accent-gold);
+  color: var(--primary-black);
+  padding: 0.4rem 1rem;
+  border-radius: 15px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .cardContent3 {
   padding: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .cardTitle3 {
@@ -118,6 +142,7 @@
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-grow: 1;
 }
 
 .cardMeta3 {
@@ -126,6 +151,7 @@
   align-items: center;
   padding-top: 1rem;
   border-top: 1px solid var(--gray-200);
+  margin-top: auto;
 }
 
 .cardAuthor3 {
@@ -158,6 +184,7 @@
 }
 
 .loadMoreBtn3 {
+  display: inline-block;
   background: transparent;
   border: 2px solid var(--gray-300);
   color: var(--primary-black);
@@ -169,6 +196,8 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 0.9rem;
+  text-decoration: none;
+  text-align: center;
 }
 
 .loadMoreBtn3:hover {
@@ -178,21 +207,39 @@
   transform: translateY(-2px);
 }
 
+/* Center the grid when there are fewer items */
+@media (min-width: 769px) {
+  .articlesGrid3:has(:nth-child(3)) {
+    justify-content: center;
+  }
+  
+  .articlesGrid3:has(:nth-child(2)):not(:has(:nth-child(3))) {
+    grid-template-columns: repeat(2, minmax(350px, 400px));
+    justify-content: center;
+  }
+  
+  .articlesGrid3:has(:nth-child(1)):not(:has(:nth-child(2))) {
+    grid-template-columns: minmax(350px, 600px);
+    justify-content: center;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .techArticlesGrid3 {
     padding: 60px 0;
   }
-
+  
   .articlesGrid3 {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
+    max-width: 100%;
   }
-
+  
   .cardContent3 {
     padding: 1.5rem;
   }
-
+  
   .cardTitle3 {
     font-size: 1.2rem;
   }
@@ -202,26 +249,71 @@
   .sectionTitle3 {
     font-size: 2rem;
   }
-
+  
+  .articlesGrid3 {
+    grid-template-columns: 1fr;
+  }
+  
   .cardContent3 {
     padding: 1.2rem;
   }
-
+  
   .cardTitle3 {
     font-size: 1.1rem;
   }
-
+  
   .cardDescription3 {
     font-size: 0.9rem;
   }
-
+  
   .cardMeta3 {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-
+  
   .metaDetails3 {
     align-items: flex-start;
   }
+}
+
+.articleLink3 {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Loading states */
+.loadingPlaceholder {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.noArticles {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+  font-size: 1.1rem;
+}
+
+/* Container styles for consistency */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }

@@ -35,8 +35,11 @@
 
 .trendingGrid6 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .trendingCard6 {
@@ -51,6 +54,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  height: 100%;
 }
 
 .trendingCard6:hover {
@@ -82,6 +86,7 @@
   height: 180px;
   border-radius: 8px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .image6 {
@@ -134,6 +139,7 @@
   gap: 0.5rem;
   font-size: 0.85rem;
   color: var(--gray-500);
+  margin-top: auto;
 }
 
 .author6 {
@@ -146,7 +152,15 @@
 }
 
 .cardStats6 {
-  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+.readTime6 {
+  font-style: italic;
 }
 
 .views6 {
@@ -157,33 +171,65 @@
   letter-spacing: 0.5px;
 }
 
+/* Center the grid when there are fewer items */
+@media (min-width: 769px) {
+  .trendingGrid6:has(:nth-child(3)) {
+    justify-content: center;
+  }
+  
+  .trendingGrid6:has(:nth-child(2)):not(:has(:nth-child(3))) {
+    grid-template-columns: repeat(2, minmax(320px, 380px));
+    justify-content: center;
+  }
+  
+  .trendingGrid6:has(:nth-child(1)):not(:has(:nth-child(2))) {
+    grid-template-columns: minmax(320px, 500px);
+    justify-content: center;
+  }
+}
+
 /* Mobile Horizontal Scroll */
 @media (max-width: 768px) {
   .trendingGrid6 {
-    display: flex;
-    overflow-x: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
-    padding-bottom: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--gray-300) transparent;
-  }
-  
-  .trendingGrid6::-webkit-scrollbar {
-    height: 4px;
-  }
-  
-  .trendingGrid6::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .trendingGrid6::-webkit-scrollbar-thumb {
-    background: var(--gray-300);
-    border-radius: 2px;
+    max-width: 100%;
+    overflow-x: visible;
+    padding-bottom: 0;
   }
   
   .trendingCard6 {
-    min-width: 280px;
-    flex-shrink: 0;
+    min-width: auto;
+    height: auto;
+  }
+  
+  /* Only enable horizontal scroll on very small screens */
+  @media (max-width: 600px) {
+    .trendingGrid6 {
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gray-300) transparent;
+    }
+    
+    .trendingGrid6::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    .trendingGrid6::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .trendingGrid6::-webkit-scrollbar-thumb {
+      background: var(--gray-300);
+      border-radius: 2px;
+    }
+    
+    .trendingCard6 {
+      min-width: 280px;
+      flex-shrink: 0;
+    }
   }
 }
 
@@ -212,4 +258,53 @@
   .cardTitle6 {
     font-size: 1.1rem;
   }
+  
+  .trendingBadge6 {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+    top: -10px;
+    left: -10px;
+  }
+}
+
+/* Loading states */
+.loadingPlaceholder {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.noArticles {
+  text-align: center;
+  padding: 3rem;
+  color: var(--gray-500);
+  font-size: 1.1rem;
+}
+
+.trendingLink6 {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Container styles for consistency */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
