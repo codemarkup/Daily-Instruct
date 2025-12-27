@@ -1,5 +1,5 @@
-/* Import modern fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+/* REMOVE THIS LINE - It's causing the blocking request */
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap'); */
 
 .navbar {
   position: fixed;
@@ -13,6 +13,8 @@
   z-index: 1000;
   transition: var(--transition-smooth);
 }
+
+/* Rest of your Navbar.module.css remains EXACTLY THE SAME, just remove the @import line at the top */
 
 .navbarScrolled {
   padding: 0.8rem 0;
