@@ -115,7 +115,7 @@ export default function GuidesSubcategoryPage({ params }: SubcategoryPageProps) 
         <section className={styles.techArticlesGrid333}>
           <div className="container">
             <h2 className={styles.sectionTitle333}>
-              {formattedTitle} Guides
+              {formattedTitle}
             </h2>
             <div className={styles.loadingPlaceholder}>
               <div className={styles.loadingSpinner}></div>
@@ -143,7 +143,7 @@ export default function GuidesSubcategoryPage({ params }: SubcategoryPageProps) 
       <section className={styles.techArticlesGrid333}>
         <div className="container">
           <h2 className={styles.sectionTitle333}>
-            {formattedTitle} Guides
+            {formattedTitle}
           </h2>
 
           {filteredArticles.length === 0 ? (
