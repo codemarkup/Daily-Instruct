@@ -265,6 +265,7 @@
   outline: none;
   font-family: var(--font-sans);
   font-weight: 400;
+  min-width: 0; /* Prevents overflow */
 }
 
 .searchInput::placeholder {
@@ -293,7 +294,7 @@
   background: var(--gray-100);
 }
 
-/* Premium Search Submit Button */
+/* Premium Search Submit Button - FIXED */
 .searchSubmitBtn {
   background: var(--accent-gold);
   border: none;
@@ -307,6 +308,7 @@
   flex-shrink: 0;
   font-family: var(--font-sans);
   letter-spacing: 0.3px;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .searchSubmitBtn:hover {
@@ -621,6 +623,7 @@
   color: var(--primary-black);
   padding: 0.25rem 0;
   outline: none;
+  min-width: 0; /* Prevents overflow */
 }
 
 .mobileClearButton {
@@ -646,6 +649,7 @@
   font-size: 0.9rem;
   margin-left: 0.5rem;
   flex-shrink: 0;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 /* Hide the old search icon button */
@@ -653,7 +657,7 @@
   display: none;
 }
 
-/* Responsive Design */
+/* Responsive Design - FIXED FOR MOBILE */
 @media (max-width: 1200px) {
   .searchContainer {
     max-width: 400px;
@@ -735,6 +739,7 @@
 @media (max-width: 480px) {
   .navContainer {
     padding: 0 15px;
+    gap: 1rem; /* Reduced gap for mobile */
   }
   
   .navLogo {
@@ -747,10 +752,82 @@
   
   .mobileSearchInputWrapper {
     padding: 0.625rem 0.875rem;
+    flex-wrap: nowrap; /* Prevent wrapping */
   }
   
   .searchResults {
     left: 0.5rem;
     right: 0.5rem;
+  }
+  
+  /* FIX FOR MOBILE SEARCH BUTTON */
+  .mobileSearchBtn {
+    padding: 0.5rem 0.875rem; /* Reduced padding */
+    font-size: 0.8rem; /* Smaller font */
+    margin-left: 0.25rem; /* Reduced margin */
+    min-width: 60px; /* Minimum width */
+  }
+  
+  .mobileSearchInput {
+    font-size: 0.9rem; /* Smaller font for input */
+    padding: 0.125rem 0; /* Adjusted padding */
+  }
+  
+  .mobileSearchIcon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem; /* Reduced margin */
+  }
+  
+  .mobileClearButton {
+    margin: 0 0.25rem; /* Reduced margin */
+  }
+}
+
+/* Extra small devices (phones less than 375px) */
+@media (max-width: 375px) {
+  .navContainer {
+    padding: 0 10px;
+    gap: 0.75rem;
+  }
+  
+  .navLogo {
+    font-size: 1.2rem;
+  }
+  
+  .mobileSearchInputWrapper {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .mobileSearchBtn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    min-width: 55px;
+  }
+  
+  .mobileSearchInput {
+    font-size: 0.85rem;
+  }
+  
+  .mobileSearchInput::placeholder {
+    font-size: 0.85rem;
+  }
+}
+
+/* Specific fix for very small screens */
+@media (max-width: 320px) {
+  .navLogo {
+    font-size: 1.1rem;
+  }
+  
+  .mobileSearchBtn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    min-width: 50px;
+    letter-spacing: 0; /* Remove letter spacing */
+  }
+  
+  .mobileSearchInput {
+    max-width: 120px; /* Limit input width */
   }
 }
