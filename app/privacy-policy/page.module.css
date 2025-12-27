@@ -1,0 +1,279 @@
+.privacyPage {
+  padding-top: 80px;
+}
+
+/* Hero Section */
+.heroSection {
+  background: linear-gradient(135deg, var(--primary-black), var(--gray-800));
+  color: var(--primary-white);
+  padding: 4rem 0 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 70% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+}
+
+.heroContent {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-family: var(--font-serif);
+  margin-bottom: 1rem;
+  line-height: 1.1;
+  color: var(--primary-black);
+}
+
+.heroSubtitle {
+  font-size: 1.1rem;
+  color: var(--accent-gold);
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.heroDescription {
+  font-size: 1.2rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Content Section */
+.contentSection {
+  padding: 4rem 0;
+  background: var(--primary-white);
+}
+
+.contentWrapper {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Table of Contents */
+.tableOfContents {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  background: var(--secondary-white);
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid var(--gray-200);
+}
+
+.tocTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-black);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--accent-gold);
+}
+
+.tocList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tocList li {
+  margin-bottom: 0.75rem;
+}
+
+.tocList a {
+  color: var(--gray-600);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: var(--transition-smooth);
+  display: block;
+  padding: 0.25rem 0;
+  border-left: 2px solid transparent;
+  padding-left: 1rem;
+}
+
+.tocList a:hover {
+  color: var(--accent-gold);
+  border-left-color: var(--accent-gold);
+}
+
+/* Policy Content */
+.policyContent {
+  max-width: 800px;
+}
+
+.policySection {
+  margin-bottom: 3.5rem;
+  scroll-margin-top: 20px;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-family: var(--font-serif);
+  color: var(--primary-black);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.subsectionTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin: 1.5rem 0 1rem;
+}
+
+.policyList {
+  margin: 1rem 0 1.5rem 1.5rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.policyList li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem;
+}
+
+.policyList strong {
+  color: var(--primary-black);
+}
+
+.importantNote {
+  background: var(--secondary-white);
+  border-left: 4px solid var(--accent-gold);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+}
+
+/* Rights Grid */
+.rightsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.rightCard {
+  background: var(--secondary-white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--gray-200);
+  transition: var(--transition-smooth);
+}
+
+.rightCard:hover {
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+}
+
+.rightCard h4 {
+  font-size: 1.1rem;
+  color: var(--primary-black);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.rightCard p {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+}
+
+/* Contact Info */
+.contactInfo {
+  background: var(--secondary-white);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.contactInfo p {
+  margin-bottom: 0.5rem;
+  color: var(--gray-600);
+}
+
+.contactInfo strong {
+  color: var(--primary-black);
+}
+
+.contactInfo a {
+  color: var(--accent-gold);
+  text-decoration: none;
+}
+
+.contactInfo a:hover {
+  text-decoration: underline;
+}
+
+.complianceNote {
+  background: var(--gray-100);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: var(--gray-700);
+  border-left: 4px solid var(--primary-black);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .contentWrapper {
+    grid-template-columns: 250px 1fr;
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+  
+  .contentWrapper {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  
+  .tableOfContents {
+    position: static;
+    margin-bottom: 2rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+  
+  .heroSection {
+    padding: 3rem 0 2rem;
+  }
+  
+  .contentSection {
+    padding: 3rem 0;
+  }
+  
+  .rightsGrid {
+    grid-template-columns: 1fr;
+  }
+}

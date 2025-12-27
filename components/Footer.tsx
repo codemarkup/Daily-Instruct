@@ -59,28 +59,23 @@ const Footer: React.FC = () => {
               <h4 className={styles.columnTitle}>Categories</h4>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/tech" className={styles.footerLink}>
                     Technology
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/business" className={styles.footerLink}>
                     Business
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Startups
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/market" className={styles.footerLink}>
                     Markets
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Science
+                  <a href="/guides" className={styles.footerLink}>
+                    Guides
                   </a>
                 </li>
               </ul>
@@ -90,28 +85,18 @@ const Footer: React.FC = () => {
               <h4 className={styles.columnTitle}>Company</h4>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/about" className={styles.footerLink}>
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/contact" className={styles.footerLink}>
                     Contact
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/press" className={styles.footerLink}>
                     Press
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
-                    Partners
                   </a>
                 </li>
               </ul>
@@ -121,27 +106,22 @@ const Footer: React.FC = () => {
               <h4 className={styles.columnTitle}>Legal</h4>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/privacy-policy" className={styles.footerLink}>
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/terms-of-service" className={styles.footerLink}>
                     Terms of Service
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Cookie Policy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/gdpr" className={styles.footerLink}>
                     GDPR
                   </a>
                 </li>
                 <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/disclaimer" className={styles.footerLink}>
                     Disclaimer
                   </a>
                 </li>
@@ -152,28 +132,18 @@ const Footer: React.FC = () => {
               <h4 className={styles.columnTitle}>Support</h4>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Help Center
+                  <a href="/help-center" className={styles.footerLink}>
+                    FAQ's
                   </a>
                 </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
+                {/* <li>
+                  <a href="/community" className={styles.footerLink}>
                     Community
                   </a>
-                </li>
+                </li> */}
                 <li>
-                  <a href="#" className={styles.footerLink}>
-                    Newsletter
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
+                  <a href="/feedback" className={styles.footerLink}>
                     Feedback
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className={styles.footerLink}>
-                    Status
                   </a>
                 </li>
               </ul>
@@ -187,13 +157,13 @@ const Footer: React.FC = () => {
             <strong>Saad Capital Group</strong> Venture • All Rights Reserved.
           </div>
           <div className={styles.legalLinks}>
-            <a href="#" className={styles.legalLink}>
+            <a href="/privacy-policy" className={styles.legalLink}>
               Privacy
             </a>
-            <a href="#" className={styles.legalLink}>
+            <a href="/terms-of-service" className={styles.legalLink}>
               Terms
             </a>
-            <a href="#" className={styles.legalLink}>
+            <a href="/sitemap-page" className={styles.legalLink}>
               Sitemap
             </a>
           </div>

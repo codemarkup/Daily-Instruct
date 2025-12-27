@@ -52,7 +52,7 @@ function SearchResults() {
     <>
       {/* Search Header */}
       <div className={styles.searchHeader}>
-        <h1 className={styles.pageTitle}>Search Results</h1>
+        <h1 className={styles.pageTitle} style={{ marginTop: '4rem' }}>Search Results</h1>
         <form onSubmit={handleSearch} className={styles.searchForm}>
           <input
             type="text"
