@@ -25,7 +25,7 @@ export default function FAQPage() {
     },
     {
       question: 'Can I contribute content to Daily Instruct?',
-      answer: 'Yes! We welcome guest contributors and subject matter experts. Please visit our "Write for Us" page for submission guidelines and more information.'
+      answer: 'Yes! We welcome guest contributors and subject matter experts.'
     },
     {
       question: 'How can I search for specific topics?',
@@ -37,15 +37,15 @@ export default function FAQPage() {
     },
     {
       question: 'Can I share articles with others?',
-      answer: 'Yes! We encourage sharing our educational content. You can use the share buttons on each article to share via social media, email, or copy the link to share directly.'
+      answer: 'Yes! We encourage sharing our educational content.'
     },
     {
       question: 'Do you have a newsletter?',
-      answer: 'Yes, we offer a free newsletter where you can receive daily learning summaries, featured articles, and exclusive content. You can subscribe from any page on our website.'
+      answer: 'We are working on it.'
     },
     {
       question: 'How can I contact the editorial team?',
-      answer: 'For editorial inquiries, article suggestions, or content-related questions, please email us at editorial@dailyinstruct.com.'
+      answer: 'For editorial inquiries, article suggestions, or content-related questions, please email us at na350331@gmail.com.'
     },
     {
       question: 'Can I use your content for educational purposes?',
@@ -53,7 +53,7 @@ export default function FAQPage() {
     },
     {
       question: 'How do I report an error in an article?',
-      answer: 'If you find any errors or outdated information in our articles, please contact us at corrections@dailyinstruct.com with the article title and details about the correction needed.'
+      answer: 'If you find any errors or outdated information in our articles, please contact us at saadmehmood7741@gmail.com with the article title and details about the correction needed.'
     },
     {
       question: 'Do you have mobile-friendly access?',
