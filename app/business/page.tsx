@@ -7,6 +7,13 @@ import BusinessSubcategories from '../../components/business/BusinessSubcategori
 // import BusinessNewsLetter from '../../components/business/BusinessNewsLetter';
 import styles from './business.module.css';
 
+// app/business/page.tsx
+export const metadata = {
+  title: 'Business News & Entrepreneurship | Daily Instruct',
+  description: 'Latest business news, entrepreneurship tips, startup advice, and market analysis. Learn business strategies and leadership skills.',
+  keywords: 'business news, entrepreneurship, startups, finance, leadership, marketing, management',
+};
+
 const BusinessPage: React.FC = () => {
   return (
     <div className={styles.businessPage}>

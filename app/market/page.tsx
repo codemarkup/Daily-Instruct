@@ -7,6 +7,13 @@ import styles from './market.module.css';
 import MarketHeader from '../../components/markets/MarketHeader';
 // import MarketNewsLetter from '../../components/markets/MarketNewsLetter';
 
+// app/market/page.tsx
+export const metadata = {
+  title: 'Market Analysis & Financial Insights | Daily Instruct',
+  description: 'Stock market updates, cryptocurrency news, investment strategies, and economic analysis. Make informed financial decisions.',
+  keywords: 'stock market, cryptocurrency, investing, finance, trading, economics, investment tips',
+};
+
 const MarketPage: React.FC = () => {
   return (
     <div className={styles.marketPage}>

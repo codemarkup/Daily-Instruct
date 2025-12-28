@@ -31,8 +31,11 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata = {
-  title: 'Daily Instruct - Educational Platform',
-  description: 'Daily tutorials, how-to guides, and informative articles',
+  title: {
+    default: 'Daily Instruct - Educational Platform',
+    template: '%s | Daily Instruct',
+  },
+  description: 'Daily tutorials, how-to guides, and informative articles on technology, business, and learning.',
   keywords: 'education, tutorials, how-to, learning, technology, business, guides',
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
@@ -41,6 +44,26 @@ export const metadata = {
     title: 'Daily Instruct - Educational Platform',
     description: 'Daily tutorials, how-to guides, and informative articles',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png', // Create this for social sharing
+        width: 1200,
+        height: 630,
+        alt: 'Daily Instruct',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Daily Instruct - Educational Platform',
+    description: 'Daily tutorials, how-to guides, and informative articles',
+    images: ['/og-image.png'],
+  },
+  // ADD FAVICON TO METADATA TOO
+  icons: {
+    icon: '/tab-icon.png',       // For browser tabs (2nd icon)
+    shortcut: '/tab-icon.png',   // For shortcuts
+    apple: '/google-icon.png',   // For Apple devices (1st icon)
   },
 };
 
@@ -52,6 +75,33 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable} ${playfairDisplay.variable}`}>
       <head>
+        {/* TWO FAVICONS: First for Google, Second for Browser Tabs */}
+        {/* 1. For Google Search Results (comes first) */}
+        <link 
+          rel="icon" 
+          href="/google-icon.png" 
+          type="image/png" 
+          sizes="64x64" 
+          key="google-icon"
+        />
+        
+        {/* 2. For Browser Tabs (comes second, browser will use this) */}
+        <link 
+          rel="icon" 
+          href="/tab-icon.png" 
+          type="image/png" 
+          sizes="32x32" 
+          key="tab-icon"
+        />
+        
+        {/* Alternative for better browser support */}
+        <link 
+          rel="shortcut icon" 
+          href="/tab-icon.png" 
+          type="image/png" 
+          key="shortcut-icon"
+        />
+        
         {/* Preconnect to improve performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -102,14 +152,16 @@ export default function RootLayout({
           `
         }} />
         
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        
         {/* Additional meta tags */}
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#ffffff" />
+        
+        {/* Preload critical assets */}
+        <link 
+          rel="preload" 
+          href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/_next/static/css/app/layout.css`}
+          as="style"
+        />
       </head>
       <body>
         <Navbar />
