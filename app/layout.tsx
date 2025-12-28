@@ -32,7 +32,7 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata = {
   title: {
-    default: 'Daily Instruct - Educational Platform',
+    default: 'Daily Instruct - Where Learning Meets Innovation',
     template: '%s | Daily Instruct',
   },
   description: 'Daily tutorials, how-to guides, and informative articles on technology, business, and learning.',
