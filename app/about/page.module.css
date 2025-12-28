@@ -45,7 +45,7 @@
   color: var(--gray-600);
 }
 
-/* Mission Section */
+/* ===== MISSION SECTION - FIXED ===== */
 .missionSection {
   padding: 5rem 0;
   background: var(--primary-white);
@@ -98,6 +98,26 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.missionPhoto {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Shows FULL image without cropping */
+  object-position: center;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.missionImage:hover .missionPhoto {
+  transform: scale(1.05);
 }
 
 .imagePlaceholder {
@@ -111,7 +131,7 @@
   font-size: 1.2rem;
 }
 
-/* Leadership Section */
+/* ===== LEADERSHIP SECTION - EXACTLY YOUR VERSION ===== */
 .leadershipSection {
   padding: 5rem 0;
   background: var(--secondary-white);
@@ -130,6 +150,8 @@
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
 }
 
 .leaderCard:hover {
@@ -138,13 +160,39 @@
 }
 
 .leaderImage {
-  height: 250px;
-  background: linear-gradient(135deg, var(--accent-gold), var(--gold-dark));
+  height: 300px; /* Your exact height */
   position: relative;
+  overflow: hidden;
+}
+
+.leaderPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Your exact setting */
+  object-position: center;
+  display: block;
+}
+
+.leaderCard:hover .leaderPhoto {
+  transform: scale(1.05); /* Your exact hover effect */
+}
+
+.leaderImage::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  pointer-events: none;
 }
 
 .leaderInfo {
   padding: 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .leaderName {
@@ -167,6 +215,7 @@
   font-size: 1rem;
   line-height: 1.6;
   color: var(--gray-600);
+  flex: 1;
 }
 
 /* Values Section */
@@ -215,76 +264,9 @@
   color: var(--gray-600);
 }
 
-/* CTA Section */
-.ctaSection {
-  padding: 5rem 0;
-  background: linear-gradient(135deg, var(--primary-black), var(--gray-800));
-  color: var(--primary-white);
-  text-align: center;
-}
+/* ===== PHONE ADJUSTMENTS ONLY ===== */
 
-.ctaContent {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.ctaTitle {
-  font-size: 2.5rem;
-  font-family: var(--font-serif);
-  margin-bottom: 1.5rem;
-  color: var(--primary-black);
-}
-
-.ctaText {
-  font-size: 1.2rem;
-      color: var(--gray-600);
-  margin-bottom: 2.5rem;
-  line-height: 1.6;
-}
-
-.ctaButtons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.primaryButton {
-  background: var(--accent-gold);
-  color: var(--primary-black);
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition-smooth);
-  display: inline-block;
-}
-
-.primaryButton:hover {
-  background: var(--gold-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-}
-
-.secondaryButton {
-  background: transparent;
-  color: var(--primary-black);
-  padding: 1rem 2rem;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: var(--transition-smooth);
-  display: inline-block;
-  border: 2px solid var(--gray-600);
-}
-
-.secondaryButton:hover {
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-  transform: translateY(-2px);
-}
-
-/* Responsive Design */
+/* Tablet (768px and below) - Only minor adjustments */
 @media (max-width: 768px) {
   .heroTitle {
     font-size: 2.5rem;
@@ -311,19 +293,18 @@
     font-size: 2rem;
   }
   
-  .ctaButtons {
-    flex-direction: column;
-    align-items: center;
+  /* Leadership: Only height and padding adjustments */
+  .leadershipGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
   
-  .primaryButton,
-  .secondaryButton {
-    width: 100%;
-    max-width: 300px;
-    text-align: center;
+  .leaderImage {
+    height: 250px; /* Adjusted for tablet */
   }
 }
 
+/* Mobile (480px and below) - Minimal adjustments */
 @media (max-width: 480px) {
   .heroTitle {
     font-size: 2rem;
@@ -335,12 +316,20 @@
   
   .missionSection,
   .leadershipSection,
-  .valuesSection,
-  .ctaSection {
+  .valuesSection {
     padding: 3rem 0;
   }
   
-  .leaderCard {
-    margin-bottom: 2rem;
+  .missionImage {
+    height: 250px;
+  }
+  
+  /* Leadership: Only these 2 adjustments for phones */
+  .leaderImage {
+    height: 200px;
+  }
+  
+  .leaderInfo {
+    padding: 1.5rem;
   }
 }
