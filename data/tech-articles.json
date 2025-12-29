@@ -1,33 +1,6 @@
 {
   "articles": [
     {
-      "id": 1,
-      "slug": "test-tech",
-      "title": "TEST Tech",
-      "description": "Tech Test Article",
-      "author": "Saad",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/tech/1765098177855-2.png",
-      "category": "tech",
-      "specific": "Artificial Intelligence",
-      "trending": true,
-      "featured": false,
-      "topStory": true,
-      "grid": true,
-      "homeFeatured": false,
-      "homeLatest": true,
-      "homeTrending": false,
-      "homeTopStory": false,
-      "content": [
-        {
-          "type": "heading",
-          "text": "Tech Test Article"
-        }
-      ],
-      "updatedAt": "2025-12-29T14:45:39.321Z"
-    },
-    {
       "title": "test article git",
       "slug": "test-article-git",
       "description": "test article for git",
