@@ -31,54 +31,54 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
   // FIX: Changed "market" to "markets" to match your JSON files
   const categories = [
-    {
-      value: "tech",
-      label: "Technology",
-      subcategories: [
-        "Artificial Intelligence",
-        "gadgets devices",
-        "software development",
-        "cybersecurity",
-        "data analytics",
-      ],
-    },
-    {
-      value: "business",
-      label: "Business",
-      subcategories: [
-        "Startup News",
-        "Company Updates",
-        "Market Trends",
-        "Business Tips",
-        "Personal Finance",
-        "Work Productivity",
-      ],
-    },
-    {
-      value: "markets", // CHANGED FROM "market" TO "markets"
-      label: "Markets",
-      subcategories: [
-        "Stock Market",
-        "Cryptocurrency",
-        "Commodities",
-        "Forex Market",
-        "Market Trends",
-        "Economic News",
-      ],
-    },
-    {
-      value: "guides",
-      label: "Guides",
-      subcategories: [
-        "Technology Guides",
-        "Finance & Investing Guides",
-        "Business & Entrepreneurship Guides",
-        "Productivity & Work-Life Guides",
-        "Software & Tools How-Tos",
-        "Career & Skills Development Guides",
-      ],
-    },
-  ];
+  {
+    value: "tech",
+    label: "Technology",
+    subcategories: [
+      "Artificial Intelligence",
+      "Gadgets & Devices", // Changed from "gadgets devices" to match display format
+      "Software Development", // Capitalized
+      "Cybersecurity", // Capitalized
+      "Data & Analytics", // Changed from "data analytics" to match display format
+    ],
+  },
+  {
+    value: "business",
+    label: "Business",
+    subcategories: [
+      "Startup News",
+      "Company Updates",
+      "Market Trends",
+      "Business Tips",
+      "Personal Finance",
+      "Work Productivity",
+    ],
+  },
+  {
+    value: "markets",
+    label: "Markets",
+    subcategories: [
+      "Stock Market",
+      "Cryptocurrency",
+      "Commodities",
+      "Forex Market",
+      "Market Trends",
+      "Economic News",
+    ],
+  },
+  {
+    value: "guides",
+    label: "Guides",
+    subcategories: [
+      "Technology Guides",
+      "Finance & Investing Guides",
+      "Business & Entrepreneurship Guides",
+      "Productivity & Work-Life Guides",
+      "Software & Tools How-Tos",
+      "Career & Skills Development Guides",
+    ],
+  },
+];
 
   const generateSlug = (title: string) => {
     if (!title) return "";

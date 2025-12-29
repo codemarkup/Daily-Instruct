@@ -51,55 +51,72 @@ const TechSubcategories: React.FC = () => {
   }, []);
 
   const subcategories = [
-    {
-      id: 1,
-      name: "Artificial Intelligence",
-      slug: "artificial-intelligence",
-      description: "Machine learning, neural networks, and AI applications",
-      icon: "robot.svg",
-      color: "#3B82F6",
-    },
-    {
-      id: 2,
-      name: "Gadgets & Devices",
-      slug: "gadgets-devices",
-      description: "Latest smartphones, wearables, and consumer electronics",
-      icon: "devices.svg",
-      color: "#10B981",
-    },
-    {
-      id: 3,
-      name: "Software Development",
-      slug: "software-development",
-      description: "Programming, frameworks, and development tools",
-      icon: "software.svg",
-      color: "#F59E0B",
-    },
-    {
-      id: 4,
-      name: "Cybersecurity",
-      slug: "cybersecurity",
-      description: "Online security, encryption, and threat protection",
-      icon: "shield.svg",
-      color: "#EF4444",
-    },
-    {
-      id: 5,
-      name: "Data & Analytics",
-      slug: "data-analytics",
-      description: "Covers data trends, analytics tools, dashboards, visualization, big data, and how companies use data to make smarter decisions",
-      icon: "data.svg",
-      color: "#EF4444",
-    }
-  ];
+  {
+    id: 1,
+    name: "Artificial Intelligence", // Already matches
+    description: "Machine learning, neural networks, and AI applications",
+    icon: "robot.svg",
+    color: "#3B82F6",
+  },
+  {
+    id: 2,
+    name: "Gadgets & Devices", // Changed from "gadgets devices" 
+    description: "Latest smartphones, wearables, and consumer electronics",
+    icon: "devices.svg",
+    color: "#10B981",
+  },
+  {
+    id: 3,
+    name: "Software Development", // Capitalized
+    description: "Programming, frameworks, and development tools",
+    icon: "software.svg",
+    color: "#F59E0B",
+  },
+  {
+    id: 4,
+    name: "Cybersecurity", // Capitalized
+    description: "Online security, encryption, and threat protection",
+    icon: "shield.svg",
+    color: "#EF4444",
+  },
+  {
+    id: 5,
+    name: "Data & Analytics", // Changed from "data analytics"
+    description: "Covers data trends, analytics tools, dashboards, visualization, big data, and how companies use data to make smarter decisions",
+    icon: "data.svg",
+    color: "#8B5CF6",
+  }
+];
 
+  // Generate slugs using the SAME logic as TechSubcategoryPage
   const updatedSubcategories = subcategories.map((subcat) => {
-    const count = articles.filter(
-      (article) => article.specific === subcat.name
-    ).length;
+    // Generate slug - MUST match the logic in TechSubcategoryPage
+    const slug = subcat.name
+      .toLowerCase()
+      .replace(/&/g, 'and') // Convert "&" to "and" - THIS IS KEY!
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]/g, '');
+    
+    // Count articles - IMPORTANT: Use case-insensitive comparison
+    const count = articles.filter((article) => {
+      // Normalize both strings for comparison
+      const normalize = (str: string) => 
+        str.toLowerCase()
+           .replace(/&/g, 'and') // Also normalize & in article specific
+           .replace(/[^a-z0-9\s]/g, '')
+           .replace(/\s+/g, ' ')
+           .trim();
+      
+      const normalizedSubcat = normalize(subcat.name);
+      const normalizedArticle = normalize(article.specific);
+      
+      return normalizedArticle === normalizedSubcat;
+    }).length;
+    
     return {
       ...subcat,
-      articleCount: `${count} Articles`,
+      slug: slug, // Use generated slug
+      articleCount: `${count} ${count === 1 ? 'Article' : 'Articles'}`,
     };
   });
 
