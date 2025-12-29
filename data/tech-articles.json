@@ -11,7 +11,7 @@
       "category": "tech",
       "specific": "Artificial Intelligence",
       "trending": true,
-      "featured": true,
+      "featured": false,
       "topStory": true,
       "grid": true,
       "homeFeatured": false,
@@ -26,7 +26,7 @@
       ],
       "id": 2,
       "createdAt": "2025-12-07T17:26:11.150Z",
-      "updatedAt": "2025-12-07T18:15:16.016Z"
+      "updatedAt": "2025-12-29T18:43:23.096Z"
     },
     {
       "title": "iPhone 18 Leaks, Release Date and Features: Apple's Biggest Upgrade Yet?",
