@@ -46,7 +46,7 @@ export const metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.png', // Create this for social sharing
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Daily Instruct',
@@ -59,11 +59,10 @@ export const metadata = {
     description: 'Daily tutorials, how-to guides, and informative articles',
     images: ['/og-image.png'],
   },
-  // ADD FAVICON TO METADATA TOO
   icons: {
-    icon: '/tab-icon.png',       // For browser tabs (2nd icon)
-    shortcut: '/tab-icon.png',   // For shortcuts
-    apple: '/google-icon.png',   // For Apple devices (1st icon)
+    icon: '/tab-icon.png',
+    shortcut: '/tab-icon.png',
+    apple: '/google-icon.png',
   },
 };
 
@@ -75,38 +74,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable} ${playfairDisplay.variable}`}>
       <head>
-        {/* TWO FAVICONS: First for Google, Second for Browser Tabs */}
-        {/* 1. For Google Search Results (comes first) */}
-        <link 
-          rel="icon" 
-          href="/google-icon.png" 
-          type="image/png" 
-          sizes="64x64" 
-          key="google-icon"
-        />
-        
-        {/* 2. For Browser Tabs (comes second, browser will use this) */}
-        <link 
-          rel="icon" 
-          href="/tab-icon.png" 
-          type="image/png" 
-          sizes="32x32" 
-          key="tab-icon"
-        />
-        
-        {/* Alternative for better browser support */}
-        <link 
-          rel="shortcut icon" 
-          href="/tab-icon.png" 
-          type="image/png" 
-          key="shortcut-icon"
-        />
-        
-        {/* Preconnect to improve performance */}
+        {/* TWO FAVICONS */}
+        <link rel="icon" href="/google-icon.png" type="image/png" sizes="64x64" key="google-icon" />
+        <link rel="icon" href="/tab-icon.png" type="image/png" sizes="32x32" key="tab-icon" />
+        <link rel="shortcut icon" href="/tab-icon.png" type="image/png" key="shortcut-icon" />
+
+        {/* Preconnect for fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
-        {/* Inline critical CSS for above-the-fold content */}
+
+        {/* Inline critical CSS */}
         <style dangerouslySetInnerHTML={{
           __html: `
             :root {
@@ -114,60 +91,42 @@ export default function RootLayout({
               --primary-white: #ffffff;
               --accent-gold: #d4af37;
             }
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-              -webkit-tap-highlight-color: transparent;
-            }
+            * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
             body {
               font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-              margin: 0;
-              padding: 0;
-              overflow-x: hidden;
-              color: #1a1a1a;
-              background: #ffffff;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
+              margin:0; padding:0; overflow-x:hidden; color:#1a1a1a; background:#ffffff;
+              -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
             }
             .navbar {
-              position: fixed;
-              top: 0;
-              left: 0;
-              right: 0;
-              background: rgba(255, 255, 255, 0.95);
-              backdrop-filter: blur(20px);
-              border-bottom: 1px solid #e8e8e8;
-              z-index: 1000;
+              position: fixed; top:0; left:0; right:0; background: rgba(255,255,255,0.95);
+              backdrop-filter: blur(20px); border-bottom: 1px solid #e8e8e8; z-index:1000;
             }
-            main {
-              padding-top: 80px;
-              min-height: 100vh;
-            }
-            @media (max-width: 768px) {
-              main {
-                padding-top: 70px;
-              }
-            }
+            main { padding-top:80px; min-height:100vh; }
+            @media (max-width:768px) { main { padding-top:70px; } }
           `
         }} />
-        
+
         {/* Additional meta tags */}
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#ffffff" />
-        
-        {/* Preload critical assets */}
-        <link 
-          rel="preload" 
-          href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/_next/static/css/app/layout.css`}
-          as="style"
+        <link rel="preload" href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/_next/static/css/app/layout.css`} as="style" />
+
+        {/* Google Analytics GA4 Tag */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-H3C9FZF6E1"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-H3C9FZF6E1', { page_path: window.location.pathname });
+            `,
+          }}
         />
       </head>
       <body>
         <Navbar />
-        <main>
-          {children}
-        </main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
