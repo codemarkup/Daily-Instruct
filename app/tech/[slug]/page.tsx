@@ -27,7 +27,7 @@ interface Article {
   homeTrending: boolean;
   homeTopStory: boolean;
   content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
+    type: "paragraph" | "heading" | "quote";
     text: string;
     author?: string;
   }>;
@@ -40,7 +40,7 @@ interface SubcategoryPageProps {
 export default function SubcategoryPage({ params }: SubcategoryPageProps) {
   // Unwrap the Promise using React.use()
   const { slug } = use(params);
-  
+
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
@@ -48,16 +48,19 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
   useEffect(() => {
     const fetchTechArticles = async () => {
       try {
-        const response = await fetch('/api/github/articles?category=tech');
+        const response = await fetch("/api/github/articles?category=tech");
         const data = await response.json();
         setArticles(data.articles || []);
       } catch (error) {
-        console.error('Error fetching tech articles for subcategory page:', error);
+        console.error(
+          "Error fetching tech articles for subcategory page:",
+          error
+        );
       } finally {
         setLoading(false);
       }
     };
-    
+
     fetchTechArticles();
   }, []);
 
@@ -66,10 +69,10 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
       const filtered = articles.filter((article) => {
         const articleSlug = article.specific
           .toLowerCase()
-          .replace(/&/g, '')  
-          .replace(/\s+/g, '-') 
-          .replace(/[^\w-]/g, ''); 
-        
+          .replace(/&/g, "and") // ✅ CHANGE TO 'and' (matches TechSubcategories)
+          .replace(/\s+/g, "-")
+          .replace(/[^\w-]/g, "");
+
         return articleSlug === slug;
       });
       setFilteredArticles(filtered);
@@ -78,9 +81,9 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
 
   // Format the title for display
   const formattedTitle = slug
-    .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
   if (loading) {
     return (
@@ -88,9 +91,7 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
         <TechHeader />
         <section className={styles.techArticlesGrid}>
           <div className="container">
-            <h2 className={styles.sectionTitle}>
-              {formattedTitle} Articles
-            </h2>
+            <h2 className={styles.sectionTitle}>{formattedTitle} Articles</h2>
             <div className={styles.loadingPlaceholder}>
               <div className={styles.loadingSpinner}></div>
               <p>Loading {formattedTitle} articles...</p>
@@ -116,24 +117,32 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
 
       <section className={styles.techArticlesGrid}>
         <div className="container">
-          <h2 className={styles.sectionTitle}>
-            {formattedTitle} Articles
-          </h2>
+          <h2 className={styles.sectionTitle}>{formattedTitle} Articles</h2>
 
           {filteredArticles.length === 0 ? (
-            <div style={{ textAlign: "center", marginTop: "2rem", padding: "2rem" }}>
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "2rem",
+                padding: "2rem",
+              }}
+            >
               <p>No articles found in "{formattedTitle}" category.</p>
               {articles.length > 0 && (
                 <p style={{ marginTop: "1rem", color: "var(--gray-500)" }}>
-                  Available categories: {articles.map(a => a.specific).filter((v, i, a) => a.indexOf(v) === i).join(', ')}
+                  Available categories:{" "}
+                  {articles
+                    .map((a) => a.specific)
+                    .filter((v, i, a) => a.indexOf(v) === i)
+                    .join(", ")}
                 </p>
               )}
             </div>
           ) : (
             <div className={styles.articlesGrid}>
               {filteredArticles.map((article) => (
-                <Link 
-                  key={article.id} 
+                <Link
+                  key={article.id}
                   href={`/articles/${article.slug}`}
                   className={styles.articleLink}
                 >
@@ -146,19 +155,31 @@ export default function SubcategoryPage({ params }: SubcategoryPageProps) {
                         height={250}
                         className={styles.image}
                       />
-                      <div className={styles.categoryTag}>{article.category}</div>
-                      {article.trending && <div className={styles.trendingBadge}>Trending</div>}
+                      <div className={styles.categoryTag}>
+                        {article.category}
+                      </div>
+                      {article.trending && (
+                        <div className={styles.trendingBadge}>Trending</div>
+                      )}
                     </div>
 
                     <div className={styles.cardContent}>
                       <h3 className={styles.cardTitle}>{article.title}</h3>
-                      <p className={styles.cardDescription}>{article.description}</p>
+                      <p className={styles.cardDescription}>
+                        {article.description}
+                      </p>
 
                       <div className={styles.cardMeta}>
-                        <span className={styles.cardAuthor}>{article.author}</span>
+                        <span className={styles.cardAuthor}>
+                          {article.author}
+                        </span>
                         <div className={styles.metaDetails}>
-                          <span className={styles.cardDate}>{article.date}</span>
-                          <span className={styles.cardReadTime}>{article.readTime}</span>
+                          <span className={styles.cardDate}>
+                            {article.date}
+                          </span>
+                          <span className={styles.cardReadTime}>
+                            {article.readTime}
+                          </span>
                         </div>
                       </div>
                     </div>
