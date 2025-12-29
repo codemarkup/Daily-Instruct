@@ -2,7 +2,7 @@ import { getAllArticles } from '@/lib/json-utils';
 import { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://daily-instruct.vercel.app';
+  const baseUrl = 'https://dailyinstruct.com'; // ✅ Changed to your verified domain
   
   try {
     const articles = await getAllArticles();
