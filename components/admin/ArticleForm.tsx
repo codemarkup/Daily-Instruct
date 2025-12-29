@@ -36,9 +36,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       label: "Technology",
       subcategories: [
         "Artificial Intelligence",
-        "Programming",
-        "Gadgets",
-        "Cybersecurity",
+        "gadgets devices",
+        "software development",
+        "cybersecurity",
+        "data analytics",
       ],
     },
     {
@@ -50,7 +51,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         "Market Trends",
         "Business Tips",
         "Personal Finance",
-        "Work & Productivity",
+        "Work Productivity",
       ],
     },
     {
