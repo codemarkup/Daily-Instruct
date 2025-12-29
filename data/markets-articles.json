@@ -54,36 +54,6 @@
       "id": 2,
       "createdAt": "2025-12-07T16:28:39.364Z",
       "updatedAt": "2025-12-07T18:37:05.272Z"
-    },
-    {
-      "title": "samp",
-      "slug": "samp",
-      "description": "samp",
-      "author": "Admin",
-      "date": "December 29, 2025",
-      "readTime": "5 min read",
-      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1767026814/1000083098_1_bcmh4t.png",
-      "category": "markets",
-      "specific": "Commodities",
-      "trending": false,
-      "featured": true,
-      "topStory": false,
-      "grid": true,
-      "homeFeatured": false,
-      "homeLatest": false,
-      "homeTrending": false,
-      "homeTopStory": false,
-      "content": [
-        {
-          "type": "paragraph",
-          "text": "samp"
-        }
-      ],
-      "keywords": "samp",
-      "metaDescription": "samp",
-      "id": 3,
-      "createdAt": "2025-12-29T17:17:28.526Z",
-      "updatedAt": "2025-12-29T17:17:28.526Z"
     }
   ]
 }
