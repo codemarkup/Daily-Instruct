@@ -1,59 +1,95 @@
 {
   "articles": [
     {
-      "id": 1,
-      "slug": "test-market",
-      "title": "TEST Market",
-      "description": "Test market Article",
+      "title": "Gold Price Today Crash After All-Time High and What's Next - Live Update, Forecast and Market Signals",
+      "slug": "gold-price-today-crash-after-all-time-high-whats-next-live-update-forecast-market-signals",
+      "description": "Live Gold Price Today update: gold collapses after record highs, profit-taking hits markets, traders weigh Fed moves and dollar strength - essential trend analysis.",
       "author": "Saad",
-      "date": "December 7, 2025",
+      "date": "December 29, 2025",
       "readTime": "5 min read",
-      "image": "/images/markets/1765098419577-1.png",
-      "category": "markets",
-      "specific": "Stock Market",
-      "trending": false,
-      "featured": false,
-      "topStory": false,
-      "grid": false,
-      "homeFeatured": false,
-      "homeLatest": false,
-      "homeTrending": false,
-      "homeTopStory": true,
-      "content": [
-        {
-          "type": "heading",
-          "text": "Market Article"
-        }
-      ],
-      "updatedAt": "2025-12-12T15:53:53.839Z"
-    },
-    {
-      "title": "new article",
-      "slug": "new-article",
-      "description": "new article",
-      "author": "Admin",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/guides/1.png",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1767026814/1000083098_1_bcmh4t.png",
       "category": "markets",
       "specific": "Commodities",
       "trending": true,
       "featured": true,
       "topStory": true,
-      "grid": true,
-      "homeFeatured": true,
-      "homeLatest": false,
+      "grid": false,
+      "homeFeatured": false,
+      "homeLatest": true,
       "homeTrending": true,
-      "homeTopStory": false,
+      "homeTopStory": true,
       "content": [
         {
+          "type": "heading",
+          "text": "Current Gold Price Today and Market Crash"
+        },
+        {
+          "id": "block-1767028831139-0f8ygdbnq",
           "type": "paragraph",
-          "text": "gold, silver"
+          "text": "Gold price today is seeing a significant pullback after a historic rally that pushed prices to new all-time highs just days ago. Recent trading saw gold drop sharply as profit-taking intensified and speculative positions unwound following strong gains throughout 2025. Mixed U.S. economic signals and strength in the U.S. dollar have contributed to this decline, with investors reassessing risk assets amid shifting macro trends."
+        },
+        {
+          "id": "block-1767028841219-u0zurssuc",
+          "type": "heading",
+          "text": "Why Gold Fell After Hitting Record Highs"
+        },
+        {
+          "id": "block-1767028852165-0pdiuvffm",
+          "type": "paragraph",
+          "text": "The recent gold price downturn comes after bullion reached unprecedented levels fueled by safe-haven demand, expectations of U.S. Federal Reserve rate cuts, and geopolitical concerns. As prices peaked, traders began locking in profits, pushing prices lower. Additionally, a firmer U.S. dollar and easing geopolitical tensions reduced the urgency to hold non-yielding assets like gold, triggering further selling pressure."
+        },
+        {
+          "id": "block-1767028862461-herqav2tx",
+          "type": "heading",
+          "text": "Key Drivers Behind the Recent Trend"
+        },
+        {
+          "id": "block-1767028873563-7uqe4wfly",
+          "type": "paragraph",
+          "text": "Several key forces are shaping gold's current trend:\nProfit-taking after record rallies: Investors are booking gains after unprecedented price jumps.\nStronger U.S. dollar: A stronger dollar makes gold more expensive in other currencies, damping demand.\nFed monetary expectations: Uncertainty over future rate cut timing keeps traders cautious.\nMarket volatility and margins: Higher margin requirements have discouraged speculative bets in futures markets, amplifying downside."
+        },
+        {
+          "id": "block-1767028919508-kbm2e3ptx",
+          "type": "quote",
+          "text": "Gold's pullback today reflects classic profit-taking dynamics after extended rallies. Traders are balancing safe-haven appeal with technical resistance and dollar strength.",
+          "author": "Market Analysts"
+        },
+        {
+          "id": "block-1767028936963-fdf1pd75z",
+          "type": "heading",
+          "text": "Technical Levels Traders Are Watching"
+        },
+        {
+          "id": "block-1767028951971-cbfn43ic7",
+          "type": "paragraph",
+          "text": "On technical charts, crucial support zones lie near prior consolidation ranges. If gold breaks below these levels, further downside could develop toward key psychological floors. Conversely, renewed demand on dips and any return of safe-haven flows could set the stage for a rebound. Watch for shifts in U.S. inflation data and Federal Reserve commentary, which will likely influence gold's next major move."
+        },
+        {
+          "id": "block-1767028967843-ok0oiettb",
+          "type": "heading",
+          "text": "What Comes Next: Forecast And Market Signals"
+        },
+        {
+          "id": "block-1767028983021-smsrl5rck",
+          "type": "paragraph",
+          "text": "Despite the recent drop, many analysts still regard gold as elevated relative to long-term averages and view corrections as potential buying opportunities. Continued geopolitical uncertainty, central bank buying, and possible future rate cuts could support gold prices, although short-term volatility remains high. Traders should monitor economic data releases and any shifts in monetary policy expectations closely."
+        },
+        {
+          "id": "block-1767028986499-vbbfdmjpf",
+          "type": "heading",
+          "text": "Tips for Traders And Investors Today"
+        },
+        {
+          "id": "block-1767028998644-f9iu5cxtc",
+          "type": "paragraph",
+          "text": "Track live gold quotes and dollar index movements.\nUse technical levels to plan entries on pullbacks.\nBalance risk with protective stops in volatile conditions.\nConsider macro themes like inflation trends and geopolitical news before allocating.\nActive risk management is critical as gold navigates this trend shift."
         }
       ],
-      "id": 2,
-      "createdAt": "2025-12-07T16:28:39.364Z",
-      "updatedAt": "2025-12-07T18:37:05.272Z"
+      "metaDescription": "Gold price today has pulled back sharply from record highs after a historic rally. Explore live pricing, reasons for the crash, expert forecasts & what traders are watching next for gold markets.",
+      "keywords": "gold price today, gold price crash, gold price forecast 2026, live gold price, gold market trend, gold all time high, gold price analysis, gold safe haven demand, gold profit taking, gold dollar strength, gold technical outlook, gold price prediction, XAUUSD today, precious metals markets, gold breaking news",
+      "id": 3,
+      "createdAt": "2025-12-29T17:23:08.249Z",
+      "updatedAt": "2025-12-29T18:06:51.818Z"
     }
   ]
 }
