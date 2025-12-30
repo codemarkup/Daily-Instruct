@@ -118,6 +118,12 @@ const TechArticlesGrid: React.FC = () => {
                       <span className={styles.cardReadTime}>{article.readTime}</span>
                     </div>
                   </div>
+                  
+                  {/* Mobile-only meta - shown only on mobile */}
+                  <div className={styles.mobileMeta}>
+                    <div className={styles.mobileAuthor}>{article.author}</div>
+                    <div className={styles.mobileDate}>{article.date}</div>
+                  </div>
                 </div>
               </article>
             </Link>

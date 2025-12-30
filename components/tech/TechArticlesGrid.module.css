@@ -317,3 +317,227 @@
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+/* Mobile-only meta - hidden by default */
+.mobileMeta {
+  display: none;
+}
+
+/* Mobile-only styles (applied only to screens up to 480px) */
+@media (max-width: 480px) {
+  .techArticlesGrid {
+    padding: 1.25rem 0.75rem;
+    background: var(--secondary-white);
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Page header section - SMALLER FONT SIZE */
+  .sectionTitle {
+    text-align: left;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--primary-black);
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: var(--accent-gold);
+    transform: none;
+  }
+
+  /* Mobile-optimized grid/list */
+  .articlesGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mobile article card - horizontal layout */
+  .articleCard {
+    border-radius: 6px;
+    padding: 0;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--gray-100);
+    display: flex;
+    flex-direction: row;
+    gap: 0.875rem;
+    align-items: flex-start;
+    min-height: 90px;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Remove hover effects for touch devices */
+  .articleCard:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    border-color: var(--gray-100);
+  }
+
+  .articleCard:hover .cardTitle {
+    color: var(--primary-black);
+  }
+
+  .articleCard:hover .cardTitle::after {
+    width: 0;
+  }
+
+  /* Mobile thumbnail image */
+  .cardImage {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .cardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .articleCard:hover .image {
+    transform: none;
+  }
+
+  /* Hide trending badge on mobile */
+  .trendingBadge {
+    display: none;
+  }
+
+  /* Mobile content layout */
+  .cardContent {
+    padding: 0.875rem 0.875rem 0.875rem 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  /* Article title - SMALLER FONT SIZE */
+  .cardTitle {
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: var(--primary-black);
+    font-weight: 600;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  /* Hide title underline effect on mobile */
+  .cardTitle::after {
+    display: none;
+  }
+
+  /* Hide description on mobile */
+  .cardDescription {
+    display: none;
+  }
+
+  /* Hide desktop meta on mobile */
+  .cardMeta {
+    display: none;
+  }
+
+  /* Hide read time on mobile */
+  .cardReadTime {
+    display: none;
+  }
+
+  /* Show mobile meta on mobile */
+  .mobileMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin-top: 0.375rem;
+  }
+
+  .mobileAuthor {
+    font-weight: 600;
+    color: var(--gray-500);
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .mobileDate {
+    color: var(--gray-500);
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+
+  /* Load more button - mobile optimization */
+  .loadMoreBtn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  /* Touch-friendly spacing */
+  .articleCard:active {
+    background-color: var(--gray-50);
+  }
+}
+
+/* Small mobile devices (below 360px) */
+@media (max-width: 360px) {
+  .cardImage {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+  }
+
+  .articleCard {
+    gap: 0.625rem;
+    min-height: 80px;
+  }
+
+  .cardContent {
+    padding: 0.75rem 0.75rem 0.75rem 0;
+  }
+
+  .cardTitle {
+    font-size: 0.825rem;
+    -webkit-line-clamp: 2;
+  }
+
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+
+  .mobileAuthor {
+    font-size: 0.7rem;
+  }
+
+  .mobileDate {
+    font-size: 0.65rem;
+  }
+}

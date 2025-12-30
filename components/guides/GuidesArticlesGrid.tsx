@@ -119,6 +119,12 @@ const GuidesArticlesGrid: React.FC = () => {
                       <span className={styles.cardReadTime333}>{article.readTime}</span>
                     </div>
                   </div>
+                  
+                  {/* Mobile-only meta - shown only on mobile */}
+                  <div className={styles.mobileMeta333}>
+                    <div className={styles.mobileAuthor333}>{article.author}</div>
+                    <div className={styles.mobileDate333}>{article.date}</div>
+                  </div>
                 </div>
               </article>
             </Link>

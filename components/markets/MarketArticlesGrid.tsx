@@ -119,6 +119,12 @@ const MarketArticlesGrid: React.FC = () => {
                       <span className={styles.cardReadTime3}>{article.readTime}</span>
                     </div>
                   </div>
+                  
+                  {/* Mobile-only meta - shown only on mobile */}
+                  <div className={styles.mobileMeta3}>
+                    <div className={styles.mobileAuthor3}>{article.author}</div>
+                    <div className={styles.mobileDate3}>{article.date}</div>
+                  </div>
                 </div>
               </article>
             </Link>
