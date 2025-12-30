@@ -1,45 +1,6 @@
 {
   "articles": [
     {
-      "title": "Test Article 2",
-      "slug": "test-article-2",
-      "description": "test article for business page",
-      "author": "Admin",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/guides/1.png",
-      "category": "business",
-      "specific": "Business Tips",
-      "trending": true,
-      "featured": true,
-      "topStory": true,
-      "grid": true,
-      "homeFeatured": false,
-      "homeLatest": false,
-      "homeTrending": false,
-      "homeTopStory": false,
-      "content": [
-        {
-          "type": "heading",
-          "text": "test article for business page"
-        },
-        {
-          "id": "block-1765125462100-l4mcptbl9",
-          "type": "paragraph",
-          "text": "testing is going good"
-        },
-        {
-          "id": "block-1765125472228-5llflh8t9",
-          "type": "quote",
-          "text": "Tested and looks perfect",
-          "author": "saad mehmood"
-        }
-      ],
-      "id": 2,
-      "createdAt": "2025-12-07T16:38:12.032Z",
-      "updatedAt": "2025-12-07T16:38:12.032Z"
-    },
-    {
       "title": "Technical Outage Hits Deutsche Bank Online Banking - What Customers Need to Know Today",
       "slug": "technical-outage-hits-deutsche-bank-online-banking-what-customers-need-to-know-today",
       "description": "Deutsche Bank, Postbank and Norisbank customers in Germany face temporary online banking login issues due to a technical outage. Learn what happened, how long it lasted, and what users can do now.",
@@ -75,12 +36,12 @@
         {
           "id": "block-1767079332699-2klb42kl7",
           "type": "paragraph",
-          "text": "The disruption did not only impact Deutsche Bank customers but also extended to Postbank and Norisbank, both part of the same banking group, indicating a shared digital infrastructure may have been involved. Users nationwide reported login failures on both browser and app interfaces during peak outage hours, with some platforms such as allestÃ¶rungen.de showing a significant spike in issue reports around midday."
+          "text": "The disruption did not only impact Deutsche Bank customers but also extended to Postbank and Norisbank, both part of the same banking group, indicating a shared digital infrastructure may have been involved. Users nationwide reported login failures on both browser and app interfaces during peak outage hours, with some platforms such as allestÃÂ¶rungen.de showing a significant spike in issue reports around midday."
         },
         {
           "id": "block-1767079361110-4k4agj3w8",
           "type": "paragraph",
-          "text": "Deutsche Bankâs official response emphasized that the outage was technical in nature, and not related to security breaches. A spokesperson thanked customers for their patience and indicated ongoing monitoring to ensure full restoration of service. Standard banking services such as ATM access and card transactions were reportedly not affected during the outage period."
+          "text": "Deutsche BankÃ¢ÂÂs official response emphasized that the outage was technical in nature, and not related to security breaches. A spokesperson thanked customers for their patience and indicated ongoing monitoring to ensure full restoration of service. Standard banking services such as ATM access and card transactions were reportedly not affected during the outage period."
         },
         {
           "id": "block-1767079372065-1wa297a0d",
@@ -95,7 +56,7 @@
         {
           "id": "block-1767079394321-ua4d0qaui",
           "type": "quote",
-          "text": "'Derzeit kommt es zu EinschrÃ¤nkungen im Online- und Mobile-Banking. An einer Behebung wird mit Hochdruck gearbeitet.' ",
+          "text": "'Derzeit kommt es zu EinschrÃÂ¤nkungen im Online- und Mobile-Banking. An einer Behebung wird mit Hochdruck gearbeitet.' ",
           "author": " Deutsche Bank spokesperson on the outage"
         }
       ],
