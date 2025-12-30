@@ -1,3 +1,6 @@
+/* TrendingSection.module.css */
+
+/* Base styles */
 .trendingSection {
   padding: var(--section-padding);
   background: var(--secondary-white);
@@ -181,7 +184,7 @@
   }
 }
 
-/* Responsive Design */
+/* Tablet responsive design */
 @media (max-width: 768px) {
   .trendingGrid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -211,21 +214,190 @@
   }
 }
 
+/* Mobile-only styles (applied only to screens up to 480px) */
 @media (max-width: 480px) {
+  .trendingSection {
+    padding: 1.25rem 0.75rem;
+    background: var(--secondary-white);
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Page header section - SMALLER FONT SIZE */
+  .sectionTitle {
+    text-align: left;
+    margin-bottom: 0.375rem;
+    font-size: 1.3rem; /* Much smaller for mobile */
+    font-family: var(--font-serif);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--primary-black);
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .sectionTitle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px; /* Smaller line */
+    height: 2px;
+    background: var(--accent-gold);
+    transform: none;
+  }
+
+  .sectionSubtitle {
+    text-align: left;
+    color: var(--gray-600);
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem; /* Smaller subtitle */
+    line-height: 1.4;
+    font-weight: 400;
+  }
+
+  /* Mobile-optimized grid/list */
   .trendingGrid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0;
   }
-  
+
+  .trendingLink {
+    text-decoration: none;
+    display: block;
+  }
+
+  /* Mobile article card */
   .trendingCard {
-    padding: 1.2rem;
+    background: var(--primary-white);
+    border-radius: 6px;
+    padding: 0.875rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    position: relative;
+    border: 1px solid var(--gray-100);
+    display: flex;
+    flex-direction: row;
+    gap: 0.875rem;
+    align-items: flex-start;
+    min-height: 90px;
+    height: auto;
   }
-  
+
+  /* Remove hover effects for touch devices */
+  .trendingCard:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    border-color: var(--gray-100);
+  }
+
+  /* Hide trending number on mobile */
+  .trendingNumber {
+    display: none;
+  }
+
+  /* Mobile thumbnail image */
+  .cardImage {
+    position: relative;
+    width: 80px; /* Smaller thumbnail */
+    height: 80px;
+    min-width: 80px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0;
+  }
+
+  .cardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .trendingCard:hover .cardImage img {
+    transform: none;
+  }
+
+  /* Hide category tag on mobile */
+  .cardCategory {
+    display: none;
+  }
+
+  /* Mobile content layout */
   .cardContent {
-    gap: 0.8rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    min-width: 0;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  /* Article title - SMALLER FONT SIZE */
+  .cardTitle {
+    font-size: 0.875rem; /* Smaller title for mobile */
+    line-height: 1.25;
+    color: var(--primary-black);
+    font-weight: 600;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .trendingCard:hover .cardTitle {
+    color: var(--primary-black);
+  }
+
+  /* FIXED: Show author name - separate line */
+  .cardAuthor {
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.75rem;
+    margin-top: 0.125rem;
+    display: block; /* Ensure it's visible */
+  }
+
+  /* FIXED: Show date line - separate line below author */
+  .cardDate {
+    color: var(--gray-500);
+    font-size: 0.7rem;
+    margin-top: 0.125rem;
+    display: block; /* Ensure it's visible */
+  }
+
+  /* Hide the separator on mobile */
+  .separator {
+    display: none;
+  }
+
+  /* Hide cardStats completely on mobile (includes read time) */
+  .cardStats {
+    display: none;
+  }
+
+  /* Keep cardMeta for desktop but hide on mobile */
+  @media (min-width: 769px) {
+    .cardMeta {
+      display: flex;
+    }
   }
   
   .cardMeta {
-    flex-wrap: wrap;
+    display: none; /* Hide desktop version on mobile */
+  }
+
+  /* Touch-friendly spacing */
+  .trendingCard:active {
+    background-color: var(--gray-50);
   }
 }
 
@@ -236,8 +408,7 @@
   padding: 0 1rem;
 }
 
-/* Add these to your existing TrendingSection.module.css */
-
+/* Loading states */
 .loadingPlaceholder {
   text-align: center;
   padding: 3rem;
@@ -263,4 +434,98 @@
   padding: 3rem;
   color: var(--gray-500);
   font-size: 1.1rem;
+}
+
+/* Small mobile devices (below 360px) */
+@media (max-width: 360px) {
+  .cardImage {
+    width: 70px;
+    height: 70px;
+    min-width: 70px;
+  }
+
+  .trendingCard {
+    gap: 0.625rem;
+    padding: 0.75rem;
+    min-height: 80px;
+  }
+
+  .cardTitle {
+    font-size: 0.825rem; /* Even smaller for very small screens */
+    -webkit-line-clamp: 2;
+  }
+
+  .sectionTitle {
+    font-size: 1.2rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.8rem;
+  }
+
+  .cardAuthor {
+    font-size: 0.7rem;
+  }
+
+  .cardDate {
+    font-size: 0.65rem;
+  }
+}
+
+
+/* Add these styles to your existing CSS file */
+
+/* Desktop meta - hide on mobile */
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin-top: auto;
+}
+
+/* Mobile-only meta - hidden by default */
+.mobileMeta {
+  display: none;
+}
+
+/* Mobile-only styles */
+@media (max-width: 480px) {
+  /* Hide desktop meta on mobile */
+  .cardMeta {
+    display: none;
+  }
+  
+  /* Hide read time on mobile */
+  .cardStats {
+    display: none;
+  }
+  
+  /* Show mobile meta on mobile */
+  .mobileMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin-top: 0.375rem;
+  }
+  
+  .mobileAuthor {
+    font-weight: 600;
+    color: var(--gray-500); /* Same color as date */
+    font-size: 0.55rem;
+    line-height: 1.2;
+  }
+  
+  .mobileDate {
+    color: var(--gray-500);
+    font-size: 0.5rem;
+    line-height: 1.2;
+  }
+  
+  /* Make title smaller on mobile */
+  .cardTitle {
+    font-size: 0.875rem !important;
+    line-height: 1.25;
+  }
 }

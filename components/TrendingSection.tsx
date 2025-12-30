@@ -137,10 +137,17 @@ const TrendingSection: React.FC = () => {
                 <div className={styles.cardContent}>
                   <h3 className={styles.cardTitle}>{article.title}</h3>
                   
+                  {/* Desktop meta - shown on larger screens */}
                   <div className={styles.cardMeta}>
                     <span className={styles.cardAuthor}>{article.author}</span>
                     <span className={styles.separator}>•</span>
                     <span className={styles.cardDate}>{article.date}</span>
+                  </div>
+                  
+                  {/* Mobile-only meta - shown only on mobile */}
+                  <div className={styles.mobileMeta}>
+                    <div className={styles.mobileAuthor}>{article.author}</div>
+                    <div className={styles.mobileDate}>{article.date}</div>
                   </div>
                   
                   <div className={styles.cardStats}>
