@@ -1,34 +1,6 @@
 {
   "articles": [
     {
-      "title": "test article git",
-      "slug": "test-article-git",
-      "description": "test article for git",
-      "author": "Admin",
-      "date": "December 7, 2025",
-      "readTime": "5 min read",
-      "image": "/images/guides/1.png",
-      "category": "tech",
-      "specific": "Artificial Intelligence",
-      "trending": false,
-      "featured": false,
-      "topStory": false,
-      "grid": false,
-      "homeFeatured": false,
-      "homeLatest": false,
-      "homeTrending": false,
-      "homeTopStory": false,
-      "content": [
-        {
-          "type": "paragraph",
-          "text": "testing..............................."
-        }
-      ],
-      "id": 2,
-      "createdAt": "2025-12-07T17:26:11.150Z",
-      "updatedAt": "2025-12-29T19:42:45.405Z"
-    },
-    {
       "title": "iPhone 18 Leaks, Release Date and Features: Apple's Biggest Upgrade Yet?",
       "slug": "iphone-18-leaks-release-date-features-apples-biggest-upgrade-yet",
       "description": "iPhone 18 is already trending in the US. Discover leaks, release date predictions, new features, pricing, and how it compares to previous iPhones.",
