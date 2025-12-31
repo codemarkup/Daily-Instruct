@@ -35,8 +35,8 @@ export const metadata = {
     default: 'Daily Instruct - Where Learning Meets Innovation',
     template: '%s | Daily Instruct',
   },
-  description: 'Daily tutorials, how-to guides, and informative articles on technology, business, and learning.',
-  keywords: 'education, tutorials, how-to, learning, technology, business, guides',
+  description: 'Daily Instruct delivers timely, in-depth coverage of technology, business, markets, and global trends—providing professionals and decision-makers with clear insights, analysis, and informed perspectives.',
+  keywords: 'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   robots: 'index, follow',
@@ -59,11 +59,6 @@ export const metadata = {
     description: 'Daily tutorials, how-to guides, and informative articles',
     images: ['/og-image.png'],
   },
-  icons: {
-    icon: '/tab-icon.png',
-    shortcut: '/tab-icon.png',
-    apple: '/google-icon.png',
-  },
 };
 
 export default function RootLayout({
@@ -74,18 +69,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable} ${playfairDisplay.variable}`}>
       <head>
-        {/* TWO FAVICONS */}
-        <link rel="icon" href="/google-icon.png" type="image/png" sizes="64x64" key="google-icon" />
-        <link rel="icon" href="/tab-icon.png" type="image/png" sizes="32x32" key="tab-icon" />
-        <link rel="shortcut icon" href="/tab-icon.png" type="image/png" key="shortcut-icon" />
-
         {/* Preconnect for fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* Inline critical CSS */}
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
             :root {
               --primary-black: #1a1a1a;
               --primary-white: #ffffff;
@@ -103,13 +94,18 @@ export default function RootLayout({
             }
             main { padding-top:80px; min-height:100vh; }
             @media (max-width:768px) { main { padding-top:70px; } }
-          `
-        }} />
+          `,
+          }}
+        />
 
         {/* Additional meta tags */}
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#ffffff" />
-        <link rel="preload" href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/_next/static/css/app/layout.css`} as="style" />
+        <link
+          rel="preload"
+          href={`${process.env.NEXT_PUBLIC_BASE_URL || ''}/_next/static/css/app/layout.css`}
+          as="style"
+        />
 
         {/* Google Analytics GA4 Tag */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-H3C9FZF6E1"></script>
