@@ -15,9 +15,9 @@
       "topStory": true,
       "grid": false,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": true,
-      "homeTopStory": true,
+      "homeTopStory": false,
       "content": [
         {
           "type": "heading",
@@ -89,7 +89,7 @@
       "keywords": "gold price today, gold price crash, gold price forecast 2026, live gold price, gold market trend, gold all time high, gold price analysis, gold safe haven demand, gold profit taking, gold dollar strength, gold technical outlook, gold price prediction, XAUUSD today, precious metals markets, gold breaking news",
       "id": 3,
       "createdAt": "2025-12-29T17:23:08.249Z",
-      "updatedAt": "2025-12-29T18:06:51.818Z"
+      "updatedAt": "2026-01-01T11:02:27.120Z"
     }
   ]
 }
