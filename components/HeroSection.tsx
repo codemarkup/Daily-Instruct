@@ -75,9 +75,10 @@ const HeroSection: React.FC = () => {
   // Get featured article for homepage (can be from any category)
   const featuredArticle = articles.find(article => article.homeFeatured);
   
-  // Get top stories for homepage (limit to 4, can be from any category)
+  // Get top stories for homepage (limit to 4, sorted by date - latest first)
   const topStories = articles
     .filter(article => article.homeTopStory)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
     .slice(0, 4);
 
   if (loading) {
