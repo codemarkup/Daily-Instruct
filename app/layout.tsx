@@ -3,6 +3,7 @@ import { Inter, DM_Serif_Display, Playfair_Display } from 'next/font/google';
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import type { Metadata } from 'next';
 
 // Optimized font loading with next/font
 const inter = Inter({
@@ -30,17 +31,36 @@ const playfairDisplay = Playfair_Display({
   preload: true,
 });
 
-export const metadata = {
+export const metadata: Metadata = {
+  // ✅ ADDED (required for canonical + domain preference)
+  metadataBase: new URL('https://dailyinstruct.com'),
+
   title: {
     default: 'Daily Instruct - Where Learning Meets Innovation',
     template: '%s | Daily Instruct',
   },
-  description: 'Daily Instruct delivers timely, in-depth coverage of technology, business, markets, and global trends—providing professionals and decision-makers with clear insights, analysis, and informed perspectives.',
-  keywords: 'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
+
+  description:
+    'Daily Instruct delivers timely, in-depth coverage of technology, business, markets, and global trends—providing professionals and decision-makers with clear insights, analysis, and informed perspectives.',
+
+  keywords:
+    'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
+
   authors: [{ name: 'Daily Instruct' }],
+
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
+
   robots: 'index, follow',
+
+  // ✅ ADDED (THIS FIXES "Duplicate without user-selected canonical")
+  alternates: {
+    canonical: '/',
+  },
+
   openGraph: {
+    // ✅ ADDED (reinforces preferred domain)
+    url: 'https://dailyinstruct.com',
+
     title: 'Daily Instruct - Educational Platform',
     description: 'Daily tutorials, how-to guides, and informative articles',
     type: 'website',
@@ -53,6 +73,7 @@ export const metadata = {
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
     title: 'Daily Instruct - Educational Platform',
