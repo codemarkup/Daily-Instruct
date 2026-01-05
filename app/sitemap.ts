@@ -21,13 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: 'daily',
         priority: 1,
       },
-      {
-        url: `${baseUrl}/articles`,
-        lastModified: new Date(),
-        changeFrequency: 'daily',
-        priority: 0.9,
-      },
-      ...articleUrls,
+      ...articleUrls, // Only actual articles, /articles removed
     ];
   } catch (error) {
     // Fallback if articles can't be fetched
