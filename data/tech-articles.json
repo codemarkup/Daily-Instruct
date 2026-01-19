@@ -245,9 +245,9 @@
       "topStory": true,
       "grid": false,
       "homeFeatured": false,
-      "homeLatest": true,
-      "homeTrending": true,
-      "homeTopStory": true,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
       "content": [
         {
           "type": "heading",
@@ -333,7 +333,7 @@
       "keywords": "manus, manus ai, manus company, manus explained, meta manus, meta acquires manus, manus acquisition, manus ai company, manus news, manus technology, manus artificial intelligence, manus meta news",
       "id": 4,
       "createdAt": "2025-12-30T06:55:19.885Z",
-      "updatedAt": "2025-12-30T06:57:22.555Z"
+      "updatedAt": "2026-01-19T05:53:16.804Z"
     },
     {
       "title": "US Approves Samsung Chip Tool Shipments to China for 2026, a Strategic Move Reshaping Global Semiconductor Power",
