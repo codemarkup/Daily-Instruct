@@ -545,8 +545,8 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
-      "homeTrending": true,
+      "homeLatest": false,
+      "homeTrending": false,
       "homeTopStory": false,
       "content": [
         {
@@ -628,7 +628,7 @@
       "keywords": "China AI IPO, Hong Kong IPO surge, Chinese artificial intelligence companies, China semiconductor industry, global AI race, United States AI investors, UK stock market trends, Hong Kong stock exchange 2025, AI IPO outlook 2026, China technology stocks, Asian markets AI boom, global capital rotation, Chinese chipmakers IPO",
       "id": 7,
       "createdAt": "2025-12-31T13:19:56.803Z",
-      "updatedAt": "2025-12-31T13:24:14.722Z"
+      "updatedAt": "2026-01-19T05:54:36.898Z"
     },
     {
       "title": "Breakthrough CES 2026 Tech Reveals That Will Redefine AI, Self Driving Cars, Smart Homes and Global Innovation",
