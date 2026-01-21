@@ -148,7 +148,7 @@ export default async function ArticlePage({
 
     return (
       <div className={styles.articlePage}>
-        <HeaderComponent />
+        {/* <HeaderComponent /> */}
         
         {/* Article Hero Section */}
         <section className={styles.articleHero}>

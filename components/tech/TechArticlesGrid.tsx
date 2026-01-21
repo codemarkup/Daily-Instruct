@@ -53,8 +53,9 @@ const TechArticlesGrid: React.FC = () => {
 
   // Filter for grid articles - handles boolean true, string "true", or any truthy value
   const gridArticles = articles
-    .filter(article => Boolean(article.grid)) // Convert to boolean: true, "true", 1, etc. all become true
-    .slice(0, 6);
+  .filter(article => Boolean(article.grid)) // Convert to boolean: true, "true", 1, etc. all become true
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+  .slice(0, 6);
 
   if (loading) {
     return (

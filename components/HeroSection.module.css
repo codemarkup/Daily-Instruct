@@ -1,7 +1,7 @@
 /* ===== MOBILE FIRST STYLES ===== */
 
 .heroSection {
-  padding: 100px 0 40px;
+  padding: 45px 0 40px;
   background: var(--secondary-white);
 }
 
@@ -281,7 +281,7 @@
 /* ===== TABLET (768px) ===== */
 @media (min-width: 768px) {
   .heroSection {
-    padding: 120px 0 60px;
+    padding: 40px 0 60px;
   }
   
   .heroGrid {

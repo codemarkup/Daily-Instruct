@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
 
@@ -17,6 +17,8 @@ interface SearchArticle {
   category: string;
   specific: string;
   trending: boolean;
+  content?: string; // Added for better search
+  tags?: string[]; // Added for better search
 }
 
 const Navbar: React.FC = () => {
@@ -36,6 +38,7 @@ const Navbar: React.FC = () => {
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -86,77 +89,163 @@ const Navbar: React.FC = () => {
     }
   }, [isSearchOpen]);
 
-  // Debounced search function
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(async () => {
-      if (searchQuery.trim().length > 1) {
-        await performSearch(searchQuery);
-      } else {
-        setSearchResults([]);
-        setShowSearchResults(false);
-      }
-    }, 250); // Reduced delay for better UX
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery]);
-
-  const performSearch = async (query: string) => {
-    if (!query.trim()) return;
+  // Improved search function with better ranking
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim() || query.length < 2) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
 
     setIsSearching(true);
     try {
+      // Try API search first
       const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=8`);
       if (response.ok) {
         const data = await response.json();
-        if (data.results) {
+        if (data.results && data.results.length > 0) {
           setSearchResults(data.results);
           setShowSearchResults(true);
+          return;
         }
       }
+      // Fallback to local search
+      await performLocalSearch(query);
     } catch (error) {
       console.error('Search error:', error);
-      performLocalSearch(query);
+      await performLocalSearch(query);
     } finally {
       setIsSearching(false);
     }
-  };
+  }, []);
 
-  // Fallback local search function
-  const performLocalSearch = async (query: string) => {
-    try {
-      const [techData, businessData, marketData, guidesData] = await Promise.all([
-        import('@/data/tech-articles.json'),
-        import('@/data/business-articles.json'),
-        import('@/data/markets-articles.json'),
-        import('@/data/guides-articles.json')
-      ]);
+  // Optimized debounced search
+// Optimized debounced search
+useEffect(() => {
+  if (searchTimeoutRef.current) {
+    clearTimeout(searchTimeoutRef.current);
+  }
 
-      const allArticles = [
-        ...techData.articles,
-        ...businessData.articles,
-        ...marketData.articles,
-        ...guidesData.articles
-      ];
+  if (searchQuery.trim().length >= 2) {
+    searchTimeoutRef.current = setTimeout(() => {
+      performSearch(searchQuery);
+    }, 200); // Slightly reduced delay
+  } else if (searchQuery.length === 0) {
+    setSearchResults([]);
+    // DON'T automatically show results when query is empty
+    // Only show when user focuses on search input (handled by onFocus)
+    // setShowSearchResults(true); // <-- REMOVE OR COMMENT THIS LINE
+  } else {
+    setSearchResults([]);
+    setShowSearchResults(false);
+  }
 
-      const searchQuery = query.toLowerCase();
-      const results = allArticles.filter(article => {
-        const searchableText = `
-          ${article.title.toLowerCase()}
-          ${article.description.toLowerCase()}
-          ${article.author.toLowerCase()}
-          ${article.category.toLowerCase()}
-          ${article.specific?.toLowerCase() || ''}
-        `;
-        
-        return searchableText.includes(searchQuery);
-      }).slice(0, 8);
-
-      setSearchResults(results);
-      setShowSearchResults(true);
-    } catch (error) {
-      console.error('Local search error:', error);
+  return () => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
     }
   };
+}, [searchQuery, performSearch]);
+
+  // Improved local search with ranking
+  // Improved local search with ranking
+// Improved local search with ranking
+const performLocalSearch = async (query: string) => {
+  try {
+    const [techData, businessData, marketData, guidesData] = await Promise.all([
+      import('@/data/tech-articles.json'),
+      import('@/data/business-articles.json'),
+      import('@/data/markets-articles.json'),
+      import('@/data/guides-articles.json')
+    ]);
+
+    // Extract articles from each data set
+    const allArticles: any[] = [
+      ...(techData.articles || []),
+      ...(businessData.articles || []),
+      ...(marketData.articles || []),
+      ...(guidesData.articles || [])
+    ];
+
+    const searchQuery = query.toLowerCase().trim();
+    const words = searchQuery.split(/\s+/).filter(word => word.length > 1);
+    
+    if (words.length === 0) {
+      setSearchResults([]);
+      return;
+    }
+
+    // Create an array to store articles with scores
+    const scoredArticles = allArticles
+      .map(article => {
+        let score = 0;
+        const title = (article.title || '').toLowerCase();
+        const description = (article.description || '').toLowerCase();
+        const author = (article.author || '').toLowerCase();
+        const category = (article.category || '').toLowerCase();
+        const specific = (article.specific || '').toLowerCase();
+        
+        // Calculate relevance score
+        words.forEach(word => {
+          // Title matches are most important (weight: 10)
+          if (title.includes(word)) score += 10;
+          // Exact title match bonus
+          if (title === searchQuery) score += 15;
+          
+          // Description matches (weight: 5)
+          if (description.includes(word)) score += 5;
+          
+          // Category matches (weight: 8)
+          if (category.includes(word)) score += 8;
+          
+          // Specific/tags matches (weight: 6)
+          if (specific.includes(word)) score += 6;
+          
+          // Author matches (weight: 3)
+          if (author.includes(word)) score += 3;
+          
+          // Partial word matches in title
+          if (word.length > 3) {
+            if (title.includes(word.substring(0, word.length - 1))) score += 2;
+          }
+        });
+        
+        // Boost trending articles
+        if (article.trending) score += 5;
+        
+        // Boost if query appears at beginning of title
+        if (title.startsWith(searchQuery)) score += 12;
+        
+        return { article, score };
+      })
+      .filter(item => item.score > 0) // Only include relevant results
+      .sort((a, b) => b.score - a.score) // Sort by score descending
+      .slice(0, 8);
+
+    // Extract just the articles without scores and cast to SearchArticle type
+    const results: SearchArticle[] = scoredArticles.map(item => ({
+      id: item.article.id || 0,
+      slug: item.article.slug || '',
+      title: item.article.title || '',
+      description: item.article.description || '',
+      author: item.article.author || '',
+      date: item.article.date || '',
+      readTime: item.article.readTime || '',
+      image: item.article.image || '',
+      category: item.article.category || '',
+      specific: item.article.specific || '',
+      trending: item.article.trending || false,
+      content: item.article.content || '',
+      tags: item.article.tags || []
+    }));
+    
+    setSearchResults(results);
+    setShowSearchResults(true);
+  } catch (error) {
+    console.error('Local search error:', error);
+    setSearchResults([]);
+  }
+};
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -195,6 +284,7 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // Rest of the component remains exactly the same...
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Tech', href: '/tech' },

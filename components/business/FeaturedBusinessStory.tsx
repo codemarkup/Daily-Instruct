@@ -52,7 +52,13 @@ const FeaturedBusinessStory: React.FC = () => {
   }, []);
 
   // Get the first featured article
-  const featuredArticle = articles.find(article => Boolean(article.featured));
+  // Get the most recent featured article
+const featuredArticles = articles.filter(article => article.featured);
+const featuredArticle = featuredArticles.length > 0 
+  ? featuredArticles.sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    )[0]
+  : undefined;
 
   if (loading) {
     return (
@@ -70,7 +76,9 @@ const FeaturedBusinessStory: React.FC = () => {
   // If no featured article, use the first one as fallback
   if (!featuredArticle) {
     if (articles.length > 0) {
-      const firstArticle = articles[0];
+      const firstArticle = articles.sort((a, b) => 
+  new Date(b.date).getTime() - new Date(a.date).getTime()
+)[0];
       return (
         <section className={styles.featuredTechStory22}>
           <div className="container">

@@ -72,8 +72,10 @@ const TrendingSection: React.FC = () => {
     fetchAllArticles();
   }, []);
 
+  // FIXED: Added sorting by date (newest first)
   const trendingArticles = articles
     .filter(article => article.homeTrending)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
     .slice(0, 10);
 
   if (loading) {

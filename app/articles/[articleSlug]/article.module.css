@@ -5,7 +5,7 @@
 
 /* Article Hero Section - More Luxurious */
 .articleHero {
-  padding: 100px 0 60px;
+  padding: 30px 0 60px;
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
   position: relative;
 }
@@ -63,7 +63,7 @@
 }
 
 .articleTitle {
-  font-size: 3.5rem;
+  font-size: 2.7rem;
   font-family: var(--font-serif);
   line-height: 1.1;
   margin-bottom: 2rem;
@@ -437,7 +437,7 @@
 /* Responsive Design for Luxury */
 @media (max-width: 768px) {
   .articleHero {
-    padding: 80px 0 40px;
+    padding: 16px 0 40px;
   }
   
   .articleTitle {
@@ -445,7 +445,7 @@
   }
   
   .articleExcerpt {
-    font-size: 1.2rem;
+    font-size: 0.85rem;
   }
   
   .contentWrapper {
@@ -474,7 +474,7 @@
 
 @media (max-width: 480px) {
   .articleTitle {
-    font-size: 2rem;
+    font-size: 1.3rem;
   }
   
   .articleMeta {
@@ -498,7 +498,19 @@
   }
   
   .quote p {
-    font-size: 1.1rem;
+    font-size: 16px;
+  }
+
+  .paragraph{
+    font-size: 16px;
+  }
+
+  .articleExcerpt{
+    margin-bottom: 0rem;
+  }
+
+  .articleContent{
+    padding: 1rem 0;
   }
 }
 

@@ -72,8 +72,11 @@ const HeroSection: React.FC = () => {
     fetchAllArticles();
   }, []);
 
-  // Get featured article for homepage (can be from any category)
-  const featuredArticle = articles.find(article => article.homeFeatured);
+  // Get featured article for homepage - get the most recent one
+  const featuredArticles = articles.filter(article => article.homeFeatured);
+  const featuredArticle = featuredArticles.sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  )[0]; // Get the first (most recent) one
   
   // Get top stories for homepage (limit to 4, sorted by date - latest first)
   const topStories = articles

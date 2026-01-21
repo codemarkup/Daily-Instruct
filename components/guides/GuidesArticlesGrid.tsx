@@ -53,8 +53,9 @@ const GuidesArticlesGrid: React.FC = () => {
 
   // Get only articles that should appear in the grid (limit to 6 for homepage)
   const gridArticles = articles
-    .filter(article => Boolean(article.grid))
-    .slice(0, 6); // Show only 6 articles on homepage
+  .filter(article => Boolean(article.grid))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+  .slice(0, 6); // Show only 6 articles on homepage
 
   if (loading) {
     return (

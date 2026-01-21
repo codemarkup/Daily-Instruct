@@ -72,8 +72,10 @@ const LatestArticles: React.FC = () => {
     fetchAllArticles();
   }, []);
 
+  // FIXED: Added sorting by date (newest first)
   const latestArticles = articles
     .filter((article) => article.homeLatest)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
     .slice(0, 6); // Show 6 latest articles
 
   if (loading) {

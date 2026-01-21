@@ -53,8 +53,9 @@ const TrendingInBusiness: React.FC = () => {
 
   // Filter only trending articles
   const trendingArticles = articles
-    .filter(article => Boolean(article.trending))
-    .slice(0, 6); // Limit to 6 trending articles
+  .filter(article => Boolean(article.trending))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+  .slice(0, 6); // Limit to 6 trending articles
 
   if (loading) {
     return (
