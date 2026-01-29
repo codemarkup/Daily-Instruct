@@ -27,58 +27,61 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [showQuickFill, setShowQuickFill] = useState(false);
+  const [quickFillText, setQuickFillText] = useState("");
+  const [quickFillError, setQuickFillError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // FIX: Changed "market" to "markets" to match your JSON files
   const categories = [
-  {
-    value: "tech",
-    label: "Technology",
-    subcategories: [
-      "Artificial Intelligence",
-      "Gadgets & Devices", // Changed from "gadgets devices" to match display format
-      "Software Development", // Capitalized
-      "Cybersecurity", // Capitalized
-      "Data & Analytics", // Changed from "data analytics" to match display format
-    ],
-  },
-  {
-    value: "business",
-    label: "Business",
-    subcategories: [
-      "Startup News",
-      "Company Updates",
-      "Market Trends",
-      "Business Tips",
-      "Personal Finance",
-      "Work Productivity",
-    ],
-  },
-  {
-    value: "markets",
-    label: "Markets",
-    subcategories: [
-      "Stock Market",
-      "Cryptocurrency",
-      "Commodities",
-      "Forex Market",
-      "Market Trends",
-      "Economic News",
-    ],
-  },
-  {
-    value: "guides",
-    label: "Guides",
-    subcategories: [
-      "Technology Guides",
-      "Finance & Investing Guides",
-      "Business & Entrepreneurship Guides",
-      "Productivity & Work-Life Guides",
-      "Software & Tools How-Tos",
-      "Career & Skills Development Guides",
-    ],
-  },
-];
+    {
+      value: "tech",
+      label: "Technology",
+      subcategories: [
+        "Artificial Intelligence",
+        "Gadgets & Devices",
+        "Software Development",
+        "Cybersecurity",
+        "Data & Analytics",
+      ],
+    },
+    {
+      value: "business",
+      label: "Business",
+      subcategories: [
+        "Startup News",
+        "Company Updates",
+        "Market Trends",
+        "Business Tips",
+        "Personal Finance",
+        "Work Productivity",
+      ],
+    },
+    {
+      value: "markets",
+      label: "Markets",
+      subcategories: [
+        "Stock Market",
+        "Cryptocurrency",
+        "Commodities",
+        "Forex Market",
+        "Market Trends",
+        "Economic News",
+      ],
+    },
+    {
+      value: "guides",
+      label: "Guides",
+      subcategories: [
+        "Technology Guides",
+        "Finance & Investing Guides",
+        "Business & Entrepreneurship Guides",
+        "Productivity & Work-Life Guides",
+        "Software & Tools How-Tos",
+        "Career & Skills Development Guides",
+      ],
+    },
+  ];
 
   const generateSlug = (title: string) => {
     if (!title) return "";
@@ -100,7 +103,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     }
   }, [article.title, isEditing]);
 
-  // FIX: Send only the changed field, not the entire article
   const handleChange = (field: keyof Article, value: any) => {
     console.log(`Form changing ${field} to:`, value);
     onUpdate({ [field]: value });
@@ -163,17 +165,100 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     }
   };
 
+  // =========== QUICK FILL FUNCTIONALITY ===========
+  const handleQuickFill = () => {
+    if (!quickFillText.trim()) {
+      setQuickFillError("Please paste some content first!");
+      return;
+    }
+
+    // Parse the text
+    const lines = quickFillText.split('\n').filter(line => line.trim());
+    if (lines.length === 0) {
+      setQuickFillError("No valid content found!");
+      return;
+    }
+
+    const newBlocks: ContentBlock[] = [];
+    let lineCount = 0;
+
+    lines.forEach(line => {
+      let type: "paragraph" | "heading" | "quote" = "paragraph";
+      let text = line.trim();
+
+      // Check for prefixes
+      if (line.toUpperCase().startsWith('HEADING:')) {
+        type = "heading";
+        text = line.substring(8).trim(); // Remove "HEADING:"
+        lineCount++;
+      } else if (line.toUpperCase().startsWith('PARAGRAPH:')) {
+        type = "paragraph";
+        text = line.substring(10).trim(); // Remove "PARAGRAPH:"
+        lineCount++;
+      } else if (line.toUpperCase().startsWith('QUOTE:')) {
+        type = "quote";
+        text = line.substring(6).trim(); // Remove "QUOTE:"
+        lineCount++;
+      }
+      // If no prefix but has content, assume it's a paragraph
+      else if (text.length > 0) {
+        type = "paragraph";
+        lineCount++;
+      }
+
+      // Create block if we have content
+      if (text.length > 0) {
+        const block: ContentBlock = {
+          id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}-${lineCount}`,
+          type,
+          text,
+        };
+        newBlocks.push(block);
+      }
+    });
+
+    if (newBlocks.length === 0) {
+      setQuickFillError("Could not parse any content. Make sure to use HEADING:/PARAGRAPH:/QUOTE: prefixes.");
+      return;
+    }
+
+    // Replace existing content with new blocks
+    handleChange("content", newBlocks);
+    setQuickFillError("");
+    setShowQuickFill(false);
+    setQuickFillText("");
+    
+    // Show success message
+    alert(`Successfully created ${newBlocks.length} content blocks!`);
+  };
+
+  const handleCancelQuickFill = () => {
+    setShowQuickFill(false);
+    setQuickFillText("");
+    setQuickFillError("");
+  };
+
+  const handleQuickFillExample = () => {
+    const exampleText = `HEADING: Introduction to AI
+PARAGRAPH: Artificial intelligence is transforming every industry...
+QUOTE: "The future belongs to those who embrace AI"
+PARAGRAPH: Companies that adopt AI early will have a competitive advantage...
+HEADING: Getting Started
+PARAGRAPH: Begin with simple automation tasks...`;
+    
+    setQuickFillText(exampleText);
+  };
+  // =========== END QUICK FILL FUNCTIONALITY ===========
+
   // Image Upload Functions
   const handleImageUpload = async (file: File) => {
     if (!file) return;
 
-    // Reset error state
     setUploadError(null);
     setUploading(true);
     setUploadProgress(0);
 
     try {
-      // Validate file
       const allowedTypes = [
         "image/jpeg",
         "image/jpg",
@@ -188,13 +273,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         );
       }
 
-      // Validate size (5MB max)
       const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         throw new Error("File size too large. Maximum size is 5MB.");
       }
 
-      // Simulate upload progress
       const progressInterval = setInterval(() => {
         setUploadProgress((prev) => {
           if (prev >= 90) {
@@ -205,12 +288,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         });
       }, 100);
 
-      // Prepare form data
       const formData = new FormData();
       formData.append("file", file);
       formData.append("category", article.category || "uncategorized");
 
-      // Upload to API
       const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -224,14 +305,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       }
 
       const data = await response.json();
-
-      // Update progress to 100%
       setUploadProgress(100);
-
-      // Update the article with the new image URL
       handleChange("image", data.url);
 
-      // Show success message briefly
       setTimeout(() => {
         setUploadProgress(0);
       }, 1000);
@@ -241,7 +317,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       setUploadProgress(0);
     } finally {
       setUploading(false);
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -282,6 +357,90 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
   return (
     <div className="article-form-fields">
+      {/* =========== QUICK FILL MODAL =========== */}
+      {showQuickFill && (
+        <div className="modal-overlay">
+          <div className="modal-container">
+            <div className="modal-header">
+              <h3 className="modal-title">
+                <span className="modal-icon">⚡</span>
+                Quick Fill Content
+              </h3>
+              <button
+                onClick={handleCancelQuickFill}
+                className="modal-close"
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="modal-description">
+                <p><strong>Paste GPT output with prefixes:</strong></p>
+                <ul className="prefix-list">
+                  <li><code>HEADING:</code> Your heading text</li>
+                  <li><code>PARAGRAPH:</code> Your paragraph text</li>
+                  <li><code>QUOTE:</code> Your quote text</li>
+                </ul>
+                <p className="example-text">
+                  <button
+                    type="button"
+                    onClick={handleQuickFillExample}
+                    className="example-button"
+                  >
+                    Load Example Format
+                  </button>
+                </p>
+              </div>
+              
+              <div className="text-area-container">
+                <textarea
+                  value={quickFillText}
+                  onChange={(e) => {
+                    setQuickFillText(e.target.value);
+                    setQuickFillError("");
+                  }}
+                  className="quick-fill-textarea"
+                  placeholder={`HEADING: Your Main Heading
+PARAGRAPH: Your first paragraph...
+QUOTE: "Your important quote"
+PARAGRAPH: Continue writing...`}
+                  rows={10}
+                />
+                <div className="text-area-hint">
+                  <span>Lines: {quickFillText.split('\n').filter(l => l.trim()).length}</span>
+                  <span>Chars: {quickFillText.length}</span>
+                </div>
+              </div>
+
+              {quickFillError && (
+                <div className="quick-fill-error">
+                  <span className="error-icon">⚠️</span>
+                  {quickFillError}
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                onClick={handleCancelQuickFill}
+                className="modal-button secondary"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleQuickFill}
+                className="modal-button primary"
+              >
+                <span className="button-icon">⚡</span>
+                Create Blocks
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========== ORIGINAL FORM FIELDS =========== */}
       <div className="form-group">
         <label className="form-label required">
           Article Title
@@ -352,7 +511,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
-      {/* =========== SEO FIELDS ADDED HERE =========== */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label">
@@ -390,9 +548,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
           </div>
         </div>
       </div>
-      {/* =========== END SEO FIELDS =========== */}
 
-      {/* FIXED CATEGORY DROPDOWN */}
       <div className="form-row">
         <div className="form-group">
           <label className="form-label required">Category</label>
@@ -431,7 +587,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         </div>
       </div>
 
-      {/* IMAGE UPLOAD SECTION */}
+      {/* IMAGE UPLOAD SECTION (unchanged) */}
       <div className="form-group">
         <label className="form-label required">
           Article Cover Image
@@ -439,9 +595,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             Upload a high-quality cover image (Max 5MB)
           </span>
         </label>
-
         <div className="image-upload-container">
-          {/* Drag & Drop Area */}
           <div
             className={`drag-drop-area ${dragActive ? "drag-active" : ""} ${
               uploading ? "uploading" : ""
@@ -460,11 +614,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
               id="image-upload"
               disabled={uploading}
             />
-
             <div className="drag-drop-content">
-              <div className="drag-drop-icon">
-                {/* {uploading ? '⏳' : dragActive ? '📂' : '📤'} */}
-              </div>
               <div className="drag-drop-text">
                 {uploading ? (
                   <>
@@ -479,11 +629,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 ) : (
                   <>
                     <strong>Drag & drop your image here</strong>
-                    {/* <p>or click to browse</p> */}
                   </>
                 )}
               </div>
-
               <label
                 htmlFor="image-upload"
                 className={`upload-button ${uploading ? "uploading" : ""}`}
@@ -494,7 +642,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             </div>
           </div>
 
-          {/* Progress Bar */}
           {uploading && (
             <div className="upload-progress-container">
               <div className="progress-bar">
@@ -507,7 +654,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             </div>
           )}
 
-          {/* Error Message */}
           {uploadError && (
             <div className="upload-error-message">
               <span className="error-icon">⚠️</span>
@@ -525,7 +671,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             </div>
           )}
 
-          {/* Image Preview */}
           <div className="image-preview-section">
             <div className="preview-header">
               {article.image && article.image !== "/images/default.png" && (
@@ -540,7 +685,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                 </button>
               )}
             </div>
-
             <div className="preview-container">
               {article.image && article.image !== "/images/default.png" ? (
                 <div className="image-preview">
@@ -572,20 +716,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="no-image-placeholder">
-                  {/* <div className="placeholder-icon">🖼️</div>
-                  <div className="placeholder-text">
-                    <p>No image selected</p>
-                    <p className="placeholder-subtext">
-                      Upload an image or use default: <code>/images/default.png</code>
-                    </p>
-                  </div> */}
-                </div>
+                <div className="no-image-placeholder"></div>
               )}
             </div>
           </div>
 
-          {/* Manual URL Input */}
           <div className="manual-url-section">
             <label className="url-input-label">
               Or enter image URL manually:
@@ -662,115 +797,60 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       <div className="form-section">
         <h3 className="section-title">Article Flags</h3>
         <div className="flags-grid">
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.trending || false}
-                onChange={(e) => handleChange("trending", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Trending</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.featured || false}
-                onChange={(e) => handleChange("featured", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Featured</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.topStory || false}
-                onChange={(e) => handleChange("topStory", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Top Story</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.grid || false}
-                onChange={(e) => handleChange("grid", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Grid</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeFeatured || false}
-                onChange={(e) => handleChange("homeFeatured", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Featured</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeLatest || false}
-                onChange={(e) => handleChange("homeLatest", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Latest</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeTrending || false}
-                onChange={(e) => handleChange("homeTrending", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Trending</span>
-            </label>
-          </div>
-          <div className="flag-group">
-            <label className="flag-label">
-              <input
-                type="checkbox"
-                checked={article.homeTopStory || false}
-                onChange={(e) => handleChange("homeTopStory", e.target.checked)}
-                className="flag-checkbox"
-              />
-              <span className="flag-text">Home Top Story</span>
-            </label>
-          </div>
+          {["trending", "featured", "topStory", "grid", "homeFeatured", "homeLatest", "homeTrending", "homeTopStory"].map((flag) => (
+            <div key={flag} className="flag-group">
+              <label className="flag-label">
+                <input
+                  type="checkbox"
+                  checked={Boolean(article[flag as keyof Article]) || false}
+                  onChange={(e) => handleChange(flag as keyof Article, e.target.checked)}
+                  className="flag-checkbox"
+                />
+                <span className="flag-text">
+                  {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
+                </span>
+              </label>
+            </div>
+          ))}
+        </div>
+        <div className="flags-status-counter">
+          {[
+            article.trending,
+            article.featured,
+            article.topStory,
+            article.grid,
+            article.homeFeatured,
+            article.homeLatest,
+            article.homeTrending,
+            article.homeTopStory,
+          ].filter(Boolean).length}
+          /8
         </div>
       </div>
 
+      {/* =========== CONTENT SECTION WITH QUICK FILL BUTTON =========== */}
       <div className="form-section">
-        <div className="flags-status-counter">
-          {
-            [
-              article.trending,
-              article.featured,
-              article.topStory,
-              article.grid,
-              article.homeFeatured,
-              article.homeLatest,
-              article.homeTrending,
-              article.homeTopStory,
-            ].filter(Boolean).length
-          }
-          /8
+        <div className="content-section-header">
+          <div>
+            <h3 className="section-title required">Article Content</h3>
+            <p className="section-subtitle">Add paragraphs, headings, and quotes</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowQuickFill(true)}
+            className="quick-fill-trigger-button"
+          >
+            <span className="button-icon">⚡</span>
+            Quick Fill Content
+          </button>
         </div>
-        <h3 className="section-title required">Article Content</h3>
-        <p className="section-subtitle">Add paragraphs, headings, and quotes</p>
+
+        <div className="quick-fill-hint">
+          <span className="hint-text">
+            <strong>How to use:</strong> Click "Quick Fill Content", paste GPT output with HEADING:/PARAGRAPH:/QUOTE: prefixes
+          </span>
+        </div>
+
         <div className="content-editor">
           {contentBlocks.map((block, index) => (
             <div key={block.id} className="content-block">

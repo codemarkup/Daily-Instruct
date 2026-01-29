@@ -1,4 +1,4 @@
-// /lib/json-utils.ts
+// /lib/json-utils.ts - FIXED UTF-8 VERSION
 interface GitHubFile {
   path: string;
   content: string;
@@ -21,6 +21,7 @@ class GitHubStorage {
       headers: {
         'Authorization': `token ${this.token}`,
         'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json; charset=utf-8',
         ...options.headers,
       },
     });
@@ -34,14 +35,22 @@ class GitHubStorage {
     return response.json();
   }
 
-  // Read JSON file from GitHub
+  // Read JSON file from GitHub with PROPER UTF-8 handling
   async readJSONFile(path: string): Promise<any> {
     try {
       const data = await this.request(`/repos/${this.owner}/${this.repo}/contents/${path}`);
       
-      // Decode base64 content
-      const content = atob(data.content.replace(/\n/g, ''));
-      return JSON.parse(content);
+      // FIXED: PROPER UTF-8 Base64 decoding
+      const binaryString = atob(data.content);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const text = new TextDecoder('utf-8').decode(bytes);
+      
+      // Parse JSON and sanitize UTF-8 characters
+      const parsed = JSON.parse(text);
+      return this.sanitizeUTF8(parsed);
     } catch (error: any) {
       // If file doesn't exist, return default structure
       if (error.message.includes('404')) {
@@ -51,10 +60,18 @@ class GitHubStorage {
     }
   }
 
-  // Write JSON file to GitHub
+  // Write JSON file to GitHub with PROPER UTF-8 handling
   async writeJSONFile(path: string, content: any, sha?: string): Promise<any> {
-    const fileContent = JSON.stringify(content, null, 2);
-    const encodedContent = btoa(unescape(encodeURIComponent(fileContent)));
+    // First sanitize the content to fix smart characters
+    const sanitizedContent = this.sanitizeUTF8(content);
+    
+    // Stringify with proper UTF-8
+    const fileContent = JSON.stringify(sanitizedContent, null, 2);
+    
+    // FIXED: Convert UTF-8 string to Base64 properly
+    const bytes = new TextEncoder().encode(fileContent);
+    const binaryString = String.fromCharCode(...bytes);
+    const encodedContent = btoa(binaryString);
 
     const payload: any = {
       message: `Update ${path}`,
@@ -84,6 +101,46 @@ class GitHubStorage {
     } catch {
       return null;
     }
+  }
+
+  // UTF-8 Sanitizer to fix smart quotes and special characters
+  private sanitizeUTF8(obj: any): any {
+    if (typeof obj === 'string') {
+      // Fix the specific "â" sequence (0xE2 0x80 0x99 in UTF-8 bytes)
+      let sanitized = obj
+        .replace(/\u00E2\u20AC\u2122/g, "'")        // Fix "â" -> "'"
+        .replace(/\u00E2\u20AC\u201D/g, '"')        // Fix other common sequences
+        .replace(/\u00E2\u20AC\u201C/g, '"')
+        .replace(/\u00E2\u20AC\u201C/g, '"')
+        .replace(/\u00E2\u20AC\u201C/g, '"');
+      
+      // Also fix direct Unicode smart characters
+      sanitized = sanitized
+        .replace(/[\u2018\u2019]/g, "'")           // Smart single quotes ‘ ’
+        .replace(/[\u201C\u201D]/g, '"')           // Smart double quotes " "
+        .replace(/\u2013/g, '-')                   // En dash –
+        .replace(/\u2014/g, '--')                  // Em dash —
+        .replace(/\u2026/g, '...')                 // Ellipsis …
+        .replace(/\u00A0/g, ' ')                   // Non-breaking space
+        .normalize('NFKD')                         // Normalize Unicode
+        .replace(/[\u0300-\u036f]/g, '');          // Remove combining diacritics
+      
+      return sanitized;
+    }
+    
+    if (Array.isArray(obj)) {
+      return obj.map(item => this.sanitizeUTF8(item));
+    }
+    
+    if (obj && typeof obj === 'object') {
+      const result: any = {};
+      for (const key in obj) {
+        result[key] = this.sanitizeUTF8(obj[key]);
+      }
+      return result;
+    }
+    
+    return obj;
   }
 }
 
@@ -193,7 +250,12 @@ export async function writeJsonFile<T>(filename: string, data: T): Promise<void>
         const filePath = path.join(DATA_DIRECTORY, filename);
         
         await fs.promises.mkdir(DATA_DIRECTORY, { recursive: true });
-        await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+        // Ensure UTF-8 encoding when writing locally
+        await fs.promises.writeFile(
+          filePath, 
+          JSON.stringify(data, null, 2), 
+          { encoding: 'utf-8' }
+        );
         console.log(`Successfully wrote ${filename} to local file system`);
         return;
       } catch (fsError: any) {
@@ -323,6 +385,7 @@ export async function updateArticle(slug: string, articleData: Partial<Article>)
   return null;
 }
 
+// Delete article
 export async function deleteArticle(slug: string): Promise<boolean> {
   const categories = ['tech', 'business', 'markets', 'guides'];
   
@@ -342,3 +405,45 @@ export async function deleteArticle(slug: string): Promise<boolean> {
   
   return false;
 }
+
+// UTF-8 sanitizer helper for frontend input
+export function sanitizeInputText(text: string): string {
+  if (!text) return text;
+  
+  // Convert smart characters to plain ASCII equivalents
+  return text
+    .replace(/[\u2018\u2019]/g, "'")           // Smart single quotes
+    .replace(/[\u201C\u201D]/g, '"')           // Smart double quotes
+    .replace(/\u2013/g, '-')                   // En dash
+    .replace(/\u2014/g, '--')                  // Em dash
+    .replace(/\u2026/g, '...')                 // Ellipsis
+    .replace(/\u00A0/g, ' ')                   // Non-breaking space
+    .replace(/\u00E2\u20AC\u2122/g, "'")       // Fix "â" sequence
+    .replace(/\u00E2\u20AC\u201D/g, '"')       // Other broken sequences
+    .normalize('NFKD')                         // Normalize Unicode
+    .replace(/[\u0300-\u036f]/g, '');          // Remove combining marks
+}
+
+// Utility function to sanitize an entire article object
+export function sanitizeArticle(article: Partial<Article>): Partial<Article> {
+  const sanitized: Partial<Article> = { ...article };
+  
+  // Sanitize all string fields
+  if (sanitized.title) sanitized.title = sanitizeInputText(sanitized.title);
+  if (sanitized.description) sanitized.description = sanitizeInputText(sanitized.description);
+  if (sanitized.keywords) sanitized.keywords = sanitizeInputText(sanitized.keywords);
+  if (sanitized.metaDescription) sanitized.metaDescription = sanitizeInputText(sanitized.metaDescription);
+  
+  // Sanitize content blocks
+  if (sanitized.content && Array.isArray(sanitized.content)) {
+    sanitized.content = sanitized.content.map(block => ({
+      ...block,
+      text: sanitizeInputText(block.text),
+      author: block.author ? sanitizeInputText(block.author) : undefined
+    }));
+  }
+  
+  return sanitized;
+}
+
+export { GitHubStorage };

@@ -566,3 +566,58 @@ body {
 .logout-button:active {
   transform: scale(0.98);
 }
+
+
+/* ===== ADMIN HEADER - FIXED POSITIONING ===== */
+.admin-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 280px !important; /* Sidebar width */
+  right: 0 !important;
+  height: 80px !important;
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 30px !important;
+  z-index: 900 !important; /* Below sidebar (1000) but above content */
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-sizing: border-box !important;
+}
+
+/* When sidebar is collapsed */
+.admin-sidebar.collapsed ~ .admin-main .admin-header {
+  left: 80px !important;
+}
+
+/* Adjust admin content to account for fixed header */
+.admin-content {
+  margin-top: 80px !important; /* Height of fixed header */
+  padding: 30px !important;
+  min-height: calc(100vh - 140px) !important; /* Adjust for header + footer */
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .admin-header {
+    left: 0 !important;
+    right: 0 !important;
+    height: 70px !important;
+    padding: 0 15px !important;
+  }
+  
+  .admin-content {
+    margin-top: 70px !important;
+    padding: 20px !important;
+    min-height: calc(100vh - 120px) !important;
+  }
+}
+
+/* Make sure header controls are properly spaced */
+.header-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+}

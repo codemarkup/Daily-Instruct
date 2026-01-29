@@ -32,35 +32,23 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  // ✅ ADDED (required for canonical + domain preference)
   metadataBase: new URL('https://dailyinstruct.com'),
-
   title: {
     default: 'Daily Instruct - Where Learning Meets Innovation',
     template: '%s | Daily Instruct',
   },
-
   description:
     'Daily Instruct delivers timely, in-depth coverage of technology, business, markets, and global trends—providing professionals and decision-makers with clear insights, analysis, and informed perspectives.',
-
   keywords:
     'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
-
   authors: [{ name: 'Daily Instruct' }],
-
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
-
   robots: 'index, follow',
-
-  // ✅ ADDED (THIS FIXES "Duplicate without user-selected canonical")
   alternates: {
     canonical: '/',
   },
-
   openGraph: {
-    // ✅ ADDED (reinforces preferred domain)
     url: 'https://dailyinstruct.com',
-
     title: 'Daily Instruct - Educational Platform',
     description: 'Daily tutorials, how-to guides, and informative articles',
     type: 'website',
@@ -73,7 +61,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-
   twitter: {
     card: 'summary_large_image',
     title: 'Daily Instruct - Educational Platform',
@@ -90,11 +77,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable} ${playfairDisplay.variable}`}>
       <head>
-        {/* Preconnect for fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
-        {/* Inline critical CSS */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -115,11 +100,19 @@ export default function RootLayout({
             }
             main { padding-top:80px; min-height:100vh; }
             @media (max-width:768px) { main { padding-top:70px; } }
+            
+            /* Admin-specific overrides - HIDE navbar/footer on admin pages */
+            body.admin-page .navbar,
+            body.admin-page .footer {
+              display: none !important;
+            }
+            body.admin-page main {
+              padding-top: 0 !important;
+            }
           `,
           }}
         />
 
-        {/* Additional meta tags */}
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#ffffff" />
         <link
@@ -142,8 +135,10 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* NAVBAR IS BACK! */}
         <Navbar />
         <main>{children}</main>
+        {/* FOOTER IS BACK! */}
         <Footer />
       </body>
     </html>
