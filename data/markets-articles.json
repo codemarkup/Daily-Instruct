@@ -1372,7 +1372,7 @@
       "featured": false,
       "topStory": false,
       "grid": true,
-      "homeFeatured": false,
+      "homeFeatured": true,
       "homeLatest": false,
       "homeTrending": true,
       "homeTopStory": true,
@@ -1487,7 +1487,7 @@
       "metaDescription": "Silver prices plunged sharply as Fed chair uncertainty and market volatility hit precious metals, dragging miners and ETFs lower.",
       "id": 13,
       "createdAt": "2026-01-30T11:07:35.230Z",
-      "updatedAt": "2026-01-30T11:07:35.230Z"
+      "updatedAt": "2026-01-30T11:08:51.349Z"
     }
   ]
 }
