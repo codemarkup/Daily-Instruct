@@ -1504,7 +1504,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1618,7 +1618,7 @@
       "keywords": "AAPL stock, Apple earnings, iPhone sales surge, Apple stock trend US, Apple Q1 earnings, iPhone 17 demand",
       "id": 14,
       "createdAt": "2026-01-30T11:19:49.519Z",
-      "updatedAt": "2026-01-30T11:19:49.519Z"
+      "updatedAt": "2026-02-11T14:51:56.091Z"
     },
     {
       "title": "Stock Market News Today Reveals a Quiet Shift in Power, Confidence, and Risk",
