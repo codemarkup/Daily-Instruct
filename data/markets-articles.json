@@ -991,9 +991,9 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
-      "homeTopStory": true,
+      "homeTopStory": false,
       "content": [
         {
           "type": "heading",
@@ -1094,7 +1094,7 @@
       "keywords": "meta stock, meta shares forecast, Meta earnings 2026, artificial intelligence investment, superintelligence spending, united states tech stocks, china ai landscape, uk technology investment, Facebook parent company, Nasdaq tech performance, AI driven growth stocks, global social media industry, metaverse spending 2026",
       "id": 10,
       "createdAt": "2026-01-29T07:38:32.650Z",
-      "updatedAt": "2026-01-29T07:44:10.419Z"
+      "updatedAt": "2026-02-11T14:52:49.764Z"
     },
     {
       "title": "Microsoft Stock Drops After Earnings Beat - Why Wall Street Is Suddenly Nervous About MSFT",
