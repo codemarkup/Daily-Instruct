@@ -1250,7 +1250,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1353,7 +1353,7 @@
       "keywords": "microsoft outage, outlook down today, microsoft teams outage, office 365 down, microsoft services outage, united states tech outage, global cloud disruption, china cloud comparison, uk microsoft outage, enterprise software failure, digital infrastructure 2026, cloud reliability crisis",
       "id": 13,
       "createdAt": "2026-01-23T14:44:15.550Z",
-      "updatedAt": "2026-01-23T14:44:15.550Z"
+      "updatedAt": "2026-02-12T15:53:44.894Z"
     }
   ]
 }
