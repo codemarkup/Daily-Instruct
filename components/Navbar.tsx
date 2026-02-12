@@ -40,10 +40,7 @@ const Navbar: React.FC = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Hide Navbar on admin pages
-  if (pathname && pathname.startsWith('/admin')) {
-    return null;
-  }
+
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -304,6 +301,11 @@ const Navbar: React.FC = () => {
     }
     return pathname.startsWith(href);
   };
+
+  // Hide Navbar on admin pages and login page
+  if (pathname && (pathname.startsWith('/admin') || pathname === '/login')) {
+    return null;
+  }
 
   return (
     <nav className={`${styles.navbar} ${isScrolled ? styles.navbarScrolled : ''}`}>
