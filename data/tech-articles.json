@@ -890,7 +890,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1013,7 +1013,7 @@
       "keywords": "Windows 11 emergency update, Microsoft Windows 11 2026, Nvidia GPU Windows update issue, Windows 11 shutdown bug, Microsoft emergency patch, Windows performance drop, Windows update problems 2026, United States Windows update, UK Windows 11 news, China Windows market, Microsoft Nvidia issue, Windows 11 stability fix",
       "id": 10,
       "createdAt": "2026-01-19T11:13:55.427Z",
-      "updatedAt": "2026-01-19T11:13:55.427Z"
+      "updatedAt": "2026-02-12T15:56:58.847Z"
     },
     {
       "title": "AOL Just Went Dark Across the United States - What This Sudden Outage Reveals About Aging Internet Giants in 2026",
