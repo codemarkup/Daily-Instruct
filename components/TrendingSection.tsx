@@ -38,7 +38,6 @@ const TrendingSection: React.FC = () => {
   useEffect(() => {
     const fetchAllArticles = async () => {
       try {
-        // Fetch from all categories
         const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
           fetch('/api/github/articles?category=tech'),
           fetch('/api/github/articles?category=business'),
@@ -53,7 +52,6 @@ const TrendingSection: React.FC = () => {
           guidesRes.json()
         ]);
 
-        // Combine all articles
         const allArticles = [
           ...(techData.articles || []),
           ...(businessData.articles || []),
@@ -68,98 +66,74 @@ const TrendingSection: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchAllArticles();
   }, []);
 
-  // FIXED: Added sorting by date (newest first)
   const trendingArticles = articles
     .filter(article => article.homeTrending)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
+
+  // Duplicate for infinite scroll
+  const marqueeArticles = [...trendingArticles, ...trendingArticles];
 
   if (loading) {
     return (
       <section className={styles.trendingSection}>
-        <div className="container">
-          <h2 className={styles.sectionTitle}>Trending Now</h2>
-          <p className={styles.sectionSubtitle}>Most popular articles this week</p>
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading trending articles...</p>
-          </div>
+        <div className={styles.loadingPlaceholder}>
+          <div className={styles.loadingSpinner}></div>
         </div>
       </section>
     );
   }
 
   if (trendingArticles.length === 0) {
-    return (
-      <section className={styles.trendingSection}>
-        <div className="container">
-          <h2 className={styles.sectionTitle}>Trending Now</h2>
-          <p className={styles.sectionSubtitle}>Most popular articles this week</p>
-          <div className={styles.noArticles}>
-            <p>No trending articles at the moment.</p>
-          </div>
-        </div>
-      </section>
-    );
+    return null; // Hide if no trending articles
   }
 
   return (
     <section className={styles.trendingSection}>
-      <div className="container">
-        <h2 className={styles.sectionTitle}>Trending Now</h2>
-        <p className={styles.sectionSubtitle}>Most popular articles this week</p>
-        
-        <div className={styles.trendingGrid}>
-          {trendingArticles.map((article, index) => (
-            <Link 
-              key={`${article.category}-${article.id}`} 
-              href={`/articles/${article.slug}`}
-              className={styles.trendingLink}
-            >
-              <article className={styles.trendingCard}>
-                <div className={styles.trendingNumber}>
-                  {(index + 1).toString().padStart(2, '0')}
-                </div>
-                
-                <div className={styles.cardImage}>
-                  <Image 
-                    src={article.image}
-                    alt={article.title}
-                    width={300}
-                    height={180}
-                    className={styles.image}
-                  />
-                  <div className={styles.cardCategory}>{article.category}</div>
-                </div>
-                
-                <div className={styles.cardContent}>
-                  <h3 className={styles.cardTitle}>{article.title}</h3>
-                  
-                  {/* Desktop meta - shown on larger screens */}
-                  <div className={styles.cardMeta}>
-                    <span className={styles.cardAuthor}>{article.author}</span>
-                    <span className={styles.separator}>•</span>
-                    <span className={styles.cardDate}>{article.date}</span>
+      <div className={styles.container}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Trending Now</h2>
+          <p className={styles.sectionSubtitle}>Most Popular Stories</p>
+        </div>
+
+        <div className={styles.marqueeContainer}>
+          <div className={styles.marqueeTrack}>
+            {marqueeArticles.map((article, index) => (
+              <Link
+                key={`${article.category}-${article.id}-${index}`}
+                href={`/articles/${article.slug}`}
+                className={styles.trendingLink}
+              >
+                <article className={styles.trendingCard}>
+                  <div className={styles.cardImage}>
+                    <Image
+                      src={encodeURI(article.image.trim())}
+                      alt={article.title}
+                      fill
+                      className={styles.image}
+                    />
+                    <span className={styles.trendingNumber}>
+                      {index < 10 ? `0${(index % 10) + 1}` : (index % 10) + 1}
+                    </span>
                   </div>
-                  
-                  {/* Mobile-only meta - shown only on mobile */}
-                  <div className={styles.mobileMeta}>
-                    <div className={styles.mobileAuthor}>{article.author}</div>
-                    <div className={styles.mobileDate}>{article.date}</div>
+
+                  <div className={styles.cardContent}>
+                    <span className={styles.cardCategory}>{article.category}</span>
+                    <h3 className={styles.cardTitle}>{article.title}</h3>
+
+                    <div className={styles.cardMeta}>
+                      <span>{article.author}</span>
+                      <span>{article.readTime}</span>
+                    </div>
                   </div>
-                  
-                  <div className={styles.cardStats}>
-                    <span className={styles.readTime}>{article.readTime}</span>
-                    {article.trending && <span className={styles.views}>Trending</span>}
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
+                </article>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>

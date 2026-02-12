@@ -68,7 +68,7 @@ const LatestArticles: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchAllArticles();
   }, []);
 
@@ -112,14 +112,14 @@ const LatestArticles: React.FC = () => {
         <div className={styles.articlesGrid}>
           {latestArticles.map((article) => (
             <Link
-              key={article.id}
+              key={`${article.category}-${article.id}`}
               href={`/articles/${article.slug}`}
               className={styles.articleLink}
             >
               <article className={styles.articleCard}>
                 <div className={styles.cardImage}>
                   <Image
-                    src={article.image}
+                    src={encodeURI(article.image.trim())}
                     alt={article.title}
                     width={400}
                     height={250}
@@ -143,7 +143,7 @@ const LatestArticles: React.FC = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   {/* Mobile-only meta - shown only on mobile */}
                   <div className={styles.mobileMeta}>
                     <div className={styles.mobileAuthor}>{article.author}</div>

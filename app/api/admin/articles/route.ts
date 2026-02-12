@@ -2,21 +2,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GitHubStorage } from '@/lib/github-storage';
 import { getCategoryFilename } from '@/lib/json-utils';
+import { logNotification } from '@/lib/notifications';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
-    
+
     // Read from GitHub in production, from files in development
     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
       const githubStorage = new GitHubStorage();
       const allArticles = [];
-      
+
       const categories = ['tech', 'business', 'markets', 'guides'];
       for (const cat of categories) {
         if (category && cat !== category.toLowerCase()) continue;
-        
+
         const filename = getCategoryFilename(cat);
         try {
           const data = await githubStorage.readJSONFile(`data/${filename}`);
@@ -25,33 +26,45 @@ export async function GET(request: NextRequest) {
           console.error(`Error reading ${filename}:`, error);
         }
       }
-      
+
       return NextResponse.json(allArticles);
     } else {
       // Development: Read from local files
       const fs = await import('fs/promises');
       const path = await import('path');
       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
-      
+
       const allArticles = [];
       const categories = category ? [category] : ['tech', 'business', 'markets', 'guides'];
-      
+      const search = searchParams.get('search')?.toLowerCase();
+
       for (const cat of categories) {
         const filename = getCategoryFilename(cat);
         const filePath = path.join(DATA_DIRECTORY, filename);
-        
+
         try {
           const content = await fs.readFile(filePath, 'utf-8');
           const data = JSON.parse(content);
-          allArticles.push(...data.articles || []);
+          let articles = data.articles || [];
+
+          // Filter by search query if present
+          if (search) {
+            articles = articles.filter((a: any) =>
+              a.title?.toLowerCase().includes(search) ||
+              a.description?.toLowerCase().includes(search) ||
+              a.category?.toLowerCase().includes(search)
+            );
+          }
+
+          allArticles.push(...articles);
         } catch (error) {
           console.error(`Error reading ${filename}:`, error);
         }
       }
-      
+
       return NextResponse.json(allArticles);
     }
-    
+
   } catch (error: any) {
     console.error('Error fetching articles:', error);
     return NextResponse.json(
@@ -64,7 +77,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const articleData = await request.json();
-    
+
     // Validate required fields
     const requiredFields = ['title', 'slug', 'description', 'category', 'specific'];
     for (const field of requiredFields) {
@@ -78,10 +91,10 @@ export async function POST(request: NextRequest) {
 
     const category = articleData.category.toLowerCase();
     const filename = getCategoryFilename(category);
-    
+
     let data: { articles: any[] };
     let sha: string | null = null;
-    
+
     // READ: Get existing articles
     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
       const githubStorage = new GitHubStorage();
@@ -93,7 +106,7 @@ export async function POST(request: NextRequest) {
       const path = await import('path');
       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
       const filePath = path.join(DATA_DIRECTORY, filename);
-      
+
       try {
         const content = await fs.readFile(filePath, 'utf-8');
         data = JSON.parse(content);
@@ -101,7 +114,7 @@ export async function POST(request: NextRequest) {
         data = { articles: [] };
       }
     }
-    
+
     // Check if slug already exists
     if (data.articles.some((a: any) => a.slug === articleData.slug)) {
       return NextResponse.json(
@@ -111,10 +124,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Get next ID
-    const nextId = data.articles.length > 0 
-      ? Math.max(...data.articles.map((a: any) => a.id)) + 1 
+    const nextId = data.articles.length > 0
+      ? Math.max(...data.articles.map((a: any) => a.id)) + 1
       : 1;
-    
+
     // Create article
     const article = {
       ...articleData,
@@ -122,10 +135,10 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    
+
     // Add to array
     data.articles.push(article);
-    
+
     // WRITE: Save back
     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
       const githubStorage = new GitHubStorage();
@@ -136,10 +149,13 @@ export async function POST(request: NextRequest) {
       const path = await import('path');
       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
       const filePath = path.join(DATA_DIRECTORY, filename);
-      
+
       await fs.mkdir(DATA_DIRECTORY, { recursive: true });
       await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
     }
+
+    // Log notification
+    await logNotification(`New article "${article.title}" posted successfully`, 'success');
 
     return NextResponse.json({
       success: true,
@@ -150,7 +166,7 @@ export async function POST(request: NextRequest) {
   } catch (error: any) {
     console.error('Error creating article:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to create article',
         details: error.message
       },
@@ -176,13 +192,13 @@ export async function PUT(request: NextRequest) {
     let targetCategory: string | null = null;
     let targetFilename: string | null = null;
     let allArticles: any[] = [];
-    
+
     const categories = ['tech', 'business', 'markets', 'guides'];
-    
+
     for (const cat of categories) {
       const filename = getCategoryFilename(cat);
       let data: { articles: any[] };
-      
+
       if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
         const githubStorage = new GitHubStorage();
         data = await githubStorage.readJSONFile(`data/${filename}`);
@@ -191,7 +207,7 @@ export async function PUT(request: NextRequest) {
         const path = await import('path');
         const DATA_DIRECTORY = path.join(process.cwd(), 'data');
         const filePath = path.join(DATA_DIRECTORY, filename);
-        
+
         try {
           const content = await fs.readFile(filePath, 'utf-8');
           data = JSON.parse(content);
@@ -199,13 +215,13 @@ export async function PUT(request: NextRequest) {
           continue;
         }
       }
-      
+
       const articleIndex = data.articles.findIndex((a: any) => a.slug === slug);
       if (articleIndex !== -1) {
         targetCategory = cat;
         targetFilename = filename;
         allArticles = data.articles;
-        
+
         // Update article
         allArticles[articleIndex] = {
           ...allArticles[articleIndex],
@@ -215,14 +231,14 @@ export async function PUT(request: NextRequest) {
         break;
       }
     }
-    
+
     if (!targetCategory || !targetFilename) {
       return NextResponse.json(
         { error: 'Article not found' },
         { status: 404 }
       );
     }
-    
+
     // Save updated articles
     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
       const githubStorage = new GitHubStorage();
@@ -233,13 +249,18 @@ export async function PUT(request: NextRequest) {
       const path = await import('path');
       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
       const filePath = path.join(DATA_DIRECTORY, targetFilename);
-      
+
       await fs.writeFile(filePath, JSON.stringify({ articles: allArticles }, null, 2), 'utf-8');
     }
 
+    const updatedArticle = allArticles.find((a: any) => a.slug === slug);
+
+    // Log notification
+    await logNotification(`Article "${updatedArticle.title}" updated successfully`, 'info');
+
     return NextResponse.json({
       success: true,
-      article: allArticles.find((a: any) => a.slug === slug),
+      article: updatedArticle,
       message: 'Article updated successfully'
     });
 
@@ -268,13 +289,13 @@ export async function DELETE(request: NextRequest) {
     let targetCategory: string | null = null;
     let targetFilename: string | null = null;
     let allArticles: any[] = [];
-    
+
     const categories = ['tech', 'business', 'markets', 'guides'];
-    
+
     for (const cat of categories) {
       const filename = getCategoryFilename(cat);
       let data: { articles: any[] };
-      
+
       if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
         const githubStorage = new GitHubStorage();
         data = await githubStorage.readJSONFile(`data/${filename}`);
@@ -283,7 +304,7 @@ export async function DELETE(request: NextRequest) {
         const path = await import('path');
         const DATA_DIRECTORY = path.join(process.cwd(), 'data');
         const filePath = path.join(DATA_DIRECTORY, filename);
-        
+
         try {
           const content = await fs.readFile(filePath, 'utf-8');
           data = JSON.parse(content);
@@ -291,7 +312,7 @@ export async function DELETE(request: NextRequest) {
           continue;
         }
       }
-      
+
       const articleIndex = data.articles.findIndex((a: any) => a.slug === slug);
       if (articleIndex !== -1) {
         targetCategory = cat;
@@ -300,14 +321,14 @@ export async function DELETE(request: NextRequest) {
         break;
       }
     }
-    
+
     if (!targetCategory || !targetFilename) {
       return NextResponse.json(
         { error: 'Article not found' },
         { status: 404 }
       );
     }
-    
+
     // Save updated articles (with deleted article removed)
     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
       const githubStorage = new GitHubStorage();
@@ -318,9 +339,12 @@ export async function DELETE(request: NextRequest) {
       const path = await import('path');
       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
       const filePath = path.join(DATA_DIRECTORY, targetFilename);
-      
+
       await fs.writeFile(filePath, JSON.stringify({ articles: allArticles }, null, 2), 'utf-8');
     }
+
+    // Log notification
+    await logNotification(`Article deleted successfully`, 'warning');
 
     return NextResponse.json({
       success: true,

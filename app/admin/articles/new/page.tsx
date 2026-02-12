@@ -11,7 +11,7 @@ import "../../../../styles/admin/components.css";
 const AddArticlePage = () => {
   const router = useRouter();
 
-   useEffect(() => {
+  useEffect(() => {
     const hasCookie = document.cookie.includes('admin-auth=true');
     if (!hasCookie) {
       router.push('/login');
@@ -63,7 +63,7 @@ const AddArticlePage = () => {
         !article.title ||
         !article.slug ||
         !article.description ||
-        !article.category||
+        !article.category ||
         !article.specific
       ) {
         alert("Please fill in all required fields");
@@ -103,7 +103,22 @@ const AddArticlePage = () => {
   };
 
   const handlePreview = () => {
-    alert("Preview will be available after saving");
+    // 1. Validate basic fields
+    if (!article.title) {
+      alert("Please enter at least a title to preview.");
+      return;
+    }
+
+    // 2. Save current state to localStorage
+    try {
+      localStorage.setItem("admin_preview_draft", JSON.stringify(article));
+
+      // 3. Open preview window
+      window.open("/admin/preview", "_blank");
+    } catch (error) {
+      console.error("Failed to save preview data:", error);
+      alert("Failed to launch preview. Please try again.");
+    }
   };
 
   const titleLength = article.title?.length || 0;
@@ -134,8 +149,9 @@ const AddArticlePage = () => {
             </button>
             <button
               onClick={handlePreview}
-              className="secondary-button"
+              className="preview-button-main"
               disabled={loading}
+              title="Preview article in new tab"
             >
               <span className="button-icon">👁️</span>
               Preview

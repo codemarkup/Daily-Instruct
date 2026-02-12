@@ -35,14 +35,14 @@ export interface Article {
 function sanitizeArticleData(articleData: any): any {
   const sanitizeText = (text: string): string => {
     if (!text || typeof text !== 'string') return text || '';
-    
+
     // First fix the specific "â" sequence that appears in your output
     let sanitized = text
       .replace(/\u00E2\u20AC\u2122/g, "'")        // Fix "â" -> "'"
       .replace(/\u00E2\u20AC\u201D/g, '"')        // Fix other common broken UTF-8 sequences
       .replace(/\u00E2\u20AC\u201C/g, '"')
       .replace(/\u00E2\u20AC\u201C/g, '"');
-    
+
     // Fix smart characters from Word/Google Docs
     sanitized = sanitized
       .replace(/[\u2018\u2019]/g, "'")           // Smart single quotes ‘ ’
@@ -54,30 +54,30 @@ function sanitizeArticleData(articleData: any): any {
       .replace(/\u00AD/g, '')                    // Soft hyphen
       .replace(/\u200B/g, '')                    // Zero-width space
       .replace(/\uFEFF/g, '');                   // Zero-width no-break space
-    
+
     // Normalize Unicode and remove combining marks
     sanitized = sanitized
       .normalize('NFKD')                         // Normalize Unicode
       .replace(/[\u0300-\u036f]/g, '');          // Remove combining diacritics
-    
+
     return sanitized;
   };
 
   // Create a deep copy to avoid mutating original
   const sanitized = JSON.parse(JSON.stringify(articleData));
-  
+
   // Sanitize all top-level string fields
   const stringFields = [
-    'title', 'description', 'keywords', 'metaDescription', 
+    'title', 'description', 'keywords', 'metaDescription',
     'author', 'date', 'readTime', 'slug', 'specific'
   ];
-  
+
   stringFields.forEach(field => {
     if (sanitized[field] && typeof sanitized[field] === 'string') {
       sanitized[field] = sanitizeText(sanitized[field]);
     }
   });
-  
+
   // Sanitize content blocks (nested structure)
   if (sanitized.content && Array.isArray(sanitized.content)) {
     sanitized.content = sanitized.content.map((block: any) => ({
@@ -86,7 +86,7 @@ function sanitizeArticleData(articleData: any): any {
       author: block.author ? sanitizeText(block.author) : undefined
     }));
   }
-  
+
   return sanitized;
 }
 
@@ -103,7 +103,7 @@ function testSanitization() {
     { input: "Data’s importance", expected: "Data's importance" },
     { input: "Company's “mission”", expected: "Company's \"mission\"" },
   ];
-  
+
   console.log('UTF-8 Sanitization Test Results:');
   testCases.forEach((test, i) => {
     const result = sanitizeArticleData({ title: test.input }).title;
@@ -122,30 +122,31 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
 export const AdminService = {
   // UTF-8 Sanitizer (export for use elsewhere if needed)
   sanitizeArticleData,
-  
+
   async createArticle(articleData: Omit<Article, 'id'>): Promise<Article> {
     console.log('Original article data:', JSON.stringify(articleData).substring(0, 200));
-    
+
     // SANITIZE UTF-8 CHARACTERS BEFORE SENDING
     const sanitizedData = sanitizeArticleData(articleData);
     console.log('Sanitized article data:', JSON.stringify(sanitizedData).substring(0, 200));
-    
+
     const response = await fetch(`${API_BASE}/articles`, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json; charset=utf-8', // FIXED: Added charset
         'Accept': 'application/json; charset=utf-8'
       },
       body: JSON.stringify(sanitizedData),
     });
-    
+
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`Failed to create article: ${error}`);
     }
-    
+
     const data = await response.json();
     console.log('Article created successfully:', data.article?.slug);
+
     return data.article;
   },
 
@@ -153,18 +154,21 @@ export const AdminService = {
     return this.getArticles(); // Just calls getArticles()
   },
 
-  async getArticles(category?: string): Promise<Article[]> {
-    const url = category ? `${API_BASE}/articles?category=${category}` : `${API_BASE}/articles`;
+  async getArticles(category?: string, search?: string): Promise<Article[]> {
+    let url = `${API_BASE}/articles?`;
+    if (category) url += `category=${category}&`;
+    if (search) url += `search=${encodeURIComponent(search)}&`;
+
     const response = await fetch(url, {
       headers: {
         'Accept': 'application/json; charset=utf-8' // FIXED: Added charset
       }
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch articles: ${response.status}`);
     }
-    
+
     // Parse response with UTF-8 handling
     const text = await response.text();
     try {
@@ -177,25 +181,25 @@ export const AdminService = {
 
   async updateArticle(slug: string, articleData: Partial<Article>): Promise<Article> {
     console.log('Original update data:', JSON.stringify(articleData).substring(0, 200));
-    
+
     // SANITIZE UTF-8 CHARACTERS BEFORE SENDING
     const sanitizedData = sanitizeArticleData(articleData);
     console.log('Sanitized update data:', JSON.stringify(sanitizedData).substring(0, 200));
-    
+
     const response = await fetch(`${API_BASE}/articles?slug=${slug}`, {
       method: 'PUT',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json; charset=utf-8', // FIXED: Added charset
         'Accept': 'application/json; charset=utf-8'
       },
       body: JSON.stringify(sanitizedData),
     });
-    
+
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`Failed to update article: ${error}`);
     }
-    
+
     const data = await response.json();
     console.log('Article updated successfully:', data.article?.slug);
     return data.article;
@@ -208,12 +212,12 @@ export const AdminService = {
         'Accept': 'application/json; charset=utf-8' // FIXED: Added charset
       }
     });
-    
+
     if (!response.ok) {
       const error = await response.text();
       throw new Error(`Failed to delete article: ${error}`);
     }
-    
+
     return await response.json();
   },
 
@@ -221,11 +225,11 @@ export const AdminService = {
     try {
       const articles = await this.getArticles();
       const article = articles.find(article => article.slug === slug) || null;
-      
+
       if (article) {
         console.log(`Found article: ${slug}, title: "${article.title.substring(0, 50)}..."`);
       }
-      
+
       return article;
     } catch (error) {
       console.error('Error getting article by slug:', error);
@@ -245,44 +249,44 @@ export const AdminService = {
         console.log(`Article ${slug} not found`);
         return;
       }
-      
+
       console.log(`=== UTF-8 Check for ${slug} ===`);
       console.log(`Title: "${article.title}"`);
-      
+
       // Check for problematic sequences
       const checkText = (text: string, label: string) => {
         if (!text) return;
-        
+
         // Check for the "â" sequence
         if (text.includes('\u00E2\u20AC\u2122')) {
           console.log(`⚠️  ${label} contains "â" sequence`);
         }
-        
+
         // Check for smart quotes
         if (/[\u2018\u2019\u201C\u201D]/.test(text)) {
           console.log(`⚠️  ${label} contains smart quotes`);
         }
-        
+
         // Check for other special characters
         if (/[\u2013\u2014\u2026]/.test(text)) {
           console.log(`⚠️  ${label} contains special dashes/ellipsis`);
         }
-        
+
         // Show character codes for first 100 chars
-        console.log(`${label} char codes:`, 
+        console.log(`${label} char codes:`,
           Array.from(text.substring(0, 100))
             .map(c => c.charCodeAt(0).toString(16))
             .join(' ')
         );
       };
-      
+
       checkText(article.title, 'Title');
       checkText(article.description, 'Description');
-      
+
       if (article.content && article.content.length > 0) {
         checkText(article.content[0].text, 'First content block');
       }
-      
+
     } catch (error) {
       console.error('Error checking article encoding:', error);
     }

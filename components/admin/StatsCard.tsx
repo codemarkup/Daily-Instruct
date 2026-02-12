@@ -10,26 +10,32 @@ interface StatsCardProps {
   icon: string;
   color: string;
   trend: string;
+  onClick?: () => void;
 }
 
-const StatsCard: React.FC<StatsCardProps> = ({ 
-  title, 
-  value, 
-  change, 
-  icon, 
+const StatsCard: React.FC<StatsCardProps> = ({
+  title,
+  value,
+  change,
+  icon,
   color,
-  trend 
+  trend,
+  onClick
 }) => {
 
   const isSvg = icon?.endsWith('.svg');
   return (
-    <div className={`stats-card ${color}`}>
+    <div
+      className={`stats-card ${color}`}
+      onClick={onClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <div className="stats-card-header">
         <div className="stats-icon">
           {isSvg ? (
-            <img 
-              src={icon} 
-              alt={title} 
+            <img
+              src={icon}
+              alt={title}
               className="stats-svg-icon"
               width={24}
               height={24}

@@ -15,6 +15,12 @@ interface ArticleTableProps {
   onDeleteArticle: (slug: string, category: string) => void;
   onDuplicateArticle: (article: Article) => void;
   onRefresh?: () => void;
+  onToggleFlag?: (slug: string, field: keyof Article, value: boolean) => void;
+  // Visibility props
+  showSelection?: boolean;
+  showFlags?: boolean;
+  showStatus?: boolean;
+  showActions?: boolean;
 }
 
 const ArticleTable: React.FC<ArticleTableProps> = ({
@@ -25,6 +31,11 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
   onDeleteArticle,
   onDuplicateArticle,
   onRefresh,
+  onToggleFlag,
+  showSelection = true,
+  showFlags = true,
+  showStatus = true,
+  showActions = true,
 }) => {
   const handleDelete = (slug: string, category: string) => {
     if (confirm("Are you sure you want to delete this article?")) {
@@ -44,6 +55,7 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
       return date.toLocaleDateString("en-US", {
         month: "short",
         day: "numeric",
+        year: "numeric"
       });
     } catch {
       return dateString;
@@ -51,28 +63,31 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
   };
 
   return (
-    <div className="article-table-container">
+    <div className={`article-table-container ${!showSelection ? 'dashboard-table' : ''}`}>
       <div className="table-wrapper">
         {/* Table Header */}
         <div className="table-header">
-          <div className="header-cell checkbox-cell">
-            <input
-              type="checkbox"
-              checked={
-                articles.length > 0 &&
-                articles.every(
-                  (article) => selectedArticles.includes(article.slug) // Change from article.id to article.slug
-                )
-              }
-              onChange={onSelectAll}
-              className="checkbox-input"
-            />
-          </div>
+          {showSelection && (
+            <div className="header-cell checkbox-cell">
+              <input
+                type="checkbox"
+                checked={
+                  articles.length > 0 &&
+                  articles.every(
+                    (article) => selectedArticles.includes(article.slug)
+                  )
+                }
+                onChange={onSelectAll}
+                className="checkbox-input"
+              />
+            </div>
+          )}
           <div className="header-cell title-cell">Title</div>
-          <div className="header-cell author-cell">Author</div>
+          <div className="header-cell date-cell">Date</div> {/* Added Date Column */}
+          {showFlags && <div className="header-cell flags-cell">Flags</div>}
           <div className="header-cell category-cell">Category</div>
-          <div className="header-cell status-cell">Status</div>
-          <div className="header-cell actions-cell">Actions</div>
+          {showStatus && <div className="header-cell status-cell">Status</div>}
+          {showActions && <div className="header-cell actions-cell">Actions</div>}
         </div>
 
         {/* Table Body */}
@@ -82,33 +97,34 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
               <div className="empty-icon">📝</div>
               <h3 className="empty-title">No articles found</h3>
               <p className="empty-description">
-                Try adjusting your search or filter to find what you're looking
-                for.
+                Try adjusting your search or filter to find what you're looking for.
               </p>
               <Link href="/admin/articles/new" className="empty-action">
                 Create your first article
               </Link>
-              <button onClick={onRefresh} className="empty-refresh">
-                ↻ Refresh
-              </button>
+              {onRefresh && (
+                <button onClick={onRefresh} className="empty-refresh">
+                  ↻ Refresh
+                </button>
+              )}
             </div>
           ) : (
             articles.map((article) => (
               <div
                 key={`article-${article.id}-${article.slug}`}
-                className={`table-row ${
-                  selectedArticles.includes(article.slug) ? "selected" : "" // Change from article.id to article.slug
-                }`}
+                className={`table-row ${selectedArticles.includes(article.slug) ? "selected" : ""}`}
               >
                 {/* Checkbox */}
-                <div className="table-cell checkbox-cell">
-                  <input
-                    type="checkbox"
-                    checked={selectedArticles.includes(article.slug)} // Change from article.id to article.slug
-                    onChange={() => onSelectArticle(article.slug)} // Change from article.id to article.slug
-                    className="checkbox-input"
-                  />
-                </div>
+                {showSelection && (
+                  <div className="table-cell checkbox-cell">
+                    <input
+                      type="checkbox"
+                      checked={selectedArticles.includes(article.slug)}
+                      onChange={() => onSelectArticle(article.slug)}
+                      className="checkbox-input"
+                    />
+                  </div>
+                )}
 
                 {/* Title */}
                 <div className="table-cell title-cell">
@@ -118,92 +134,130 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
                   </div>
                 </div>
 
-                {/* Author */}
-                <div className="table-cell author-cell">
-                  <span className="cell-text">{article.author}</span>
+                {/* Date - Added */}
+                <div className="table-cell date-cell">
+                  <span className="article-date">{formatDate(article.date)}</span>
                 </div>
+
+                {/* Flags (Quick Toggles) */}
+                {showFlags && (
+                  <div className="table-cell flags-cell">
+                    <div className="flags-container">
+                      <button
+                        className={`flag-toggle ${article.trending ? 'active' : ''}`}
+                        onClick={() => onToggleFlag?.(article.slug, 'trending', !article.trending)}
+                        title="Toggle Trending"
+                      >
+                        🔥
+                      </button>
+                      <button
+                        className={`flag-toggle ${article.featured ? 'active' : ''}`}
+                        onClick={() => onToggleFlag?.(article.slug, 'featured', !article.featured)}
+                        title="Toggle Featured"
+                      >
+                        ⭐
+                      </button>
+                      <button
+                        className={`flag-toggle ${article.homeLatest ? 'active' : ''}`}
+                        onClick={() => onToggleFlag?.(article.slug, 'homeLatest', !article.homeLatest)}
+                        title="Toggle Home Latest"
+                      >
+                        🏠
+                      </button>
+                      <button
+                        className={`flag-toggle ${article.homeTrending ? 'active' : ''}`}
+                        onClick={() => onToggleFlag?.(article.slug, 'homeTrending', !article.homeTrending)}
+                        title="Toggle Home Trending"
+                      >
+                        📈
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Category */}
                 <div className="table-cell category-cell">
-                  {/* Change to this to handle both market and markets */}
                   <span
-                    className={`category-tag ${
-                      article.category.toLowerCase() === "market"
-                        ? "markets"
-                        : article.category.toLowerCase()
-                    }`}
+                    className={`category-tag ${article.category.toLowerCase() === "market"
+                      ? "markets"
+                      : article.category.toLowerCase()
+                      }`}
                   >
                     {article.category}
                   </span>
                 </div>
 
                 {/* Status */}
-                <div className="table-cell status-cell">
-                  <span className={`status-badge published`}>Published</span>
-                </div>
+                {showStatus && (
+                  <div className="table-cell status-cell">
+                    <span className={`status-badge published`}>Published</span>
+                  </div>
+                )}
 
                 {/* Actions */}
-                <div className="table-cell actions-cell extra">
-                  <div className="action-buttons">
-                    <Link
-                      href={`/admin/articles/edit/${article.slug}`}
-                      className="action-button edit"
-                      title="Edit"
-                    >
-                      <Image
-                        src="/icons/edit.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                    </Link>
+                {showActions && (
+                  <div className="table-cell actions-cell extra">
+                    <div className="action-buttons">
+                      <Link
+                        href={`/admin/articles/edit/${article.slug}`}
+                        className="action-button edit"
+                        title="Edit"
+                      >
+                        <Image
+                          src="/icons/edit.svg"
+                          alt="Edit"
+                          width={18}
+                          height={18}
+                          className="icon"
+                        />
+                      </Link>
 
-                    <button
-                      onClick={() => handleDuplicate(article)}
-                      className="action-button duplicate"
-                      title="Duplicate"
-                    >
-                      <Image
-                        src="/icons/duplicate.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleDelete(article.slug, article.category)
-                      }
-                      className="action-button delete"
-                      title="Delete"
-                    >
-                      <Image
-                        src="/icons/delete.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                    </button>
-                    <a
-                      href={`/articles/${article.slug}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="action-button preview"
-                      title="Preview"
-                    >
-                      <Image
-                        src="/icons/view.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                    </a>
+                      <button
+                        onClick={() => handleDuplicate(article)}
+                        className="action-button duplicate"
+                        title="Duplicate"
+                      >
+                        <Image
+                          src="/icons/duplicate.svg"
+                          alt="Edit"
+                          width={18}
+                          height={18}
+                          className="icon"
+                        />
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDelete(article.slug, article.category)
+                        }
+                        className="action-button delete"
+                        title="Delete"
+                      >
+                        <Image
+                          src="/icons/delete.svg"
+                          alt="Edit"
+                          width={18}
+                          height={18}
+                          className="icon"
+                        />
+                      </button>
+                      <a
+                        href={`/articles/${article.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="action-button preview"
+                        title="Preview"
+                      >
+                        <Image
+                          src="/icons/view.svg"
+                          alt="Edit"
+                          width={18}
+                          height={18}
+                          className="icon"
+                        />
+                      </a>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             ))
           )}
@@ -218,39 +272,40 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
       </div>
 
       {/* Table Footer */}
-      <div className="table-footer">
-        <div className="footer-info">
-          Showing <span className="highlight">{articles.length}</span> articles
+      {showSelection && (
+        <div className="table-footer">
+          <div className="footer-info">
+            Showing <span className="highlight">{articles.length}</span> articles
+          </div>
+          <div className="selected-count">
+            {selectedArticles.length > 0 && (
+              <>
+                <span className="highlight">{selectedArticles.length}</span>{" "}
+                selected
+                <button
+                  className="bulk-delete-btn"
+                  onClick={() => {
+                    if (
+                      confirm(
+                        `Delete ${selectedArticles.length} selected articles?`
+                      )
+                    ) {
+                      selectedArticles.forEach((slug) => {
+                        const article = articles.find((a) => a.slug === slug);
+                        if (article) {
+                          onDeleteArticle(article.slug, article.category);
+                        }
+                      });
+                    }
+                  }}
+                >
+                  Delete Selected
+                </button>
+              </>
+            )}
+          </div>
         </div>
-        <div className="selected-count">
-          {selectedArticles.length > 0 && (
-            <>
-              <span className="highlight">{selectedArticles.length}</span>{" "}
-              selected
-              <button
-                className="bulk-delete-btn"
-                onClick={() => {
-                  if (
-                    confirm(
-                      `Delete ${selectedArticles.length} selected articles?`
-                    )
-                  ) {
-                    selectedArticles.forEach((slug) => {
-                      // Change from id to slug
-                      const article = articles.find((a) => a.slug === slug); // Change from a.id === id to a.slug === slug
-                      if (article) {
-                        onDeleteArticle(article.slug, article.category);
-                      }
-                    });
-                  }
-                }}
-              >
-                Delete Selected
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      )}
     </div>
   );
 };

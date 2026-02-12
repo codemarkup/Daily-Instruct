@@ -38,7 +38,6 @@ const HeroSection: React.FC = () => {
   useEffect(() => {
     const fetchAllArticles = async () => {
       try {
-        // Fetch from all categories
         const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
           fetch('/api/github/articles?category=tech'),
           fetch('/api/github/articles?category=business'),
@@ -53,7 +52,6 @@ const HeroSection: React.FC = () => {
           guidesRes.json()
         ]);
 
-        // Combine all articles
         const allArticles = [
           ...(techData.articles || []),
           ...(businessData.articles || []),
@@ -68,91 +66,41 @@ const HeroSection: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchAllArticles();
   }, []);
 
-  // Get featured article for homepage - get the most recent one
   const featuredArticles = articles.filter(article => article.homeFeatured);
-  const featuredArticle = featuredArticles.sort((a, b) => 
+  const featuredArticle = featuredArticles.sort((a, b) =>
     new Date(b.date).getTime() - new Date(a.date).getTime()
-  )[0]; // Get the first (most recent) one
-  
-  // Get top stories for homepage (limit to 4, sorted by date - latest first)
+  )[0];
+
   const topStories = articles
     .filter(article => article.homeTopStory)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
-    .slice(0, 4);
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3); // Limit to 3 for the bento sidebar
 
   if (loading) {
     return (
       <section className={styles.heroSection}>
         <div className="container">
-          <div className={styles.heroGrid}>
-            <div className={styles.featuredArticle}>
-              <div className={styles.loadingPlaceholder}>
-                <div className={styles.loadingSpinner}></div>
-                <p>Loading featured article...</p>
-              </div>
-            </div>
-            <div className={styles.topStories}>
-              <h3 className={styles.storiesTitle}>Top Stories</h3>
-              <div className={styles.loadingPlaceholder}>
-                <div className={styles.loadingSpinner}></div>
-                <p>Loading top stories...</p>
-              </div>
-            </div>
+          <div className={styles.loadingContainer}>
+            <div className={styles.loadingSpinner}></div>
           </div>
         </div>
       </section>
     );
   }
 
-  // Fallback if no featured article
   if (!featuredArticle) {
     return (
       <section className={styles.heroSection}>
         <div className="container">
-          <div className={styles.heroGrid}>
-            <div className={styles.featuredArticle}>
-              <div className={styles.noArticles}>
-                <p>No featured article found</p>
-                <Link href="/all-articles" className={styles.browseBtn}>
-                  Browse All Articles
-                </Link>
-              </div>
-            </div>
-            <div className={styles.topStories}>
-              <h3 className={styles.storiesTitle}>Top Stories</h3>
-              {topStories.length > 0 ? (
-                <div className={styles.storiesList}>
-                  {topStories.map((story, index) => (
-                    <Link 
-                      key={`${story.category}-${story.id}`} 
-                      href={`/articles/${story.slug}`}
-                      className={styles.storyLink}
-                    >
-                      <div className={styles.storyCard}>
-                        <div className={styles.storyNumber}>{(index + 1).toString().padStart(2, '0')}</div>
-                        
-                        <div className={styles.storyContent}>
-                          <span className={styles.storyCategory}>{story.category}</span>
-                          <h4 className={styles.storyTitle}>{story.title}</h4>
-                          <div className={styles.storyMeta}>
-                            <span className={styles.storyAuthor}>{story.author}</span>
-                            <span className={styles.storyDate}>{story.date}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className={styles.noArticles}>
-                  <p>No top stories available</p>
-                </div>
-              )}
-            </div>
+          <div className={styles.noArticles}>
+            <p>No featured article found</p>
+            <Link href="/all-articles" className={styles.browseBtn}>
+              Browse All Articles
+            </Link>
           </div>
         </div>
       </section>
@@ -163,71 +111,78 @@ const HeroSection: React.FC = () => {
     <section className={styles.heroSection}>
       <div className="container">
         <div className={styles.heroGrid}>
-          {/* Main Featured Article */}
-          <div className={styles.featuredArticle}>
-            <Link href={`/articles/${featuredArticle.slug}`} className={styles.featuredLink}>
-              <div className={styles.articleImage}>
-                <Image 
-                  src={featuredArticle.image}
+
+          {/* LEFT: MAIN FEATURED ARTICLE (BENTO LARGE) */}
+          <Link href={`/articles/${featuredArticle.slug}`} className={styles.featuredLink}>
+            <div className={styles.featuredArticle}>
+              <div className={styles.featuredImageContainer}>
+                <Image
+                  src={encodeURI(featuredArticle.image.trim())}
                   alt={featuredArticle.title}
-                  width={800}
-                  height={500}
-                  className={styles.articleImg}
+                  fill
+                  className={styles.featuredImg}
                   priority
                 />
-                <div className={styles.categoryTag}>{featuredArticle.category}</div>
               </div>
-              
-              <div className={styles.articleContent}>
-                <h1 className={styles.articleTitle}>{featuredArticle.title}</h1>
-                <p className={styles.articleDescription}>{featuredArticle.description}</p>
-                
-                <div className={styles.articleMeta}>
-                  <span className={styles.author}>{featuredArticle.author}</span>
-                  <span className={styles.separator}>•</span>
-                  <span className={styles.date}>{featuredArticle.date}</span>
-                  <span className={styles.separator}>•</span>
-                  <span className={styles.readTime}>{featuredArticle.readTime}</span>
-                </div>
-                
-                <button className={styles.readArticleBtn}>Read Article</button>
-              </div>
-            </Link>
-          </div>
 
-          {/* Top Stories Sidebar */}
+              <div className={styles.featuredContent}>
+                <span className={styles.categoryBadge}>{featuredArticle.category}</span>
+                <h1 className={styles.featuredTitle}>{featuredArticle.title}</h1>
+                <p className={styles.featuredDesc}>{featuredArticle.description}</p>
+
+                <button className={styles.readMoreBtn}>
+                  Read Story
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </Link>
+
+          {/* RIGHT: TOP STORIES SIDEBAR */}
           <div className={styles.topStories}>
-            <h3 className={styles.storiesTitle}>Top Stories</h3>
-            
-            {topStories.length > 0 ? (
-              <div className={styles.storiesList}>
-                {topStories.map((story, index) => (
-                  <Link 
-                    key={`${story.category}-${story.id}`} 
-                    href={`/articles/${story.slug}`}
-                    className={styles.storyLink}
-                  >
-                    <div className={styles.storyCard}>
-                      <div className={styles.storyNumber}>{(index + 1).toString().padStart(2, '0')}</div>
-                      
-                      <div className={styles.storyContent}>
-                        <span className={styles.storyCategory}>{story.category}</span>
-                        <h4 className={styles.storyTitle}>{story.title}</h4>
-                        <div className={styles.storyMeta}>
-                          <span className={styles.storyAuthor}>{story.author}</span>
-                          <span className={styles.storyDate}>{story.date}</span>
-                        </div>
+            <div className={styles.storiesHeader}>
+              <span className={styles.sectionLabel}>Top Stories</span>
+              <div className={styles.sectionLine}></div>
+            </div>
+
+            <div className={styles.storiesList}>
+              {topStories.map((story) => (
+                <Link
+                  key={`${story.category}-${story.id}`}
+                  href={`/articles/${story.slug}`}
+                  className={styles.storyLink}
+                >
+                  <div className={styles.storyCard}>
+                    <div className={styles.storyThumbnail}>
+                      <Image
+                        src={encodeURI(story.image.trim())}
+                        alt={story.title}
+                        fill
+                        className={styles.storyThumbImg}
+                      />
+                    </div>
+                    <div className={styles.storyContent}>
+                      <span className={styles.storyCategory}>{story.category}</span>
+                      <h4 className={styles.storyTitle}>{story.title}</h4>
+                      <div className={styles.storyMeta}>
+                        <span>{story.author}</span>
+                        <span>•</span>
+                        <span>{story.readTime}</span>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.noArticles}>
-                <p>No top stories available</p>
-              </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {topStories.length === 0 && (
+              <div className={styles.noArticles}>No top stories</div>
             )}
           </div>
+
         </div>
       </div>
     </section>

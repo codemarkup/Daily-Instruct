@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import '../../styles/admin/components.css';
@@ -33,11 +33,11 @@ const AdminSidebar = () => {
       path: '/admin/categories',
       badge: '4',
     },
-    {
-      title: 'Analytics',
-      icon: '📈',
-      path: '/admin/analytics',
-    },
+    // {
+    //   title: 'Analytics',
+    //   icon: '📈',
+    //   path: '/admin/analytics',
+    // },
     {
       title: 'Utilities',
       icon: '🔧',
@@ -55,6 +55,55 @@ const AdminSidebar = () => {
     },
   ];
 
+  const sidebarRef = React.useRef<HTMLElement>(null);
+
+  // Initialize state - default to collapsed on mobile if window exists
+  // We use useEffect to avoid hydration mismatch
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Optional: Auto-collapse on resize to mobile
+    // window.addEventListener('resize', handleResize);
+    // return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Handle click outside to close sidebar on all screens
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if click is outside sidebar and sidebar is NOT collapsed (expanded)
+      if (
+        !collapsed &&
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target as Node)
+      ) {
+        setCollapsed(true);
+      }
+    };
+
+    const handleEscKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !collapsed) {
+        setCollapsed(true);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscKey);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [collapsed]);
+
   const isActive = (path: string) => {
     return pathname === path || pathname?.startsWith(`${path}/`);
   };
@@ -64,11 +113,27 @@ const AdminSidebar = () => {
   };
 
   return (
-    <aside className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <aside ref={sidebarRef} className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
       {/* Logo */}
       <div className="sidebar-header">
         <div className="sidebar-logo" onClick={() => setCollapsed(!collapsed)}>
-          <div className="logo-icon">👑</div>
+          <div className="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="40" height="40" rx="10" fill="url(#bg-gradient)" fillOpacity="0.2" />
+              <path d="M12 10H19C24.5228 10 29 14.4772 29 20C29 25.5228 24.5228 30 19 30H12V10Z" stroke="url(#logo-gradient)" strokeWidth="3" />
+              <path d="M15 10V30" stroke="url(#logo-gradient)" strokeWidth="3" />
+              <defs>
+                <linearGradient id="bg-gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#D4AF37" />
+                  <stop offset="1" stopColor="#000" />
+                </linearGradient>
+                <linearGradient id="logo-gradient" x1="12" y1="10" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#D4AF37" />
+                  <stop offset="1" stopColor="#FFF" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
           {!collapsed && (
             <div className="logo-text">
               <span className="logo-primary">Daily Instruct</span>
@@ -76,8 +141,8 @@ const AdminSidebar = () => {
             </div>
           )}
         </div>
-        <button 
-          className="sidebar-toggle" 
+        <button
+          className="sidebar-toggle"
           onClick={() => setCollapsed(!collapsed)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
@@ -89,7 +154,7 @@ const AdminSidebar = () => {
       <nav className="sidebar-nav">
         {menuItems.map((item) => (
           <div key={item.title} className="nav-section">
-            <Link 
+            <Link
               href={item.path}
               className={`nav-item ${isActive(item.path) || (item.subItems && isSubItemActive(item.subItems)) ? 'active' : ''}`}
             >
@@ -106,7 +171,7 @@ const AdminSidebar = () => {
                 <span className="nav-arrow">▼</span>
               )}
             </Link>
-            
+
             {/* Sub Items */}
             {item.subItems && !collapsed && (
               <div className="sub-nav">

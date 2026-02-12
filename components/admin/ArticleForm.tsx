@@ -227,7 +227,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     setQuickFillError("");
     setShowQuickFill(false);
     setQuickFillText("");
-    
+
     // Show success message
     alert(`Successfully created ${newBlocks.length} content blocks!`);
   };
@@ -245,7 +245,7 @@ QUOTE: "The future belongs to those who embrace AI"
 PARAGRAPH: Companies that adopt AI early will have a competitive advantage...
 HEADING: Getting Started
 PARAGRAPH: Begin with simple automation tasks...`;
-    
+
     setQuickFillText(exampleText);
   };
   // =========== END QUICK FILL FUNCTIONALITY ===========
@@ -391,7 +391,7 @@ PARAGRAPH: Begin with simple automation tasks...`;
                   </button>
                 </p>
               </div>
-              
+
               <div className="text-area-container">
                 <textarea
                   value={quickFillText}
@@ -529,7 +529,7 @@ PARAGRAPH: Continue writing...`}
             <span className="hint-count">{(article.keywords || "").length}/200</span>
           </div>
         </div>
-        
+
         <div className="form-group">
           <label className="form-label">
             Meta Description
@@ -596,10 +596,10 @@ PARAGRAPH: Continue writing...`}
           </span>
         </label>
         <div className="image-upload-container">
+          {/* FILE UPLOAD HIDDEN FOR CLIENT
           <div
-            className={`drag-drop-area ${dragActive ? "drag-active" : ""} ${
-              uploading ? "uploading" : ""
-            }`}
+            className={`drag-drop-area ${dragActive ? "drag-active" : ""} ${uploading ? "uploading" : ""
+              }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
@@ -670,6 +670,7 @@ PARAGRAPH: Continue writing...`}
               </div>
             </div>
           )}
+          */}
 
           <div className="image-preview-section">
             <div className="preview-header">
@@ -723,7 +724,7 @@ PARAGRAPH: Continue writing...`}
 
           <div className="manual-url-section">
             <label className="url-input-label">
-              Or enter image URL manually:
+              Enter Image URL:
             </label>
             <div className="url-input-group">
               <input
@@ -731,7 +732,7 @@ PARAGRAPH: Continue writing...`}
                 value={article.image || ""}
                 onChange={(e) => handleChange("image", e.target.value)}
                 className="form-input image-url-input"
-                placeholder="/images/category/filename.png"
+                placeholder="https://res.cloudinary.com/..."
                 disabled={uploading}
               />
               <button
@@ -800,15 +801,16 @@ PARAGRAPH: Continue writing...`}
           {["trending", "featured", "topStory", "grid", "homeFeatured", "homeLatest", "homeTrending", "homeTopStory"].map((flag) => (
             <div key={flag} className="flag-group">
               <label className="flag-label">
+                <span className="flag-text">
+                  {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
+                </span>
                 <input
                   type="checkbox"
                   checked={Boolean(article[flag as keyof Article]) || false}
                   onChange={(e) => handleChange(flag as keyof Article, e.target.checked)}
                   className="flag-checkbox"
                 />
-                <span className="flag-text">
-                  {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
-                </span>
+                <div className="toggle-switch"></div>
               </label>
             </div>
           ))}
@@ -875,8 +877,8 @@ PARAGRAPH: Continue writing...`}
                   block.type === "paragraph"
                     ? "Write paragraph..."
                     : block.type === "heading"
-                    ? "Write heading..."
-                    : "Write quote..."
+                      ? "Write heading..."
+                      : "Write quote..."
                 }
                 rows={block.type === "paragraph" ? 3 : 2}
               />

@@ -22,7 +22,7 @@ const ArticlesPage = () => {
   // =========== AUTH CHECK ===========
   useEffect(() => {
     const hasCookie = document.cookie.includes('admin-auth=true');
-    
+
     if (!hasCookie) {
       router.push('/login');
     } else {
@@ -67,24 +67,24 @@ const ArticlesPage = () => {
   // Filter articles based on search and filters
   const filteredArticles = articles.filter(article => {
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         article.description.toLowerCase().includes(searchQuery.toLowerCase());
+      article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      article.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = categoryFilter === 'all' || article.category.toLowerCase() === categoryFilter.toLowerCase();
-    
+
     return matchesSearch && matchesCategory;
   });
 
   const handleSelectAll = () => {
     const filteredSlugs = filteredArticles.map(article => article.slug);
-    
+
     // Check if ALL filtered articles are selected
-    const allFilteredSelected = filteredSlugs.every(slug => 
+    const allFilteredSelected = filteredSlugs.every(slug =>
       selectedArticles.includes(slug)
     );
-    
+
     if (allFilteredSelected) {
       // Deselect all filtered articles
-      setSelectedArticles(prev => 
+      setSelectedArticles(prev =>
         prev.filter(slug => !filteredSlugs.includes(slug))
       );
     } else {
@@ -109,20 +109,20 @@ const ArticlesPage = () => {
       try {
         // Get articles to delete
         const articlesToDelete = articles.filter(a => selectedArticles.includes(a.slug));
-        
+
         // Delete each article
         const deletePromises = articlesToDelete.map(async (article) => {
-          await AdminService.deleteArticle(article.slug); 
+          await AdminService.deleteArticle(article.slug);
         });
-        
+
         await Promise.all(deletePromises);
-        
+
         // Update local state
         setArticles(prev => prev.filter(article => !selectedArticles.includes(article.slug)));
         setSelectedArticles([]);
-        
+
         alert(`Successfully deleted ${selectedArticles.length} articles`);
-        
+
       } catch (err) {
         console.error('Error deleting articles:', err);
         alert('Failed to delete some articles. Please try again.');
@@ -139,31 +139,31 @@ const ArticlesPage = () => {
 
     try {
       console.log(`Deleting article: ${slug}, category: ${category}`);
-      
+
       // First, remove from local state for immediate UI update
       const articleToDelete = articles.find(a => a.slug === slug && a.category === category);
       if (!articleToDelete) {
         alert('Article not found in local state');
         return;
       }
-      
+
       // Remove from local state immediately
       setArticles(prev => prev.filter(article => !(article.slug === slug && article.category === category)));
-      
+
       // Remove from selected articles if it was selected
       setSelectedArticles(prev => prev.filter(slug => slug !== articleToDelete.slug));
-      
+
       // Then call API
       await AdminService.deleteArticle(slug); // Remove category parameter
-      
+
       console.log('Article deleted successfully');
-      
+
     } catch (err: any) {
       console.error('Error deleting article:', err);
-      
+
       // If API fails, refresh the list to restore the article
       await fetchArticles();
-      
+
       alert(`Failed to delete article: ${err.message || 'Unknown error'}`);
     }
   };
@@ -182,7 +182,7 @@ const ArticlesPage = () => {
           }),
           category: originalArticle.category
         };
-        
+
         await AdminService.createArticle(newArticle);
         await fetchArticles(); // Refresh the list
         alert('Article duplicated successfully!');
@@ -197,13 +197,31 @@ const ArticlesPage = () => {
     router.push('/admin/articles/new');
   };
 
+  const handleToggleFlag = async (slug: string, field: keyof Article, value: boolean) => {
+    try {
+      // Optimistic update
+      setArticles(prev =>
+        prev.map(a => a.slug === slug ? { ...a, [field]: value } : a)
+      );
+
+      // Call API
+      await AdminService.updateArticle(slug, { [field]: value });
+
+    } catch (err) {
+      console.error('Error toggling flag:', err);
+      alert('Failed to update article status');
+      // Revert on error
+      fetchArticles();
+    }
+  };
+
   const handleExport = () => {
     const exportData = {
       exportedAt: new Date().toISOString(),
       totalArticles: articles.length,
       articles: articles
     };
-    
+
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -300,6 +318,7 @@ const ArticlesPage = () => {
         onDeleteArticle={handleDeleteArticle}
         onDuplicateArticle={handleDuplicateArticle}
         onRefresh={fetchArticles}
+        onToggleFlag={handleToggleFlag}
       />
 
       {/* Stats Footer */}

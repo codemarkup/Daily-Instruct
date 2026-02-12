@@ -4,24 +4,25 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import StatsCard from "@/components/admin/StatsCard";
+import ArticleTable from "@/components/admin/ArticleTable";
 import { AdminService, Article } from "@/services/admin-service";
 import "../../styles/admin/components.css";
 
 const AdminDashboard = () => {
   const router = useRouter();
-  
+
   // =========== AUTH CHECK ===========
   useEffect(() => {
     // Simple cookie check
     const hasAuthCookie = document.cookie.includes('admin-auth=true');
-    
+
     if (!hasAuthCookie) {
       console.log('No auth cookie, redirecting to login');
       router.push('/login');
     }
   }, [router]);
   // =========== END AUTH CHECK ===========
-  
+
   const [stats, setStats] = useState([
     {
       title: "Total Articles",
@@ -57,17 +58,7 @@ const AdminDashboard = () => {
     },
   ]);
 
-  const [recentArticles, setRecentArticles] = useState<
-    Array<{
-      id: number;
-      title: string;
-      category: string;
-      date: string;
-      views: string;
-      status: string;
-      slug: string;
-    }>
-  >([]);
+  const [recentArticles, setRecentArticles] = useState<Article[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -144,6 +135,8 @@ const AdminDashboard = () => {
           icon: "/icons/admin/article.svg",
           color: "gold",
           trend: "up",
+          // @ts-ignore - Adding onClick prop dynamically
+          onClick: () => router.push("/admin/articles"),
         },
         {
           title: "Trending Articles",
@@ -152,6 +145,8 @@ const AdminDashboard = () => {
           icon: "/icons/admin/trending.svg",
           color: "blue",
           trend: "up",
+          // @ts-ignore
+          onClick: () => router.push("/admin/articles?filter=trending"),
         },
         {
           title: "Featured Articles",
@@ -160,6 +155,8 @@ const AdminDashboard = () => {
           icon: "/icons/admin/featured.svg",
           color: "purple",
           trend: "up",
+          // @ts-ignore
+          onClick: () => router.push("/admin/articles?filter=featured"),
         },
         {
           title: "Latest Articles",
@@ -168,21 +165,12 @@ const AdminDashboard = () => {
           icon: "/icons/admin/latest.svg",
           color: "orange",
           trend: "down",
+          // @ts-ignore
+          onClick: () => router.push("/admin/articles?sortBy=date"),
         },
       ]);
 
-      // Update recent articles
-      const formattedRecentArticles = latestArticles.map((article) => ({
-        id: article.id,
-        title: article.title,
-        category: article.category,
-        date: formatDate(article.date),
-        views: "0", // You can add view tracking later
-        status: "published", // All articles from JSON are published
-        slug: article.slug,
-      }));
-
-      setRecentArticles(formattedRecentArticles);
+      setRecentArticles(latestArticles);
 
       // Update system status
       setSystemStatus({
@@ -229,23 +217,65 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteArticle = async (slug: string, category: string) => {
-  if (confirm("Are you sure you want to delete this article?")) {
-    try {
-      // FIX: Remove category parameter
-      await AdminService.deleteArticle(slug); // ✅ CORRECT
-      
-      // Refresh data
-      fetchDashboardData();
-      alert("Article deleted successfully!");
-    } catch (err) {
-      console.error("Error deleting article:", err);
-      alert("Failed to delete article. Please try again.");
+    if (confirm("Are you sure you want to delete this article?")) {
+      try {
+        // FIX: Remove category parameter
+        await AdminService.deleteArticle(slug); // ✅ CORRECT
+
+        // Refresh data
+        fetchDashboardData();
+        alert("Article deleted successfully!");
+      } catch (err) {
+        console.error("Error deleting article:", err);
+        alert("Failed to delete article. Please try again.");
+      }
     }
-  }
-};
+  };
 
   const handlePreviewArticle = (slug: string) => {
     window.open(`/articles/${slug}`, "_blank");
+  };
+
+  const handleDuplicateArticle = async (originalArticle: Article) => {
+    if (confirm('Duplicate this article?')) {
+      try {
+        const newArticle: Omit<Article, 'id'> & { category: string } = {
+          ...originalArticle,
+          title: `${originalArticle.title} (Copy)`,
+          slug: `${originalArticle.slug}-copy-${Date.now()}`,
+          date: new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }),
+          category: originalArticle.category
+        };
+
+        await AdminService.createArticle(newArticle);
+        fetchDashboardData(); // Refresh
+        alert('Article duplicated successfully!');
+      } catch (err) {
+        console.error('Error duplicating article:', err);
+        alert('Failed to duplicate article. Please try again.');
+      }
+    }
+  };
+
+  const handleToggleFlag = async (slug: string, field: keyof Article, value: boolean) => {
+    try {
+      // Optimistic update
+      setRecentArticles(prev =>
+        prev.map(a => a.slug === slug ? { ...a, [field]: value } : a)
+      );
+
+      // Call API
+      await AdminService.updateArticle(slug, { [field]: value });
+
+    } catch (err) {
+      console.error('Error toggling flag:', err);
+      // Revert on error
+      fetchDashboardData();
+    }
   };
 
   const handleViewAllArticles = () => {
@@ -352,96 +382,21 @@ const AdminDashboard = () => {
               View All →
             </button>
           </div>
-          <div className="recent-articles-table">
-            <div className="table-header">
-              <div className="table-cell">Title</div>
-              <div className="table-cell">Category</div>
-              <div className="table-cell">Date</div>
-              <div className="table-cell">Views</div>
-              <div className="table-cell">Status</div>
-              <div className="table-cell">Actions</div>
-            </div>
-            <div className="table-body">
-              {recentArticles.length > 0 ? (
-                recentArticles.map((article) => (
-                  <div
-                    key={`${article.id}-${article.slug}`}
-                    className="table-row"
-                  >
-                    <div className="table-cell">
-                      <span className="cell-title">{article.title}</span>
-                    </div>
-                    <div className="table-cell">
-                      <span
-                        className={`category-badge ${article.category.toLowerCase()}`}
-                      >
-                        {article.category}
-                      </span>
-                    </div>
-                    <div className="table-cell">
-                      <span className="cell-date">{article.date}</span>
-                    </div>
-                    <div className="table-cell">
-                      <span className="cell-views">{article.views}</span>
-                    </div>
-                    <div className="table-cell">
-                      <span className={`status-badge ${article.status}`}>
-                        {article.status}
-                      </span>
-                    </div>
-                    <div className="table-cell">
-                      <div className="action-buttons">
-                        <button
-                          className="action-button edit"
-                          onClick={() => handleEditArticle(article.slug)}
-                        >
-                          <Image
-                            src="/icons/edit.svg"
-                            alt="Edit"
-                            width={18}
-                            height={18}
-                            className="icon"
-                          />
-                        </button>
-                        <button
-                          className="action-button delete"
-                          onClick={() =>
-                            handleDeleteArticle(article.slug, article.category)
-                          }
-                        >
-                          <Image
-                        src="/icons/delete.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                        </button>
-                        <button
-                          className="action-button preview"
-                          onClick={() => handlePreviewArticle(article.slug)}
-                        >
-                          <Image
-                        src="/icons/view.svg"
-                        alt="Edit"
-                        width={18}
-                        height={18}
-                        className="icon"
-                      />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="no-data-row">
-                  <div className="table-cell">
-                    <span className="no-data-text">No articles found</span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+
+          <ArticleTable
+            articles={recentArticles}
+            selectedArticles={[]}
+            onSelectAll={() => { }}
+            onSelectArticle={() => { }}
+            onDeleteArticle={handleDeleteArticle}
+            onDuplicateArticle={handleDuplicateArticle}
+            onRefresh={fetchDashboardData}
+            onToggleFlag={handleToggleFlag}
+            // Dashboard specific customization
+            showSelection={false}
+            showFlags={false}
+            showStatus={false}
+          />
         </div>
 
         {/* System Status */}
