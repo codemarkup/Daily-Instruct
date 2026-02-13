@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "erc017c",
+      "text": "Article \"Silver Crashes as Markets Whipsaw - What Triggered the Sudden 15% Plunge\" updated successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "info",
+      "timestamp": 1770997489087
+    },
+    {
       "id": "amio8lu",
       "text": "New article \"NASA-SpaceX Launch Ignites Global Buzz - Why This ISS Mission Has Canada Watching Closely\" posted successfully",
       "time": "Just now",
