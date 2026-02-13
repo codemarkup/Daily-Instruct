@@ -844,6 +844,112 @@
       "id": 9,
       "createdAt": "2026-01-20T19:02:59.990Z",
       "updatedAt": "2026-02-12T15:56:38.294Z"
+    },
+    {
+      "title": "NASA-SpaceX Launch Ignites Global Buzz - Why This ISS Mission Has Canada Watching Closely",
+      "slug": "nasa-spacex-launch-ignites-global-buzz-why-this-iss-mission-has-canada-watching-closely",
+      "description": "A routine crew rotation turns into a global moment.\nHere is why the latest NASA-SpaceX launch matters more than it seems.",
+      "author": "Saad",
+      "date": "February 13, 2026",
+      "readTime": "3 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1770997359/Pi7_Vision_9_cexwro.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": false,
+      "featured": true,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1770997385335-siu54u4cu-1",
+          "type": "heading",
+          "text": "NASA and SpaceX Launch Mission Grabs Attention Across Canada"
+        },
+        {
+          "id": "block-1770997385336-hc11b9q6b-2",
+          "type": "paragraph",
+          "text": "A new space trend is drawing attention in Canada as NASA and SpaceX successfully launched four astronauts toward the International Space Station. The mission comes at a critical moment, with the ISS operating on a reduced crew and growing public focus on space security and international cooperation."
+        },
+        {
+          "id": "block-1770997385336-1wzmrltjr-3",
+          "type": "heading",
+          "text": "Why This Launch Matters Right Now"
+        },
+        {
+          "id": "block-1770997385337-sgx5p72ld-4",
+          "type": "paragraph",
+          "text": "This mission is not routine. It was designed to relieve a bare-bones crew aboard the ISS, ensuring station safety, research continuity, and long-term orbital operations. The timing has amplified interest, as governments and investors closely watch space reliability and human spaceflight readiness."
+        },
+        {
+          "id": "block-1770997385337-6uv66o0l8-5",
+          "type": "heading",
+          "text": "Crew-12 and the Mission Objective"
+        },
+        {
+          "id": "block-1770997385337-f7p6sb2ek-6",
+          "type": "paragraph",
+          "text": "The Crew-12 mission carries four astronauts from multiple backgrounds, highlighting NASA's continued partnership with SpaceX. The spacecraft will dock with the ISS after a carefully timed orbital approach, replacing astronauts who have been working under extended mission conditions."
+        },
+        {
+          "id": "block-1770997385337-bhwwjp94c-7",
+          "type": "quote",
+          "text": "This mission underscores how critical dependable launch systems have become for maintaining a constant human presence in space."
+        },
+        {
+          "id": "block-1770997385337-1zjwb7xhg-8",
+          "type": "heading",
+          "text": "Why Canadians Are Paying Attention"
+        },
+        {
+          "id": "block-1770997385337-04l1ygbxa-9",
+          "type": "paragraph",
+          "text": "Canadian audiences are closely following the launch due to Canada's long-standing role in ISS operations, robotics, and space research. Any mission affecting ISS staffing directly impacts experiments and systems supported by Canadian technology."
+        },
+        {
+          "id": "block-1770997385337-jku1cv7r5-10",
+          "type": "heading",
+          "text": "SpaceX's Growing Role in Human Spaceflight"
+        },
+        {
+          "id": "block-1770997385337-ns9set2zv-11",
+          "type": "paragraph",
+          "text": "SpaceX has moved from a private disruptor to a core launch provider for NASA. Its ability to conduct frequent, crewed missions has reshaped expectations around cost, speed, and reliability in space travel."
+        },
+        {
+          "id": "block-1770997385337-5q24m0wb5-12",
+          "type": "heading",
+          "text": "What Happens Next"
+        },
+        {
+          "id": "block-1770997385337-jfn9wgm41-13",
+          "type": "paragraph",
+          "text": "After docking, the new crew will begin a handover period, taking control of station operations and research. Their arrival stabilizes ISS staffing and reduces operational risk over the coming months."
+        },
+        {
+          "id": "block-1770997385337-gwxcnl2nr-14",
+          "type": "quote",
+          "text": "Human spaceflight is no longer rare. It is becoming routine, strategic, and globally watched."
+        },
+        {
+          "id": "block-1770997385337-hy3mpkfo2-15",
+          "type": "heading",
+          "text": "The Bigger Picture"
+        },
+        {
+          "id": "block-1770997385337-zc7d0yshd-16",
+          "type": "paragraph",
+          "text": "This launch reflects a broader shift toward dependable, partnership-driven space missions. As geopolitical and scientific stakes rise, successful crew launches are no longer just achievements. They are necessities."
+        }
+      ],
+      "metaDescription": "NASA and SpaceX launch a new ISS crew, drawing major attention in Canada. Here is what happened, why it matters, and what comes next.",
+      "keywords": "NASA SpaceX launch, ISS crew mission, SpaceX Crew Dragon, Falcon 9 launch, NASA astronauts ISS, Canada space news, SpaceX NASA mission",
+      "id": 10,
+      "createdAt": "2026-02-13T15:43:25.786Z",
+      "updatedAt": "2026-02-13T15:43:25.786Z"
     }
   ]
 }
