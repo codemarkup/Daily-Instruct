@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "g1va016",
+      "text": "New article \"US CPI Report Signals a Turning Point - Why January Inflation Data Is Changing the Narrative\" posted successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "success",
+      "timestamp": 1770995484498
+    },
+    {
       "id": "zapu8ll",
       "text": "Article \"South Korea Just Opened the Crypto Floodgates - A Bitcoin ETF Shift That Could Change Global Finance in 2026\" updated successfully",
       "time": "Just now",
