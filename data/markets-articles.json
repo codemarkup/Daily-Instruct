@@ -541,7 +541,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": false,
       "content": [
@@ -644,7 +644,7 @@
       "keywords": "South Korea bitcoin ETF, crypto regulation 2026, Digital Asset Act Korea, stablecoin regulation, bitcoin ETF approval, South Korea crypto market, United States crypto ETFs, China blockchain policy, UK crypto regulation, global crypto adoption, bitcoin price outlook 2026",
       "id": 6,
       "createdAt": "2026-01-09T11:54:52.411Z",
-      "updatedAt": "2026-01-09T11:58:23.160Z"
+      "updatedAt": "2026-02-12T16:02:20.524Z"
     },
     {
       "title": "U.S. Jobs Report Surprises Markets - What Falling Unemployment and Steady Bitcoin Mean for 2026",
@@ -751,7 +751,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -854,7 +854,7 @@
       "keywords": "ge stock, ge aerospace stock, general electric shares, aerospace earnings 2026, aviation industry outlook, united states aerospace stocks, china aviation demand, uk airline growth, jet engine market 2026, industrial stocks rally, global aerospace recovery, defense and aviation stocks",
       "id": 8,
       "createdAt": "2026-01-22T17:26:55.947Z",
-      "updatedAt": "2026-01-22T17:26:55.947Z"
+      "updatedAt": "2026-02-12T15:55:55.726Z"
     },
     {
       "title": "Intel Stock Collapses After Earnings Shock - Is This the Turning Point or the Beginning of a Bigger Crisis?",
@@ -871,7 +871,7 @@
       "topStory": false,
       "grid": false,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -974,7 +974,7 @@
       "keywords": "intel stock, intc stock, intel shares plunge, intel earnings, intel guidance weak, intel chip production, semiconductor stocks, united states stock market, china semiconductor industry, uk tech stocks, global chip market 2026, intel foundry strategy, intel stock analysis 2026, nasdaq tech stocks, ai chip competition",
       "id": 9,
       "createdAt": "2026-01-23T15:11:30.570Z",
-      "updatedAt": "2026-01-23T15:19:29.545Z"
+      "updatedAt": "2026-02-12T15:55:37.451Z"
     },
     {
       "title": "Meta Stock Rockets After Bold AI Bet - Why Revenue Forecast and Superintelligence Spending Could Redefine 2026 Tech Leadership",

@@ -890,7 +890,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1013,7 +1013,7 @@
       "keywords": "Windows 11 emergency update, Microsoft Windows 11 2026, Nvidia GPU Windows update issue, Windows 11 shutdown bug, Microsoft emergency patch, Windows performance drop, Windows update problems 2026, United States Windows update, UK Windows 11 news, China Windows market, Microsoft Nvidia issue, Windows 11 stability fix",
       "id": 10,
       "createdAt": "2026-01-19T11:13:55.427Z",
-      "updatedAt": "2026-01-19T11:13:55.427Z"
+      "updatedAt": "2026-02-12T15:56:58.847Z"
     },
     {
       "title": "AOL Just Went Dark Across the United States - What This Sudden Outage Reveals About Aging Internet Giants in 2026",
@@ -1030,7 +1030,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1113,7 +1113,7 @@
       "keywords": "aol outage, aol down today, yahoo aol outage, email outage united states, legacy tech failure, internet services down, aol mail not working, yahoo mail outage, united states internet outage, china tech comparison, uk internet services, global email disruption, tech infrastructure 2026, digital reliability crisis, aging tech platforms",
       "id": 11,
       "createdAt": "2026-01-21T16:41:20.342Z",
-      "updatedAt": "2026-01-21T16:41:20.342Z"
+      "updatedAt": "2026-02-12T15:56:27.486Z"
     },
     {
       "title": "Why the Word Community Is Suddenly Everywhere in 2026 - And How It Is Quietly Reshaping Power, Money, and Influence",
@@ -1250,7 +1250,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1353,7 +1353,7 @@
       "keywords": "microsoft outage, outlook down today, microsoft teams outage, office 365 down, microsoft services outage, united states tech outage, global cloud disruption, china cloud comparison, uk microsoft outage, enterprise software failure, digital infrastructure 2026, cloud reliability crisis",
       "id": 13,
       "createdAt": "2026-01-23T14:44:15.550Z",
-      "updatedAt": "2026-01-23T14:44:15.550Z"
+      "updatedAt": "2026-02-12T15:53:44.894Z"
     }
   ]
 }
