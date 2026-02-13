@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ArticleTable from '@/components/admin/ArticleTable';
 import BulkActions from '@/components/admin/BulkActions';
@@ -8,7 +8,7 @@ import SearchFilters from '@/components/admin/SearchFilters';
 import { AdminService, Article } from '@/services/admin-service';
 import '../../../styles/admin/components.css';
 
-const ArticlesPage = () => {
+const ArticlesContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -411,6 +411,21 @@ const ArticlesPage = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const ArticlesPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="articles-container">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ArticlesContent />
+    </Suspense>
   );
 };
 
