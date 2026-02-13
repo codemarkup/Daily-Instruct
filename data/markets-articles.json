@@ -1374,7 +1374,7 @@
       "grid": true,
       "homeFeatured": true,
       "homeLatest": false,
-      "homeTrending": true,
+      "homeTrending": false,
       "homeTopStory": false,
       "content": [
         {
@@ -1487,7 +1487,7 @@
       "metaDescription": "Silver prices plunged sharply as Fed chair uncertainty and market volatility hit precious metals, dragging miners and ETFs lower.",
       "id": 13,
       "createdAt": "2026-01-30T11:07:35.230Z",
-      "updatedAt": "2026-02-13T15:21:54.292Z"
+      "updatedAt": "2026-02-13T15:44:48.600Z"
     },
     {
       "title": "Apple Stock Surges on Explosive iPhone Demand - Why Wall Street Is Repricing AAPL",
