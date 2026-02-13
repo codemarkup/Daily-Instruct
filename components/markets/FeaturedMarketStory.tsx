@@ -47,18 +47,18 @@ const FeaturedMarketStory: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchMarketArticles();
   }, []);
 
   // Get the first featured article
   // Get the most recent featured article
-const featuredArticles = articles.filter(article => article.featured);
-const featuredArticle = featuredArticles.length > 0 
-  ? featuredArticles.sort((a, b) => 
+  const featuredArticles = articles.filter(article => article.featured);
+  const featuredArticle = featuredArticles.length > 0
+    ? featuredArticles.sort((a, b) =>
       new Date(b.date).getTime() - new Date(a.date).getTime()
     )[0]
-  : undefined;
+    : undefined;
 
   if (loading) {
     return (
@@ -76,17 +76,17 @@ const featuredArticle = featuredArticles.length > 0
   // If no featured article, use the first one as fallback
   if (!featuredArticle) {
     if (articles.length > 0) {
-      const firstArticle = articles.sort((a, b) => 
-  new Date(b.date).getTime() - new Date(a.date).getTime()
-)[0];
+      const firstArticle = articles.sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      )[0];
       return (
         <section className={styles.featuredTechStory1}>
           <div className="container">
             <Link href={`/articles/${firstArticle.slug}`}>
               <article className={styles.featuredArticle1}>
                 <div className={styles.articleImage1}>
-                  <Image 
-                    src={firstArticle.image}
+                  <Image
+                    src={firstArticle.image.trim()}
                     alt={firstArticle.title}
                     width={800}
                     height={500}
@@ -95,11 +95,11 @@ const featuredArticle = featuredArticles.length > 0
                   />
                   <div className={styles.categoryTag1}>Featured (Fallback)</div>
                 </div>
-                
+
                 <div className={styles.articleContent1}>
                   <h2 className={styles.articleTitle1}>{firstArticle.title}</h2>
                   <p className={styles.articleDescription1}>{firstArticle.description}</p>
-                  
+
                   <div className={styles.articleMeta1}>
                     <span className={styles.author1}>{firstArticle.author}</span>
                     <span className={styles.separator1}>•</span>
@@ -107,7 +107,7 @@ const featuredArticle = featuredArticles.length > 0
                     <span className={styles.separator1}>•</span>
                     <span className={styles.readTime1}>{firstArticle.readTime}</span>
                   </div>
-                  
+
                   <button className={styles.readButton1}>Read Full Analysis</button>
                 </div>
               </article>
@@ -126,8 +126,8 @@ const featuredArticle = featuredArticles.length > 0
         <Link href={`/articles/${featuredArticle.slug}`}>
           <article className={styles.featuredArticle1}>
             <div className={styles.articleImage1}>
-              <Image 
-                src={featuredArticle.image}
+              <Image
+                src={featuredArticle.image.trim()}
                 alt={featuredArticle.title}
                 width={800}
                 height={500}
@@ -136,11 +136,11 @@ const featuredArticle = featuredArticles.length > 0
               />
               <div className={styles.categoryTag1}>Featured</div>
             </div>
-            
+
             <div className={styles.articleContent1}>
               <h2 className={styles.articleTitle1}>{featuredArticle.title}</h2>
               <p className={styles.articleDescription1}>{featuredArticle.description}</p>
-              
+
               <div className={styles.articleMeta1}>
                 <span className={styles.author1}>{featuredArticle.author}</span>
                 <span className={styles.separator1}>•</span>
@@ -148,7 +148,7 @@ const featuredArticle = featuredArticles.length > 0
                 <span className={styles.separator1}>•</span>
                 <span className={styles.readTime1}>{featuredArticle.readTime}</span>
               </div>
-              
+
               <button className={styles.readButton1}>Read Full Analysis</button>
             </div>
           </article>

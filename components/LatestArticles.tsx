@@ -73,10 +73,15 @@ const LatestArticles: React.FC = () => {
   }, []);
 
   // FIXED: Added sorting by date (newest first)
+  // FIXED: Added sorting by date (newest first)
   const latestArticles = articles
     .filter((article) => article.homeLatest)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
-    .slice(0, 6); // Show 6 latest articles
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+    .slice(0, 7); // 1 hero + 6 grid
+
+  const heroArticle = latestArticles[0];
+  const gridArticles = latestArticles.slice(1);
 
   if (loading) {
     return (
@@ -109,50 +114,74 @@ const LatestArticles: React.FC = () => {
     <section className={styles.latestArticles}>
       <div className="container">
         <h2 className={styles.sectionTitle}>Latest Articles</h2>
-        <div className={styles.articlesGrid}>
-          {latestArticles.map((article) => (
-            <Link
-              key={`${article.category}-${article.id}`}
-              href={`/articles/${article.slug}`}
-              className={styles.articleLink}
-            >
-              <article className={styles.articleCard}>
-                <div className={styles.cardImage}>
+        <div className={styles.latestContent}>
+          {/* Hero Article (Side-by-Side on Desktop) */}
+          {heroArticle && (
+            <Link href={`/articles/${heroArticle.slug}`} className={styles.heroLink}>
+              <article className={styles.heroCard}>
+                <div className={styles.heroImageWrapper}>
                   <Image
-                    src={encodeURI(article.image.trim())}
-                    alt={article.title}
-                    width={400}
-                    height={250}
-                    className={styles.image}
+                    src={encodeURI(heroArticle.image.trim())}
+                    alt={heroArticle.title}
+                    fill
+                    className={styles.heroImage}
+                    priority
                   />
-                  <div className={styles.cardCategory}>{article.category}</div>
+                  <div className={styles.heroBadge}>Featured Story</div>
                 </div>
-
-                <div className={styles.cardContent}>
-                  <h3 className={styles.cardTitle}>{article.title}</h3>
-                  <p className={styles.cardDescription}>
-                    {article.description}
-                  </p>
-
-                  <div className={styles.cardMeta}>
-                    <span className={styles.cardAuthor}>{article.author}</span>
-                    <div className={styles.metaDetails}>
-                      <span className={styles.cardDate}>{article.date}</span>
-                      <span className={styles.cardReadTime}>
-                        {article.readTime}
-                      </span>
-                    </div>
+                <div className={styles.heroContent}>
+                  <div className={styles.heroMetaTop}>
+                    <span className={styles.heroCategory}>{heroArticle.category}</span>
+                    <span className={styles.heroDate}>{heroArticle.date}</span>
                   </div>
-
-                  {/* Mobile-only meta - shown only on mobile */}
-                  <div className={styles.mobileMeta}>
-                    <div className={styles.mobileAuthor}>{article.author}</div>
-                    <div className={styles.mobileDate}>{article.date}</div>
+                  <h3 className={styles.heroTitle}>{heroArticle.title}</h3>
+                  <p className={styles.heroDescription}>{heroArticle.description}</p>
+                  <div className={styles.heroFooter}>
+                    <div className={styles.heroAuthor}>
+                      <span>By {heroArticle.author}</span>
+                    </div>
+                    <span className={styles.readMoreLink}>Read Full Story <span className={styles.arrow}>→</span></span>
                   </div>
                 </div>
               </article>
             </Link>
-          ))}
+          )}
+
+          {/* Standard 3-Column Grid */}
+          <div className={styles.articlesGrid}>
+            {gridArticles.map((article) => (
+              <Link
+                key={`${article.category}-${article.id}`}
+                href={`/articles/${article.slug}`}
+                className={styles.articleLink}
+              >
+                <article className={styles.articleCard}>
+                  <div className={styles.cardImage}>
+                    <Image
+                      src={encodeURI(article.image.trim())}
+                      alt={article.title}
+                      width={400}
+                      height={250}
+                      className={styles.image}
+                    />
+                    <div className={styles.cardCategory}>{article.category}</div>
+                  </div>
+
+                  <div className={styles.cardContent}>
+                    <h3 className={styles.cardTitle}>{article.title}</h3>
+                    <p className={styles.cardDescription}>
+                      {article.description}
+                    </p>
+
+                    <div className={styles.cardMeta}>
+                      <span className={styles.cardAuthor}>{article.author}</span>
+                      <span className={styles.cardDate}>{article.date}</span>
+                    </div>
+                  </div>
+                </article>
+              </Link>
+            ))}
+          </div>
         </div>
         <div className={styles.loadMoreContainer}>
           <Link href="/all-articles" className={styles.loadMoreBtn}>

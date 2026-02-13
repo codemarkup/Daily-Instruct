@@ -57,23 +57,27 @@ const AdminSidebar = () => {
 
   const sidebarRef = React.useRef<HTMLElement>(null);
 
-  // Initialize state - default to collapsed on mobile if window exists
-  // We use useEffect to avoid hydration mismatch
+  // Handle window resize to determine if we are on mobile
+  // We need to know if we are on mobile to disable hover effects
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
         setCollapsed(true);
       } else {
-        setCollapsed(false);
+        // Default to collapsed on desktop too for the "hover to expand" effect
+        setCollapsed(true);
       }
     };
 
     // Set initial state
     handleResize();
 
-    // Optional: Auto-collapse on resize to mobile
-    // window.addEventListener('resize', handleResize);
-    // return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Handle click outside to close sidebar on all screens
@@ -112,8 +116,26 @@ const AdminSidebar = () => {
     return subItems?.some(item => isActive(item.path));
   };
 
+  // Hover handlers
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setCollapsed(false);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile) {
+      setCollapsed(true);
+    }
+  };
+
   return (
-    <aside ref={sidebarRef} className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <aside
+      ref={sidebarRef}
+      className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Logo */}
       <div className="sidebar-header">
         <div className="sidebar-logo" onClick={() => setCollapsed(!collapsed)}>

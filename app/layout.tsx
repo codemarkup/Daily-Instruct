@@ -3,6 +3,7 @@ import { Inter, DM_Serif_Display, Playfair_Display } from 'next/font/google';
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+// import AnalyticsTracker from '../components/AnalyticsTracker'; // REMOVED
 import type { Metadata } from 'next';
 
 // Optimized font loading with next/font

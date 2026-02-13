@@ -1,0 +1,115 @@
+{
+  "totalViews": {
+    "market": 3,
+    "_total": 10,
+    "home": 4,
+    "login": 2,
+    "stock-market-news-today-reveals-a-quiet-shift-in-power-confidence-and-risk": 1
+  },
+  "dailyStats": {
+    "2026-02-12": {
+      "market": 3,
+      "_total": 5,
+      "home": 1,
+      "login": 1
+    },
+    "2026-02-13": {
+      "home": 3,
+      "_total": 5,
+      "login": 1,
+      "stock-market-news-today-reveals-a-quiet-shift-in-power-confidence-and-risk": 1
+    }
+  },
+  "events": [
+    {
+      "id": "c02b0895-773c-4da9-9b6e-ad5133726d16",
+      "timestamp": "2026-02-13T09:53:35.659Z",
+      "slug": "home",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": ""
+    },
+    {
+      "id": "abf0063d-dd31-4deb-a2d7-99c87014264f",
+      "timestamp": "2026-02-13T09:53:32.261Z",
+      "slug": "stock-market-news-today-reveals-a-quiet-shift-in-power-confidence-and-risk",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": ""
+    },
+    {
+      "id": "5fc518c7-c94c-4c8e-abad-2c92a3347e84",
+      "timestamp": "2026-02-13T09:53:21.743Z",
+      "slug": "home",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": ""
+    },
+    {
+      "id": "efdc91cf-1a03-4bee-9c95-0da592c2256a",
+      "timestamp": "2026-02-13T09:48:05.899Z",
+      "slug": "login",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": ""
+    },
+    {
+      "id": "9c657b74-ce0f-45f3-b5b6-baacf57ecd85",
+      "timestamp": "2026-02-13T09:47:42.215Z",
+      "slug": "home",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": ""
+    },
+    {
+      "id": "1e7512e3-bd6c-4bd9-a437-af919e9073b2",
+      "timestamp": "2026-02-12T19:11:20.228Z",
+      "slug": "login",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": "http://localhost:3000/admin"
+    },
+    {
+      "id": "8f0d0c1c-9d71-488f-aff6-b98b2e84140e",
+      "timestamp": "2026-02-12T19:05:24.847Z",
+      "slug": "home",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": "http://localhost:3000/market"
+    },
+    {
+      "id": "0588bd48-f350-42e4-9a94-7c6aa9329f71",
+      "timestamp": "2026-02-12T19:04:58.131Z",
+      "slug": "market",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": "http://localhost:3000/market"
+    },
+    {
+      "id": "96c35dee-d7ef-4063-8466-58939cb05f49",
+      "timestamp": "2026-02-12T19:04:39.160Z",
+      "slug": "market",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": "http://localhost:3000/market"
+    },
+    {
+      "id": "05931cf8-1191-4c6b-9e26-65f2959d2a0c",
+      "timestamp": "2026-02-12T19:03:57.509Z",
+      "slug": "market",
+      "visitorId": "b8c683d5-b307-4e28-b4d8-477542b45c7c",
+      "ip": "::1",
+      "country": "Localhost",
+      "referrer": "http://localhost:3000/market"
+    }
+  ]
+}

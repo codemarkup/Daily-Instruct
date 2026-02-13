@@ -22,16 +22,300 @@
   background: var(--accent-gold);
 }
 
+/* =========================================
+   MODERN LUXURY BENTO GRID
+   ========================================= */
+.latestContent {
+  display: block;
+  /* Removed flex container */
+}
+
+/* Hide old featured elements if they exist */
+.featuredLink,
+.featuredCard,
+.featuredImageWrapper,
+.featuredContent {
+  display: contents;
+  /* Reset display */
+}
+
 .articlesGrid {
   display: grid;
-  /* FIXED: Use auto-fill instead of auto-fit with max-width constraint */
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  margin-bottom: 3rem;
-  /* FIXED: Add max-width to prevent stretching */
+  width: 100%;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  grid-auto-flow: dense;
+  /* Crucial for Bento layout */
+}
+
+/* Default Card Styles (Standard) */
+.articleLink {
+  text-decoration: none;
+  display: block;
+}
+
+.articleCard {
+  background: var(--primary-white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.articleCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(212, 175, 55, 0.3);
+  /* Subtle gold border on hover */
+}
+
+/* =========================================
+   FEATURED ITEM (First Child)
+   ========================================= */
+/* Desktop: Span 2 cols, 2 rows */
+@media (min-width: 1025px) {
+  .articleLink:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .articleLink:first-child .articleCard {
+    height: 100%;
+  }
+
+  /* Make the image larger in the featured card */
+  .articleLink:first-child .cardImage {
+    height: 350px;
+    /* Taller image for focal point */
+  }
+
+  .articleLink:first-child .cardTitle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .articleLink:first-child .cardDescription {
+    font-size: 1.1rem;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Tablet: Span 2 cols (full width of grid) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .articlesGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .articleLink:first-child {
+    grid-column: span 2;
+  }
+
+  .articleLink:first-child .cardImage {
+    height: 300px;
+  }
+}
+
+
+/* Layout Container */
+.latestContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  /* Generous spacing between hero and grid */
+  width: 100%;
+}
+
+/* =========================================
+   EDITORIAL HERO STYLES (Side-by-Side)
+   ========================================= */
+.heroLink {
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+.heroCard {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  /* Asymmetrical split: Image dominant */
+  background: var(--primary-white);
+  border-radius: 2px;
+  /* Sharper, more editorial look */
+  overflow: hidden;
+  box-shadow: none;
+  /* Clean look initially */
+  border-bottom: 3px solid var(--accent-gold);
+  /* DISTINCTIVE FEATURE */
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 450px;
+  position: relative;
+}
+
+.heroCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  /* Soft, deep shadow on hover */
+}
+
+.heroImageWrapper {
+  position: relative;
+  height: 100%;
+  min-height: 450px;
+  overflow: hidden;
+}
+
+.heroImage {
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Slow, cinematic zoom */
+}
+
+.heroCard:hover .heroImage {
+  transform: scale(1.03);
+}
+
+.heroBadge {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background: var(--primary-black);
+  color: var(--accent-gold);
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  z-index: 2;
+}
+
+.heroContent {
+  padding: 4rem;
+  /* Spacious padding */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+  /* Ensure white bg */
+  border-left: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.heroMetaTop {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  font-family: var(--font-sans);
+}
+
+.heroCategory {
+  color: var(--accent-gold);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.85rem;
+}
+
+.heroDate {
+  color: var(--gray-400);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.heroTitle {
+  font-family: var(--font-serif);
+  font-size: 3.2rem;
+  /* Very large and commanding */
+  line-height: 1.1;
+  color: var(--primary-black);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  transition: color 0.3s ease;
+}
+
+.heroCard:hover .heroTitle {
+  color: var(--accent-gold);
+}
+
+.heroDescription {
+  font-family: var(--font-serif);
+  /* Serif description for editorial feel */
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: var(--gray-600);
+  margin-bottom: 3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 400;
+}
+
+.heroFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.heroAuthor {
+  font-weight: 500;
+  color: var(--primary-black);
+  font-size: 0.95rem;
+  font-family: var(--font-sans);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.heroAuthor::before {
+  content: '';
+  display: block;
+  width: 30px;
+  height: 1px;
+  background: var(--accent-gold);
+}
+
+.readMoreLink {
+  color: var(--primary-black);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.heroCard:hover .readMoreLink {
+  gap: 1.2rem;
+  color: var(--accent-gold);
+}
+
+/* =========================================
+   STANDARD GRID STYLES
+   ========================================= */
+.articlesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* Strict 3 columns on desktop */
+  gap: 2rem;
+  width: 100%;
 }
 
 .articleCard {
@@ -112,6 +396,8 @@
   font-size: 0.95rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
+  /* Standard property */
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-grow: 1;
@@ -187,21 +473,38 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 1024px) {
   .articlesGrid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    max-width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns on tablet */
   }
-  
+}
+
+@media (max-width: 1024px) {
+  .articlesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 columns on tablet */
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* ... existing styles ... */
+  .articlesGrid {
+    grid-template-columns: 1fr;
+    /* 1 column on mobile */
+    gap: 1.5rem;
+  }
+
   .cardContent {
     padding: 1.5rem;
   }
-  
+
   .cardTitle {
     font-size: 1.2rem;
   }
-  
+
   .cardImage {
     height: 200px;
   }
@@ -212,12 +515,12 @@
   .articlesGrid:has(:nth-child(3)) {
     justify-content: center;
   }
-  
+
   .articlesGrid:has(:nth-child(2)):not(:has(:nth-child(3))) {
     grid-template-columns: repeat(2, minmax(350px, 400px));
     justify-content: center;
   }
-  
+
   .articlesGrid:has(:nth-child(1)):not(:has(:nth-child(2))) {
     grid-template-columns: minmax(350px, 600px);
     justify-content: center;
@@ -228,21 +531,21 @@
   .cardContent {
     padding: 1.2rem;
   }
-  
+
   .cardTitle {
     font-size: 1.1rem;
   }
-  
+
   .cardDescription {
     font-size: 0.9rem;
   }
-  
+
   .cardMeta {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-  
+
   .metaDetails {
     align-items: flex-start;
   }
@@ -371,6 +674,8 @@
     margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
+    /* Standard property */
     -webkit-box-orient: vertical;
     overflow: hidden;
     flex: 1;
@@ -448,6 +753,8 @@
   .cardTitle {
     font-size: 0.825rem;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
+    /* Standard property */
   }
 
   .sectionTitle {

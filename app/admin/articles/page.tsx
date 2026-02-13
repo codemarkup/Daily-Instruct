@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ArticleTable from '@/components/admin/ArticleTable';
 import BulkActions from '@/components/admin/BulkActions';
 import SearchFilters from '@/components/admin/SearchFilters';
@@ -10,14 +10,20 @@ import '../../../styles/admin/components.css';
 
 const ArticlesPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedArticles, setSelectedArticles] = useState<string[]>([]);
+
+  // Filter States
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [categoryFilter, setCategoryFilter] = useState('all');
+  const [activeFilter, setActiveFilter] = useState('all'); // 'trending', 'featured', etc.
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [authChecking, setAuthChecking] = useState(true); // ADD THIS
+  const [authChecking, setAuthChecking] = useState(true);
 
   // =========== AUTH CHECK ===========
   useEffect(() => {
@@ -26,12 +32,28 @@ const ArticlesPage = () => {
     if (!hasCookie) {
       router.push('/login');
     } else {
-      setAuthChecking(false); // Auth passed
+      setAuthChecking(false);
     }
   }, [router]);
-  // =========== END AUTH CHECK ===========
 
-  // Load articles on mount (only if authenticated)
+  // Read URL Params on Load
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    const filterParam = searchParams.get('filter');
+    const sortByParam = searchParams.get('sortBy');
+
+    if (categoryParam) {
+      setCategoryFilter(categoryParam.toLowerCase());
+    }
+
+    if (filterParam) {
+      setActiveFilter(filterParam);
+    } else if (sortByParam === 'date') {
+      setActiveFilter('latest');
+    }
+  }, [searchParams]);
+
+  // Load articles on mount
   useEffect(() => {
     if (!authChecking) {
       fetchArticles();
@@ -66,12 +88,58 @@ const ArticlesPage = () => {
 
   // Filter articles based on search and filters
   const filteredArticles = articles.filter(article => {
+    // 1. Search Query
     const matchesSearch = article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || article.category.toLowerCase() === categoryFilter.toLowerCase();
 
-    return matchesSearch && matchesCategory;
+    // 2. Category Filter
+    const matchesCategory = categoryFilter === 'all' ||
+      article.category.toLowerCase() === categoryFilter.toLowerCase();
+
+    // 3. Status/Type Filter (Active Filter)
+    let matchesType = true;
+    if (activeFilter !== 'all') {
+      switch (activeFilter) {
+        case 'trending':
+          matchesType = article.trending;
+          break;
+        case 'featured':
+          matchesType = article.featured;
+          break;
+        case 'topStory':
+          matchesType = article.topStory;
+          break;
+        case 'homeTrending':
+          matchesType = article.homeTrending;
+          break;
+        case 'homeFeatured':
+          matchesType = article.homeFeatured;
+          break;
+        case 'homeLatest':
+          matchesType = article.homeLatest;
+          break;
+        case 'latest':
+          // Sort handled later, just ensures all match here
+          matchesType = true;
+          break;
+        default:
+          matchesType = true;
+      }
+    }
+
+    // 4. Status Filter (Published/Draft - future use)
+    const matchesStatus = statusFilter === 'all' ||
+      (statusFilter === 'published' /* && article.published */);
+
+    return matchesSearch && matchesCategory && matchesType && matchesStatus;
+  }).sort((a, b) => {
+    // Apply sorting if needed
+    if (activeFilter === 'latest') {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    }
+    // Default sort by date desc
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 
   const handleSelectAll = () => {
@@ -307,6 +375,8 @@ const ArticlesPage = () => {
         onStatusFilterChange={setStatusFilter}
         categoryFilter={categoryFilter}
         onCategoryFilterChange={setCategoryFilter}
+        activeFilter={activeFilter}
+        onActiveFilterChange={setActiveFilter}
       />
 
       {/* Article Table */}

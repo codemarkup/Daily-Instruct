@@ -67,40 +67,14 @@
   width: 100%;
 }
 
-/* Table Header Fix */
-.table-header {
-  display: grid;
-  grid-template-columns: 60px 2fr 1fr 1fr 1fr 1fr 1fr 120px;
-  background: rgba(10, 10, 10, 0.8);
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
-  min-width: 1200px;
-  /* Set min-width for horizontal scroll */
-  width: 100%;
-}
+/* Table Header Fix - Removed to use tables.css */
+/* .table-header {} moved to tables.css */
 
-/* Table Body Fix */
-.table-body {
-  max-height: 600px;
-  overflow-y: auto;
-  min-width: 1200px;
-  /* Match header width */
-  width: 100%;
-}
+/* Table Body Fix - Removed to use tables.css */
+/* .table-body {} moved to tables.css */
 
-/* Table Row Fix */
-.table-row {
-  display: grid;
-  grid-template-columns: 60px 2fr 1fr 1fr 1fr 1fr 1fr 120px;
-  padding: 16px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-  transition: var(--transition);
-  align-items: center;
-  min-height: 72px;
-  min-width: 1200px;
-  /* Match header width */
-  width: 100%;
-}
+/* Table Row Fix - Removed to use tables.css */
+/* .table-row {} moved to tables.css */
 
 /* Horizontal Scrollbar Styling */
 .table-wrapper::-webkit-scrollbar {

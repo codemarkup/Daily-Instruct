@@ -290,5 +290,9 @@ export const AdminService = {
     } catch (error) {
       console.error('Error checking article encoding:', error);
     }
-  }
+  },
+
+  // Analytics Methods
+  // Analytics Removed
+  // async getAnalyticsStats() { ... }
 };

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './Navbar.module.css';
 
 // Define article type for search results
@@ -311,10 +312,11 @@ const Navbar: React.FC = () => {
     <nav className={`${styles.navbar} ${isScrolled ? styles.navbarScrolled : ''}`}>
       <div className={styles.navContainer}>
         {/* Logo */}
-        <div className={styles.navLogo}>
+        {/* Logo */}
+        <Link href="/" className={styles.navLogo}>
           <span className={styles.logoSerif}>Daily</span>
           <span className={styles.logoSans}>Instruct</span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className={styles.navCenter}>

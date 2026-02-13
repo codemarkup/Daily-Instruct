@@ -47,15 +47,15 @@ const MarketArticlesGrid: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchMarketArticles();
   }, []);
 
   // Get only articles that should appear in the grid (limit to 6 for homepage)
   const gridArticles = articles
-  .filter(article => Boolean(article.grid))
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
-  .slice(0, 6); // Show only 6 articles on homepage
+    .filter(article => Boolean(article.grid))
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+    .slice(0, 6); // Show only 6 articles on homepage
 
   if (loading) {
     return (
@@ -88,18 +88,18 @@ const MarketArticlesGrid: React.FC = () => {
     <section className={styles.techArticlesGrid3}>
       <div className="container">
         <h2 className={styles.sectionTitle3}>Latest in Markets</h2>
-        
+
         <div className={styles.articlesGrid3}>
           {gridArticles.map((article) => (
-            <Link 
-              key={article.id} 
+            <Link
+              key={article.id}
               href={`/articles/${article.slug}`}
               className={styles.articleLink3}
             >
               <article className={styles.articleCard3}>
                 <div className={styles.cardImage3}>
-                  <Image 
-                    src={article.image}
+                  <Image
+                    src={article.image.trim()}
                     alt={article.title}
                     width={400}
                     height={250}
@@ -108,11 +108,11 @@ const MarketArticlesGrid: React.FC = () => {
                   {/* <div className={styles.categoryTag3}>{article.category}</div> */}
                   {article.trending && <div className={styles.trendingBadge3}>Trending</div>}
                 </div>
-                
+
                 <div className={styles.cardContent3}>
                   <h3 className={styles.cardTitle3}>{article.title}</h3>
                   <p className={styles.cardDescription3}>{article.description}</p>
-                  
+
                   <div className={styles.cardMeta3}>
                     <span className={styles.cardAuthor3}>{article.author}</span>
                     <div className={styles.metaDetails3}>
@@ -120,7 +120,7 @@ const MarketArticlesGrid: React.FC = () => {
                       <span className={styles.cardReadTime3}>{article.readTime}</span>
                     </div>
                   </div>
-                  
+
                   {/* Mobile-only meta - shown only on mobile */}
                   <div className={styles.mobileMeta3}>
                     <div className={styles.mobileAuthor3}>{article.author}</div>
@@ -131,7 +131,7 @@ const MarketArticlesGrid: React.FC = () => {
             </Link>
           ))}
         </div>
-        
+
         <div className={styles.loadMoreContainer3}>
           <Link href="/market/news" className={styles.loadMoreBtn3}>
             View All Market Articles

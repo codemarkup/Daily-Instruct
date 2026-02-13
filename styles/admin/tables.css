@@ -639,23 +639,17 @@
 
   .table-header,
   .table-row {
-    grid-template-columns: 60px 500px 200px 160px 140px 240px;
+    grid-template-columns: 60px 1.5fr 120px 190px 140px 120px 140px;
     min-width: 1300px;
   }
 
   .title-cell {
-    min-width: 500px;
-    max-width: 500px;
+    /* min-width: 500px; removed to use relative sizing */
   }
 
   .author-cell {
-    min-width: 200px;
-    max-width: 200px;
-  }
-
-  .actions-cell {
-    min-width: 240px;
-    max-width: 240px;
+    min-width: 190px;
+    max-width: 190px;
   }
 }
 
@@ -664,23 +658,17 @@
 
   .table-header,
   .table-row {
-    grid-template-columns: 60px 350px 160px 130px 110px 200px;
+    grid-template-columns: 60px 1.5fr 120px 190px 140px 120px 140px;
     min-width: 1010px;
   }
 
   .title-cell {
-    min-width: 350px;
-    max-width: 350px;
+    /* min-width: 350px; removed */
   }
 
   .author-cell {
-    min-width: 160px;
-    max-width: 160px;
-  }
-
-  .actions-cell {
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 190px;
+    max-width: 190px;
   }
 }
 
@@ -703,23 +691,21 @@
 
   .table-header,
   .table-row {
-    grid-template-columns: 50px 250px 120px 110px 100px 170px;
-    min-width: 800px;
+    grid-template-columns: 50px 1.5fr 120px 140px 100px 100px 140px;
+    min-width: 900px;
   }
 
   .title-cell {
-    min-width: 250px;
-    max-width: 250px;
+    /* min-width: 250px; */
   }
 
   .author-cell {
-    min-width: 120px;
-    max-width: 120px;
+    /* min-width: 120px; */
   }
 
   .actions-cell {
-    min-width: 170px;
-    max-width: 170px;
+    min-width: 140px;
+    max-width: 140px;
     padding-right: 16px;
   }
 
@@ -740,8 +726,8 @@
 
   .table-header,
   .table-row {
-    grid-template-columns: 40px 200px 100px 90px 80px 140px;
-    min-width: 650px;
+    grid-template-columns: 40px 1.2fr 100px 120px 80px 80px 120px;
+    min-width: 800px;
   }
 
   .title-cell {

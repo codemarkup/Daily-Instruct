@@ -4,9 +4,12 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import StatsCard from "@/components/admin/StatsCard";
+// import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"; // REMOVED
 import ArticleTable from "@/components/admin/ArticleTable";
 import { AdminService, Article } from "@/services/admin-service";
 import "../../styles/admin/components.css";
+
+// ... imports ...
 
 const AdminDashboard = () => {
   const router = useRouter();
@@ -23,7 +26,7 @@ const AdminDashboard = () => {
   }, [router]);
   // =========== END AUTH CHECK ===========
 
-  const [stats, setStats] = useState([
+  const [globalStats, setGlobalStats] = useState([
     {
       title: "Total Articles",
       value: "0",
@@ -31,35 +34,61 @@ const AdminDashboard = () => {
       icon: "/icons/admin/article.svg",
       color: "gold",
       trend: "up",
+      onClick: () => { },
     },
     {
-      title: "Trending Articles",
+      title: "Home Trending",
       value: "0",
       change: "+0%",
       icon: "/icons/admin/trending.svg",
       color: "blue",
       trend: "up",
+      onClick: () => { },
     },
     {
-      title: "Featured Articles",
+      title: "Home Featured",
       value: "0",
       change: "+0",
       icon: "/icons/admin/featured.svg",
       color: "purple",
       trend: "up",
+      onClick: () => { },
     },
     {
-      title: "Latest Articles",
+      title: "Home Latest",
       value: "0",
       change: "-0",
       icon: "/icons/admin/latest.svg",
       color: "orange",
       trend: "down",
+      onClick: () => { },
+    },
+    {
+      title: "Home Top Story",
+      value: "0",
+      change: "-0",
+      icon: "/icons/admin/latest.svg",
+      color: "green",
+      trend: "down",
+      onClick: () => { },
     },
   ]);
 
-  const [recentArticles, setRecentArticles] = useState<Article[]>([]);
+  interface CategoryStat {
+    title: string;
+    stats: {
+      title: string;
+      value: string;
+      change: string;
+      icon: string;
+      color: string;
+      trend: string;
+      onClick?: () => void;
+    }[];
+  }
 
+  const [categoryStats, setCategoryStats] = useState<CategoryStat[]>([]);
+  const [recentArticles, setRecentArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [systemStatus, setSystemStatus] = useState({
@@ -84,13 +113,14 @@ const AdminDashboard = () => {
       path: "/admin/categories",
       onClick: () => router.push("/admin/categories"),
     },
-    {
-      title: "View Analytics",
-      icon: "/icons/admin/analytics.svg",
-      color: "blue",
-      path: "/admin/analytics",
-      onClick: () => alert("Analytics page coming soon!"),
-    },
+    // Analytics Removed
+    // {
+    //   title: "View Analytics",
+    //   icon: "/icons/admin/analytics.svg", 
+    //   color: "blue",
+    //   path: "/admin/analytics",
+    //   onClick: () => alert("Analytics page coming soon!"),
+    // },
     {
       title: "Backup Data",
       icon: "/icons/admin/backup.svg",
@@ -112,22 +142,13 @@ const AdminDashboard = () => {
       // Fetch all articles
       const allArticles = await AdminService.getAllArticles();
 
-      // Calculate statistics
+      // --- GLOBAL STATS (HOME PAGE) ---
       const totalArticles = allArticles.length;
-      const trendingArticles = allArticles.filter(
-        (article) => article.trending
-      ).length;
-      const featuredArticles = allArticles.filter(
-        (article) => article.featured
-      ).length;
+      const homeTrending = allArticles.filter((a) => a.homeTrending).length;
+      const homeFeatured = allArticles.filter((a) => a.homeFeatured).length;
+      const homeLatest = allArticles.filter((a) => a.homeLatest).length;
 
-      // Get latest articles (last 5)
-      const latestArticles = [...allArticles]
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 5);
-
-      // Update stats
-      setStats([
+      setGlobalStats([
         {
           title: "Total Articles",
           value: totalArticles.toString(),
@@ -135,42 +156,113 @@ const AdminDashboard = () => {
           icon: "/icons/admin/article.svg",
           color: "gold",
           trend: "up",
-          // @ts-ignore - Adding onClick prop dynamically
+          // @ts-ignore
           onClick: () => router.push("/admin/articles"),
         },
         {
-          title: "Trending Articles",
-          value: trendingArticles.toString(),
+          title: "Home Trending",
+          value: homeTrending.toString(),
           change: "+0%",
           icon: "/icons/admin/trending.svg",
           color: "blue",
           trend: "up",
           // @ts-ignore
-          onClick: () => router.push("/admin/articles?filter=trending"),
+          onClick: () => router.push("/admin/articles?filter=homeTrending"),
         },
         {
-          title: "Featured Articles",
-          value: featuredArticles.toString(),
+          title: "Home Featured",
+          value: homeFeatured.toString(),
           change: "+0",
           icon: "/icons/admin/featured.svg",
           color: "purple",
           trend: "up",
           // @ts-ignore
-          onClick: () => router.push("/admin/articles?filter=featured"),
+          onClick: () => router.push("/admin/articles?filter=homeFeatured"),
         },
         {
-          title: "Latest Articles",
-          value: latestArticles.length.toString(),
+          title: "Home Latest",
+          value: homeLatest.toString(),
           change: "-0",
           icon: "/icons/admin/latest.svg",
           color: "orange",
           trend: "down",
           // @ts-ignore
-          onClick: () => router.push("/admin/articles?sortBy=date"),
+          onClick: () => router.push("/admin/articles?filter=homeLatest"),
+        },
+        {
+          title: "Home Top Story",
+          value: allArticles.filter((a) => a.homeTopStory).length.toString(),
+          change: "-0",
+          icon: "/icons/admin/latest.svg", // Using latest icon or a custom one if available
+          color: "green", // Distinct color
+          trend: "down",
+          // @ts-ignore
+          onClick: () => router.push("/admin/articles?filter=homeTopStory"),
         },
       ]);
 
-      setRecentArticles(latestArticles);
+      // --- CATEGORY STATS ---
+      const categories = ['Tech', 'Business', 'Markets', 'Guides'];
+      const newCategoryStats: CategoryStat[] = categories.map(cat => {
+        const catArticles = allArticles.filter(a => a.category.toLowerCase() === cat.toLowerCase());
+        const total = catArticles.length;
+        // "only that page relevant flag shall be present"
+        // For categories, we use generic flags: trending, featured, topStory (as proxy for latest/top)
+        const trending = catArticles.filter(a => a.trending).length;
+        const featured = catArticles.filter(a => a.featured).length;
+        const topStories = catArticles.filter(a => a.topStory).length; // Using topStory as requested variant
+
+        return {
+          title: cat,
+          stats: [
+            {
+              title: `${cat} Total`,
+              value: total.toString(),
+              change: "+0%",
+              icon: "/icons/admin/article.svg",
+              color: "gold",
+              trend: "up",
+              onClick: () => router.push(`/admin/articles?category=${cat.toLowerCase()}`),
+            },
+            {
+              title: `${cat} Trending`,
+              value: trending.toString(),
+              change: "+0%",
+              icon: "/icons/admin/trending.svg",
+              color: "blue",
+              trend: "up",
+              onClick: () => router.push(`/admin/articles?category=${cat.toLowerCase()}&filter=trending`),
+            },
+            {
+              title: `${cat} Featured`,
+              value: featured.toString(),
+              change: "+0",
+              icon: "/icons/admin/featured.svg",
+              color: "purple",
+              trend: "up",
+              onClick: () => router.push(`/admin/articles?category=${cat.toLowerCase()}&filter=featured`),
+            },
+            {
+              title: `${cat} Top Stories`,
+              value: topStories.toString(),
+              change: "-0",
+              icon: "/icons/admin/latest.svg", // Using star/latest icon for top stories
+              color: "orange",
+              trend: "down",
+              onClick: () => router.push(`/admin/articles?category=${cat.toLowerCase()}&filter=topStory`),
+            },
+          ]
+        };
+      });
+
+      setCategoryStats(newCategoryStats);
+
+      // Get recent articles (last 5 sorted by date for table)
+      const sortedByDate = [...allArticles]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 5);
+
+      setRecentArticles(sortedByDate);
 
       // Update system status
       setSystemStatus({
@@ -270,6 +362,8 @@ const AdminDashboard = () => {
 
       // Call API
       await AdminService.updateArticle(slug, { [field]: value });
+      // Refresh stats to reflect flag change
+      fetchDashboardData();
 
     } catch (err) {
       console.error('Error toggling flag:', err);
@@ -335,12 +429,33 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Stats Grid */}
+      {/* Analytics Dashboard (Top Section) */}
+      {/* Analytics Dashboard (Removed) */}
+      {/* 
+      <div className="animate-slide-in">
+        <AnalyticsDashboard />
+      </div> 
+      */}
+
+      {/* Stats Grid - GLOBAL (Home Page) */}
+      <h3 className="section-title" style={{ marginTop: '30px', marginBottom: '15px' }}>Home Page Stats</h3>
       <div className="stats-grid animate-slide-in delay-100">
-        {stats.map((stat, index) => (
-          <StatsCard key={index} {...stat} />
+        {globalStats.map((stat, index) => (
+          <StatsCard key={`global-${index}`} {...stat} />
         ))}
       </div>
+
+      {/* Stats Grid - CATEGORIES */}
+      {categoryStats.map((catStat, idx) => (
+        <div key={catStat.title} className="category-stats-section animate-slide-in" style={{ animationDelay: `${(idx + 2) * 100}ms` }}>
+          <h3 className="section-title" style={{ marginTop: '30px', marginBottom: '15px' }}>{catStat.title} Stats</h3>
+          <div className="stats-grid">
+            {catStat.stats.map((stat, index) => (
+              <StatsCard key={`${catStat.title}-${index}`} {...stat} />
+            ))}
+          </div>
+        </div>
+      ))}
 
       {/* Main Content */}
       <div className="dashboard-content">
