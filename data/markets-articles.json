@@ -1244,7 +1244,7 @@
       "homeFeatured": false,
       "homeLatest": false,
       "homeTrending": true,
-      "homeTopStory": true,
+      "homeTopStory": false,
       "content": [
         {
           "id": "block-1769770040339-je9sxjhqg-1",
@@ -1356,7 +1356,7 @@
       "keywords": "Bitcoin price dip, BTC downtrend 2026, Bitcoin lowest levels, Fed chair impact on crypto, Bitcoin ETF outflows, crypto risk sentiment",
       "id": 12,
       "createdAt": "2026-01-30T10:56:26.334Z",
-      "updatedAt": "2026-01-30T10:56:26.334Z"
+      "updatedAt": "2026-02-13T15:19:53.690Z"
     },
     {
       "title": "Silver Crashes as Markets Whipsaw - What Triggered the Sudden 15% Plunge",
