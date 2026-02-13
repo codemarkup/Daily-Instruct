@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "amio8lu",
+      "text": "New article \"NASA-SpaceX Launch Ignites Global Buzz - Why This ISS Mission Has Canada Watching Closely\" posted successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "success",
+      "timestamp": 1770997406261
+    },
+    {
       "id": "25bmt6m",
       "text": "Article \"Silver Crashes as Markets Whipsaw - What Triggered the Sudden 15% Plunge\" updated successfully",
       "time": "Just now",
