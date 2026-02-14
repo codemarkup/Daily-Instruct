@@ -18,7 +18,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
     relatedArticles = []
 }) => {
     return (
-        <div className={styles.articlePage}>
+        <article className={styles.articlePage}>
             {/* Article Hero Section */}
             <section className={styles.articleHero}>
                 <div className="container">
@@ -122,7 +122,7 @@ const ArticleRenderer: React.FC<ArticleRendererProps> = ({
                     </div>
                 </section>
             )}
-        </div>
+        </article>
     );
 };
 

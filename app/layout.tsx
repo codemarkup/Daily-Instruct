@@ -44,9 +44,19 @@ export const metadata: Metadata = {
     'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
-  robots: 'index, follow',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   alternates: {
-    canonical: '/',
+    canonical: 'https://dailyinstruct.com',
   },
   openGraph: {
     url: 'https://dailyinstruct.com',

@@ -1,3 +1,4 @@
+import StructuredData from "@/components/StructuredData";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,6 +58,7 @@ export async function generateMetadata({ params }: {
     }
 
     const article = result.article;
+    const url = `https://dailyinstruct.com/articles/${article.slug}`;
 
     return {
       title: article.metaDescription
@@ -64,7 +66,9 @@ export async function generateMetadata({ params }: {
         : article.title,
       description: article.metaDescription || article.description.substring(0, 160),
       keywords: article.keywords || `${article.category}, ${article.specific}, tutorial`,
-
+      alternates: {
+        canonical: url,
+      },
       // Open Graph (Facebook, LinkedIn)
       openGraph: {
         title: article.title,
@@ -73,6 +77,7 @@ export async function generateMetadata({ params }: {
         type: 'article',
         publishedTime: article.date,
         authors: [article.author],
+        url: url,
       },
 
       // Twitter
@@ -148,7 +153,17 @@ export default async function ArticlePage({
           : TechHeader;
 
     return (
-      <ArticleRenderer article={article} relatedArticles={relatedArticles} />
+      <>
+        <StructuredData
+          headline={article.title}
+          description={article.metaDescription || article.description}
+          image={article.image}
+          datePublished={article.date}
+          author={article.author}
+          slug={article.slug}
+        />
+        <ArticleRenderer article={article} relatedArticles={relatedArticles} />
+      </>
     );
 
   } catch (error) {
