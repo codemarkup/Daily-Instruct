@@ -127,7 +127,7 @@ const LatestArticles: React.FC = () => {
                     className={styles.heroImage}
                     priority
                   />
-                  <div className={styles.heroBadge}>Featured Story</div>
+                  {/* <div className={styles.heroBadge}>Featured Story</div> */}
                 </div>
                 <div className={styles.heroContent}>
                   <div className={styles.heroMetaTop}>

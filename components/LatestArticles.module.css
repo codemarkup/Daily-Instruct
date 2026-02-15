@@ -308,6 +308,54 @@
 }
 
 /* =========================================
+   MOBILE HERO STYLES (Max-Width: 768px)
+   ========================================= */
+@media (max-width: 768px) {
+  .heroCard {
+    grid-template-columns: 1fr; /* Stack vertically */
+    display: flex;
+    flex-direction: column;
+    min-height: auto; /* Allow height to adjust to content */
+    height: auto;
+  }
+
+  .heroImageWrapper {
+    height: 250px; /* Fixed height for mobile image */
+    min-height: 250px;
+    width: 100%;
+  }
+
+  .heroContent {
+    padding: 1.5rem; /* Reduce padding significantly */
+    border-left: none; /* Remove desktop border */
+    border-top: 1px solid rgba(0,0,0,0.05);
+  }
+
+  .heroTitle {
+    font-size: 1.75rem; /* Much smaller font for mobile */
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    word-break: break-word; /* Prevent overflow */
+  }
+
+  .heroMetaTop {
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+
+  .heroDescription {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    -webkit-line-clamp: 3; /* Limit lines */
+  }
+
+  .heroFooter {
+    padding-top: 1.5rem;
+  }
+}
+
+/* =========================================
    STANDARD GRID STYLES
    ========================================= */
 .articlesGrid {
