@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "2jkln0m",
+      "text": "New article \"DB Navigator Breakdown Exposes a Bigger Problem for Germany's Rail System\" posted successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "success",
+      "timestamp": 1771352946364
+    },
+    {
       "id": "cqvyt9z",
       "text": "New article \"Canada's New Defence Strategy Signals a Break From the Past - Here's What Changed\" posted successfully",
       "time": "Just now",
