@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "cqvyt9z",
+      "text": "New article \"Canada's New Defence Strategy Signals a Break From the Past - Here's What Changed\" posted successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "success",
+      "timestamp": 1771352042116
+    },
+    {
       "id": "r3plvnj",
       "text": "Article \"Nvidia Stock Stuck Since July - Why Wall Street's 5 Trillion Dollar AI Giant Has Suddenly Hit the Brakes in 2026\" updated successfully",
       "time": "Just now",
