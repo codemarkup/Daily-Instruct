@@ -1066,6 +1066,122 @@
       "id": 11,
       "createdAt": "2026-02-17T18:14:01.513Z",
       "updatedAt": "2026-02-17T18:14:01.513Z"
+    },
+    {
+      "title": "City-Killer Asteroids Are Closer Than We Think - And the U.S. Is Not Fully Ready",
+      "slug": "city-killer-asteroids-are-closer-than-we-think-and-the-us-is-not-fully-ready",
+      "description": "Scientists are raising alarms about thousands of hidden asteroids near Earth.\nThe threat is rare, but the consequences could be devastating.",
+      "author": "DailyInstruct Editorial Team",
+      "date": "February 18, 2026",
+      "readTime": "4 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1771406950/Pi7_Vision_ogacay.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": true,
+      "featured": false,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1771403941750-i3tpgtncx-1",
+          "type": "heading",
+          "text": "City-Killing Asteroids Become a Growing Concern in the United States"
+        },
+        {
+          "id": "block-1771403941750-vmpivncqt-2",
+          "type": "paragraph",
+          "text": "A new space-related trend is gaining attention in the United States as scientists warn about thousands of large asteroids capable of destroying entire cities. Recent comments from researchers have sparked public concern about how prepared Earth really is for such a threat."
+        },
+        {
+          "id": "block-1771403941750-fuzauv0y6-3",
+          "type": "heading",
+          "text": "What Are City-Killer Asteroids"
+        },
+        {
+          "id": "block-1771403941750-4eaevzxe5-4",
+          "type": "paragraph",
+          "text": "City-killer asteroids are space rocks large enough to cause massive destruction if they hit a populated area. They are smaller than planet-ending asteroids but powerful enough to wipe out a major city through blast waves, heat, and debris."
+        },
+        {
+          "id": "block-1771403941750-8pc4uo9e8-5",
+          "type": "heading",
+          "text": "Why Scientists Are Worried"
+        },
+        {
+          "id": "block-1771403941750-00zkyzag7-6",
+          "type": "paragraph",
+          "text": "Many of these asteroids remain undetected because they approach from angles that are difficult to monitor. Some travel close to the Sun's glare, making them nearly invisible to current detection systems until they pass Earth."
+        },
+        {
+          "id": "block-1771403941750-rjrtau8sk-7",
+          "type": "quote",
+          "text": "The most dangerous asteroids are often the ones we have not found yet."
+        },
+        {
+          "id": "block-1771403941750-6dpg9woso-8",
+          "type": "heading",
+          "text": "Limits of Current Planetary Defense"
+        },
+        {
+          "id": "block-1771403941750-7loflvmhj-9",
+          "type": "paragraph",
+          "text": "While space agencies track many near-Earth objects, there is currently no guaranteed system to stop a city-killer asteroid on short notice. Detection, warning time, and deflection technology all remain limited."
+        },
+        {
+          "id": "block-1771403941750-29j1s7jp0-10",
+          "type": "heading",
+          "text": "What NASA Can and Cannot Do"
+        },
+        {
+          "id": "block-1771403941750-uo20mol95-11",
+          "type": "paragraph",
+          "text": "Recent test missions have shown that asteroid deflection is possible in controlled situations. However, these methods require years of advance warning, which is not available for many hidden or newly discovered objects."
+        },
+        {
+          "id": "block-1771403941750-l5mxgv51r-12",
+          "type": "heading",
+          "text": "How Real Is the Risk"
+        },
+        {
+          "id": "block-1771403941750-scm0h10jg-13",
+          "type": "paragraph",
+          "text": "Scientists stress that large impacts are rare, but not impossible. The concern is not panic, but preparation. Even a low-probability event becomes serious when the potential damage is catastrophic."
+        },
+        {
+          "id": "block-1771403941750-cond5zom1-14",
+          "type": "quote",
+          "text": "This is not about fear. It is about readiness."
+        },
+        {
+          "id": "block-1771403941750-600y3bewv-15",
+          "type": "heading",
+          "text": "What Comes Next"
+        },
+        {
+          "id": "block-1771403941750-w2uxd8m1o-16",
+          "type": "paragraph",
+          "text": "Researchers are calling for better detection systems, more space telescopes, and global cooperation. The focus is shifting from science fiction to realistic risk management."
+        },
+        {
+          "id": "block-1771403941750-uuoziggtx-17",
+          "type": "heading",
+          "text": "The Bigger Picture"
+        },
+        {
+          "id": "block-1771403941750-4o3q2zc7g-18",
+          "type": "paragraph",
+          "text": "The debate around city-killing asteroids reflects a broader question about planetary defense. As detection improves, awareness grows, and with it, pressure to act before a real emergency occurs."
+        }
+      ],
+      "metaDescription": "NASA scientists warn thousands of city-killer asteroids remain undetected, raising concerns about Earth's planetary defense readiness.",
+      "keywords": "city killer asteroids, asteroid threat Earth, NASA asteroid warning, near Earth objects, planetary defense",
+      "id": 12,
+      "createdAt": "2026-02-18T09:30:43.855Z",
+      "updatedAt": "2026-02-18T09:30:43.855Z"
     }
   ]
 }
