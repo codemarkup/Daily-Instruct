@@ -1,6 +1,14 @@
 {
   "notifications": [
     {
+      "id": "l17fh09",
+      "text": "New article \"Heathrow Flights Are Being Quietly Cut for 2026 - What US Travelers Need to Know Now\" posted successfully",
+      "time": "Just now",
+      "read": false,
+      "type": "success",
+      "timestamp": 1771407567594
+    },
+    {
       "id": "4gu2wjj",
       "text": "New article \"City-Killer Asteroids Are Closer Than We Think - And the U.S. Is Not Fully Ready\" posted successfully",
       "time": "Just now",
