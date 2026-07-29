@@ -137,7 +137,7 @@ function validateArticleContent(article: Partial<Article>) {
 }
 
 export async function createArticle(articleData: any): Promise<Article> {
-  const { trackers, ...dbData } = articleData;
+  const { trackers, id, createdAt, updatedAt, ...dbData } = articleData;
   validateArticleContent(dbData);
   const { data, error } = await supabase.from('articles').insert([dbData]).select().single();
   if (error) throw error;
@@ -156,10 +156,13 @@ export async function createArticle(articleData: any): Promise<Article> {
 }
 
 export async function updateArticle(slug: string, articleData: any): Promise<Article | null> {
-  const { trackers, ...dbData } = articleData;
+  const { trackers, id, createdAt, updatedAt, ...dbData } = articleData;
   validateArticleContent(dbData);
   const { data, error } = await supabase.from('articles').update(dbData).eq('slug', slug).select().single();
-  if (error) return null;
+  if (error) {
+    console.error('Supabase update error:', error);
+    return null;
+  }
 
   if (trackers && Array.isArray(trackers)) {
     const { data: existingUpdates } = await supabase.from('tracker_updates').select('tracker_id').eq('linked_article_id', data.id);
@@ -187,6 +190,9 @@ export async function updateArticle(slug: string, articleData: any): Promise<Art
 
 export async function deleteArticle(slug: string): Promise<boolean> {
   const { error } = await supabase.from('articles').delete().eq('slug', slug);
+  if (error) {
+    console.error('Supabase delete error:', error);
+  }
   return !error;
 }
 
