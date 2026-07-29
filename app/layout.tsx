@@ -41,8 +41,6 @@ export const metadata: Metadata = {
   },
   description:
     'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.',
-  keywords:
-    'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   robots: 'index, follow',
