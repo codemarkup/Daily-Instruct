@@ -24,25 +24,20 @@ const ArticleGridItem = ({ article, isLarge = false }: { article: any, isLarge?:
 
 export default async function CategoryDashboard({ categoryName, categoryTitle, categoryDescription }: { categoryName: string, categoryTitle: string, categoryDescription: string }) {
 
-  // Fetch articles for this category
-  const { data: articles } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('category', categoryName)
-    .order('featured_position', { ascending: true, nullsFirst: false })
-    .order('date', { ascending: false });
+  // Fetch articles for this category using the specific flags
+  const [
+    { data: featuredData },
+    { data: trendingData },
+    { data: gridData }
+  ] = await Promise.all([
+    supabase.from('articles').select('*').eq('category', categoryName).eq('featured', true).order('date', { ascending: false }).limit(1),
+    supabase.from('articles').select('*').eq('category', categoryName).eq('trending', true).order('date', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('category', categoryName).eq('grid', true).order('date', { ascending: false }).limit(4)
+  ]);
 
-  const featured = articles?.filter(a => a.featured) || [];
-  const others = articles?.filter(a => !a.featured) || [];
-  
-  // Mix them if no featured
-  const heroArticle = featured.length > 0 ? featured[0] : (others.length > 0 ? others[0] : null);
-  const remainingFeatured = featured.slice(1);
-  // Grid items: remaining featured + recent others
-  const gridItems = [...remainingFeatured, ...others].filter(a => a.id !== heroArticle?.id);
-
-  const trendingArticles = gridItems.filter(a => a.trending);
-  const latestArticles = gridItems.filter(a => !a.trending);
+  const heroArticle = featuredData && featuredData.length > 0 ? featuredData[0] : null;
+  const trendingArticles = trendingData || [];
+  const latestArticles = gridData || [];
 
   return (
     <div style={{ background: 'var(--primary-white)', minHeight: '100vh', padding: '60px 20px', color: 'var(--primary-black)' }} className="category-page">

@@ -10,16 +10,8 @@ import "../../styles/admin/components.css";
 const AdminDashboard = () => {
   const router = useRouter();
   
-  // =========== AUTH CHECK ===========
-  useEffect(() => {
-    // Simple cookie check
-    const hasAuthCookie = document.cookie.includes('admin-auth=true');
-    
-    if (!hasAuthCookie) {
-      console.log('No auth cookie, redirecting to login');
-      router.push('/login');
-    }
-  }, [router]);
+  // =========== AUTH CHECK REMOVED ===========
+  // Supabase middleware handles route protection automatically
   // =========== END AUTH CHECK ===========
   
   const [stats, setStats] = useState([
