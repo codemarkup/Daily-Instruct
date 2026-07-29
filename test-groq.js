@@ -61,7 +61,7 @@ You MUST respond with a valid JSON object ONLY. Do not include markdown blocks l
 }
 `;
 
-  const apiKey = 'YOUR_API_KEY_HERE';
+  const apiKey = process.env.GROQ_API_KEY || 'YOUR_API_KEY_HERE';
   const userContent = `Content:\n${content}`;
 
   try {
