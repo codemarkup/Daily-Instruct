@@ -107,7 +107,7 @@
       "grid": false,
       "homeFeatured": true,
       "homeLatest": false,
-      "homeTrending": true,
+      "homeTrending": false,
       "homeTopStory": false,
       "content": [
         {
@@ -404,7 +404,7 @@
       "keywords": "nvidia stock price 2026, nvda stock prediction, nvidia blackwell chips, ai stock market 2026, nvidia china export h200, nvidia stock crash 2026, semiconductor stocks united states, nvidia valuation concerns, blackwell gpu shortage, nvidia stock forecast, ai bubble 2026, tech stocks china, nvidia uk investment, gpu supply chain 2026, artificial intelligence stocks",
       "id": 4,
       "createdAt": "2026-01-02T16:09:21.957Z",
-      "updatedAt": "2026-01-02T16:12:46.375Z"
+      "updatedAt": "2026-02-13T15:44:58.427Z"
     },
     {
       "title": "Exxon Stock Suddenly Surges as Venezuela Crisis Deepens - What Wall Street Knows That Retail Investors Dont",
@@ -422,7 +422,7 @@
       "grid": false,
       "homeFeatured": false,
       "homeLatest": false,
-      "homeTrending": true,
+      "homeTrending": false,
       "homeTopStory": true,
       "content": [
         {
@@ -524,7 +524,7 @@
       "keywords": "exxon stock today, exxon mobil stock surge, venezuela oil crisis, united states oil market, canada energy stocks, crude oil prices 2026, oil stocks rally, china oil demand, uk energy market, exxon mobil analysis 2026, geopolitics oil prices, wall street oil stocks",
       "id": 5,
       "createdAt": "2026-01-05T18:20:21.824Z",
-      "updatedAt": "2026-01-05T18:22:38.762Z"
+      "updatedAt": "2026-02-13T15:44:57.390Z"
     },
     {
       "title": "South Korea Just Opened the Crypto Floodgates - A Bitcoin ETF Shift That Could Change Global Finance in 2026",
@@ -541,7 +541,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": false,
       "content": [
@@ -644,7 +644,7 @@
       "keywords": "South Korea bitcoin ETF, crypto regulation 2026, Digital Asset Act Korea, stablecoin regulation, bitcoin ETF approval, South Korea crypto market, United States crypto ETFs, China blockchain policy, UK crypto regulation, global crypto adoption, bitcoin price outlook 2026",
       "id": 6,
       "createdAt": "2026-01-09T11:54:52.411Z",
-      "updatedAt": "2026-01-09T11:58:23.160Z"
+      "updatedAt": "2026-02-12T16:02:20.524Z"
     },
     {
       "title": "U.S. Jobs Report Surprises Markets - What Falling Unemployment and Steady Bitcoin Mean for 2026",
@@ -751,7 +751,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -854,7 +854,7 @@
       "keywords": "ge stock, ge aerospace stock, general electric shares, aerospace earnings 2026, aviation industry outlook, united states aerospace stocks, china aviation demand, uk airline growth, jet engine market 2026, industrial stocks rally, global aerospace recovery, defense and aviation stocks",
       "id": 8,
       "createdAt": "2026-01-22T17:26:55.947Z",
-      "updatedAt": "2026-01-22T17:26:55.947Z"
+      "updatedAt": "2026-02-12T15:55:55.726Z"
     },
     {
       "title": "Intel Stock Collapses After Earnings Shock - Is This the Turning Point or the Beginning of a Bigger Crisis?",
@@ -871,7 +871,7 @@
       "topStory": false,
       "grid": false,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -974,7 +974,7 @@
       "keywords": "intel stock, intc stock, intel shares plunge, intel earnings, intel guidance weak, intel chip production, semiconductor stocks, united states stock market, china semiconductor industry, uk tech stocks, global chip market 2026, intel foundry strategy, intel stock analysis 2026, nasdaq tech stocks, ai chip competition",
       "id": 9,
       "createdAt": "2026-01-23T15:11:30.570Z",
-      "updatedAt": "2026-01-23T15:19:29.545Z"
+      "updatedAt": "2026-02-12T15:55:37.451Z"
     },
     {
       "title": "Meta Stock Rockets After Bold AI Bet - Why Revenue Forecast and Superintelligence Spending Could Redefine 2026 Tech Leadership",
@@ -991,9 +991,9 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
-      "homeTopStory": true,
+      "homeTopStory": false,
       "content": [
         {
           "type": "heading",
@@ -1094,7 +1094,783 @@
       "keywords": "meta stock, meta shares forecast, Meta earnings 2026, artificial intelligence investment, superintelligence spending, united states tech stocks, china ai landscape, uk technology investment, Facebook parent company, Nasdaq tech performance, AI driven growth stocks, global social media industry, metaverse spending 2026",
       "id": 10,
       "createdAt": "2026-01-29T07:38:32.650Z",
-      "updatedAt": "2026-01-29T07:44:10.419Z"
+      "updatedAt": "2026-02-11T14:52:49.764Z"
+    },
+    {
+      "title": "Microsoft Stock Drops After Earnings Beat - Why Wall Street Is Suddenly Nervous About MSFT",
+      "slug": "microsoft-stock-drops-after-earnings-beat-why-wall-street-is-suddenly-nervous-about-msft",
+      "description": "Microsoft reported strong earnings, yet its stock fell sharply.\nHere's what investors saw beneath the surface - and why MSFT is trending in the US.",
+      "author": "Saad",
+      "date": "January 29, 2026",
+      "readTime": "5 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1769712856/Pi7_Vision_3_gniy07.png",
+      "category": "markets",
+      "specific": "Stock Market",
+      "trending": false,
+      "featured": false,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
+      "content": [
+        {
+          "id": "block-1769713076772-5s3rbhdo6-1",
+          "type": "heading",
+          "text": "Microsoft Stock Slides After Earnings Surprise"
+        },
+        {
+          "id": "block-1769713076772-krdjp47wj-2",
+          "type": "paragraph",
+          "text": "Microsoft stock has become a fresh trend in the United States after a sharp post-earnings sell-off surprised investors. Despite strong profits and solid revenue growth, the company's shares fell as markets focused on rising costs and long-term risks rather than headline numbers."
+        },
+        {
+          "id": "block-1769713076772-e34d5hq6v-3",
+          "type": "heading",
+          "text": "Why Microsoft Earnings Did Not Lift the Stock"
+        },
+        {
+          "id": "block-1769713076772-fi3hiov2x-4",
+          "type": "paragraph",
+          "text": "Microsoft reported strong quarterly results, driven by cloud services and enterprise software demand. Revenue and profit both exceeded market expectations, confirming that Microsoft's core businesses remain healthy. However, investors reacted negatively because financial markets are now more sensitive to future risks than past performance."
+        },
+        {
+          "id": "block-1769713076772-d00xtdswr-5",
+          "type": "quote",
+          "text": "Strong earnings no longer guarantee a rally when investors worry about what comes next."
+        },
+        {
+          "id": "block-1769713076772-fggkhsmiq-6",
+          "type": "heading",
+          "text": "Data Center Spending Raises Investor Concerns"
+        },
+        {
+          "id": "block-1769713076772-f21n8diz8-7",
+          "type": "paragraph",
+          "text": "The main pressure on Microsoft stock came from its aggressive increase in data center and infrastructure spending. The company is investing heavily to support artificial intelligence workloads and cloud expansion. While these investments support long-term growth, they also raise short-term costs and reduce free cash flow."
+        },
+        {
+          "id": "block-1769713076772-8rxnymppo-8",
+          "type": "heading",
+          "text": "AI Investment Is a Double-Edged Sword"
+        },
+        {
+          "id": "block-1769713076772-q9o4bx156-9",
+          "type": "paragraph",
+          "text": "Microsoft continues to position itself as a leader in artificial intelligence by expanding AI tools across Azure, Office, and enterprise products. These efforts require massive computing power, which explains the surge in capital spending. Investors are questioning how quickly these AI investments will turn into consistent profits."
+        },
+        {
+          "id": "block-1769713076772-b1977vnl4-10",
+          "type": "quote",
+          "text": "AI promises future dominance, but markets want proof of returns today."
+        },
+        {
+          "id": "block-1769713076772-lq674my32-11",
+          "type": "heading",
+          "text": "Azure Growth Missed High Expectations"
+        },
+        {
+          "id": "block-1769713076772-4s46h0ybn-12",
+          "type": "paragraph",
+          "text": "Azure cloud revenue continued to grow at a strong pace, but the growth rate slightly missed the most optimistic forecasts. In a competitive cloud market dominated by Microsoft, Amazon, and Google, even small slowdowns can trigger sharp market reactions."
+        },
+        {
+          "id": "block-1769713076772-ndm6n5wzq-13",
+          "type": "heading",
+          "text": "Changing Market Mood Around Big Tech"
+        },
+        {
+          "id": "block-1769713076772-0e14t3hwj-14",
+          "type": "paragraph",
+          "text": "The reaction to Microsoft reflects a broader shift in U.S. markets. Investors are no longer rewarding Big Tech companies simply for growth. Instead, they are closely watching spending discipline, efficiency, and long-term margins, especially as AI-related costs rise across the industry."
+        },
+        {
+          "id": "block-1769713076772-lpfleb1ay-15",
+          "type": "heading",
+          "text": "What This Trend Means for MSFT Investors"
+        },
+        {
+          "id": "block-1769713076772-d3lbospwg-16",
+          "type": "paragraph",
+          "text": "The current trend does not suggest that Microsoft's business is weak. Instead, it highlights a temporary gap between long-term strategy and short-term market expectations. For long-term investors, Microsoft's investments may strengthen its competitive position. For short-term traders, volatility is likely to remain high."
+        },
+        {
+          "id": "block-1769713076772-0x4arju6o-17",
+          "type": "quote",
+          "text": "Microsoft is building for the next decade, while markets trade the next quarter."
+        },
+        {
+          "id": "block-1769713076772-q6x5hdad2-18",
+          "type": "heading",
+          "text": "The Bigger Picture for U.S. Tech Stocks"
+        },
+        {
+          "id": "block-1769713076772-1i5sq89gs-19",
+          "type": "paragraph",
+          "text": "Microsoft's stock movement is influencing sentiment across the broader technology sector. As other major tech firms report earnings, investors are applying similar scrutiny to AI spending and cloud growth. This makes Microsoft a key signal stock for where U.S. tech markets may head next."
+        },
+        {
+          "id": "block-1769713076772-44ryih4aa-20",
+          "type": "heading",
+          "text": "Final Takeaway"
+        },
+        {
+          "id": "block-1769713076772-uk7c5jsb9-21",
+          "type": "paragraph",
+          "text": "The new trend around Microsoft stock shows how quickly market narratives can shift. Strong profits are no longer enough on their own. Investors want clarity on costs, growth sustainability, and returns on AI investments. Microsoft remains a powerful company, but its stock will move with confidence in its long-term execution."
+        }
+      ],
+      "metaDescription": "Microsoft stock fell after earnings despite strong profits. Rising AI and data center spending is driving new investor concerns.",
+      "keywords": "MSFT stock, Microsoft stock news, Microsoft earnings, MSFT trend US, Microsoft AI spending, Azure growth, US stock market",
+      "id": 11,
+      "createdAt": "2026-01-29T18:57:00.242Z",
+      "updatedAt": "2026-02-11T14:53:37.031Z"
+    },
+    {
+      "title": "Bitcoin's New Downtrend Explained - Why Prices Are Dropping, Fed Uncertainty, and What Comes Next",
+      "slug": "bitcoins-new-downtrend-explained-why-prices-are-dropping-fed-uncertainty-and-what-comes-next",
+      "description": "Bitcoin is sliding to multi-month lows as Fed chair speculation, ETF outflows, and risk-off sentiment hit crypto markets.\nUnderstand the forces reshaping BTC price trend.",
+      "author": "Saad",
+      "date": "January 30, 2026",
+      "readTime": "6 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1769770296/pi7_vision_4_ffpywh.png",
+      "category": "markets",
+      "specific": "Cryptocurrency",
+      "trending": true,
+      "featured": true,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": false,
+      "content": [
+        {
+          "id": "block-1769770040339-je9sxjhqg-1",
+          "type": "heading",
+          "text": "Bitcoin Enters a New Downtrend in the US Market"
+        },
+        {
+          "id": "block-1769770040339-t2mp5vinz-2",
+          "type": "paragraph",
+          "text": "Bitcoin price has started a fresh downward trend in the United States, drawing attention across financial markets. After a strong rally in late 2025, the world's largest cryptocurrency is now facing sustained selling pressure as investors reassess risk, policy direction, and near-term expectations."
+        },
+        {
+          "id": "block-1769770040339-wifd2jo1v-3",
+          "type": "heading",
+          "text": "Why Bitcoin Is Falling Right Now"
+        },
+        {
+          "id": "block-1769770040339-muz4cnfyb-4",
+          "type": "paragraph",
+          "text": "The recent decline in Bitcoin is closely linked to uncertainty around US monetary policy. Speculation over future Federal Reserve leadership and interest rate direction has strengthened the US dollar and reduced appetite for risk assets. Cryptocurrencies, which often react quickly to liquidity expectations, have come under pressure."
+        },
+        {
+          "id": "block-1769770040339-g73tw0tk7-5",
+          "type": "quote",
+          "text": "When policy uncertainty rises, investors usually pull back from assets that rely on abundant liquidity."
+        },
+        {
+          "id": "block-1769770040339-x2ws5qdyi-6",
+          "type": "heading",
+          "text": "Longest Losing Streak Since 2018"
+        },
+        {
+          "id": "block-1769770040339-cd1jyh9o0-7",
+          "type": "paragraph",
+          "text": "Bitcoin is on track for its longest monthly losing streak since 2018. This is a significant shift in momentum, especially after the strong gains seen last year. Consecutive monthly declines signal weakening confidence among short-term traders and institutions."
+        },
+        {
+          "id": "block-1769770040339-sb1py6u2w-8",
+          "type": "heading",
+          "text": "Risk-Off Mood Is Hitting Crypto Hard"
+        },
+        {
+          "id": "block-1769770040339-irc186fbg-9",
+          "type": "paragraph",
+          "text": "Broader market sentiment has turned cautious. Investors are moving away from speculative assets and into safer alternatives. Technology stocks, high-growth assets, and cryptocurrencies have all faced selling pressure, placing Bitcoin firmly within a wider risk-off trend."
+        },
+        {
+          "id": "block-1769770040339-53bwie9uq-10",
+          "type": "heading",
+          "text": "ETF Flows and Leverage Are Adding Pressure"
+        },
+        {
+          "id": "block-1769770040339-4tae766tw-11",
+          "type": "paragraph",
+          "text": "Weak demand for Bitcoin exchange-traded products has added to the downside. At the same time, high levels of leverage in crypto markets mean that price drops trigger forced liquidations. These liquidations increase selling volume and deepen short-term declines."
+        },
+        {
+          "id": "block-1769770040339-ambwpce70-12",
+          "type": "quote",
+          "text": "In highly leveraged markets, small price moves can quickly turn into sharp drops."
+        },
+        {
+          "id": "block-1769770040339-epxqo9ka3-13",
+          "type": "heading",
+          "text": "Technical Levels Are Breaking Down"
+        },
+        {
+          "id": "block-1769770040339-wsnu5smah-14",
+          "type": "paragraph",
+          "text": "Bitcoin has recently slipped below key technical support zones. When these levels fail, automated trading systems and stop-loss orders often accelerate selling. This technical breakdown has reinforced the bearish trend in the short term."
+        },
+        {
+          "id": "block-1769770040339-b0qso1x6c-15",
+          "type": "heading",
+          "text": "How This Fits Into Bitcoin's History"
+        },
+        {
+          "id": "block-1769770040339-8xa5q9be8-16",
+          "type": "paragraph",
+          "text": "Sharp pullbacks have been a recurring feature of Bitcoin's past market cycles. Extended rallies are often followed by periods of consolidation or decline. While painful in the short term, these phases have historically reset market positioning before the next major move."
+        },
+        {
+          "id": "block-1769770040339-uf952yog1-17",
+          "type": "heading",
+          "text": "What This Trend Means for Investors"
+        },
+        {
+          "id": "block-1769770040339-ij1g81bud-18",
+          "type": "paragraph",
+          "text": "For long-term holders, the current decline highlights Bitcoin's volatility rather than a fundamental collapse. For short-term traders, price swings are likely to remain intense as macro signals continue to drive sentiment."
+        },
+        {
+          "id": "block-1769770040339-ctar5lwya-19",
+          "type": "heading",
+          "text": "The Bigger Picture Ahead"
+        },
+        {
+          "id": "block-1769770040339-qesn2jq7x-20",
+          "type": "paragraph",
+          "text": "Bitcoin's current trend reflects its growing connection to global financial conditions. As long as uncertainty around interest rates and liquidity persists, Bitcoin may remain sensitive to macroeconomic headlines. The next phase will depend on whether confidence returns to risk assets or caution continues to dominate."
+        },
+        {
+          "id": "block-1769770040339-zm0s4zhv8-21",
+          "type": "quote",
+          "text": "Bitcoin no longer trades in isolation; it now moves with the mood of global markets."
+        }
+      ],
+      "metaDescription": "Bitcoin slips to its lowest levels in months amid Fed uncertainty, ETF outflows, and risk-off markets. Key trends shaping BTC price now.",
+      "keywords": "Bitcoin price dip, BTC downtrend 2026, Bitcoin lowest levels, Fed chair impact on crypto, Bitcoin ETF outflows, crypto risk sentiment",
+      "id": 12,
+      "createdAt": "2026-01-30T10:56:26.334Z",
+      "updatedAt": "2026-02-13T15:19:53.690Z"
+    },
+    {
+      "title": "Silver Crashes as Markets Whipsaw - What Triggered the Sudden 15% Plunge",
+      "slug": "silver-crashes-as-markets-whipsaw-what-triggered-the-sudden-15-plunge",
+      "description": "Silver prices collapsed in a sharp sell-off, dragging gold, miners, and ETFs lower.\nHere's what changed in markets and why silver is suddenly trending.",
+      "author": "Saad",
+      "date": "January 30, 2026",
+      "readTime": "5 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1769771186/Pi7_Vision_5_nimutt.png ",
+      "category": "markets",
+      "specific": "Commodities",
+      "trending": true,
+      "featured": false,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": true,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": false,
+      "content": [
+        {
+          "id": "block-1769771049382-gwjs37ooz-1",
+          "type": "heading",
+          "text": "Silver Prices Collapse as Markets Enter a Risk-Off Phase"
+        },
+        {
+          "id": "block-1769771049382-58wezkyp4-2",
+          "type": "paragraph",
+          "text": "Silver has suddenly become a major trend in global markets after prices plunged sharply in a single session. The metal fell alongside gold, triggering heavy losses across mining stocks and exchange-traded funds. The move caught many investors off guard and signaled a rapid shift in market sentiment."
+        },
+        {
+          "id": "block-1769771049382-i1g8op9tf-3",
+          "type": "heading",
+          "text": "What Triggered the Sharp Fall in Silver"
+        },
+        {
+          "id": "block-1769771049382-uu4tex027-4",
+          "type": "paragraph",
+          "text": "The sell-off in silver is closely linked to renewed uncertainty around US monetary policy. Markets reacted strongly to speculation surrounding the next Federal Reserve chair, with investors bracing for a potentially more aggressive stance on inflation and interest rates. This pushed the US dollar higher and pressured precious metals."
+        },
+        {
+          "id": "block-1769771049382-df8aczybp-5",
+          "type": "quote",
+          "text": "Precious metals often fall fast when markets reprice interest rate expectations."
+        },
+        {
+          "id": "block-1769771049382-v6fts8enh-6",
+          "type": "heading",
+          "text": "Gold Declines Added to Silver's Pressure"
+        },
+        {
+          "id": "block-1769771049382-4zmy74d01-7",
+          "type": "paragraph",
+          "text": "Silver's drop was intensified by a simultaneous fall in gold prices. When both metals decline together, it signals broad selling rather than isolated weakness. Investors reduced exposure to safe-haven assets as volatility increased across equities, bonds, and commodities."
+        },
+        {
+          "id": "block-1769771049382-m9wyg98pv-8",
+          "type": "heading",
+          "text": "Miners and ETFs Feel the Impact"
+        },
+        {
+          "id": "block-1769771049382-kb30a29gm-9",
+          "type": "paragraph",
+          "text": "The sharp decline in silver prices quickly spilled into related assets. Shares of silver mining companies dropped, and precious metal ETFs recorded steep losses. These instruments often amplify price movements because they reflect both metal prices and investor positioning."
+        },
+        {
+          "id": "block-1769771049382-0dci4e1hr-10",
+          "type": "quote",
+          "text": "When metals fall hard, mining stocks usually fall harder."
+        },
+        {
+          "id": "block-1769771049382-t7m4wbaw2-11",
+          "type": "heading",
+          "text": "Why Silver Is More Volatile Than Gold"
+        },
+        {
+          "id": "block-1769771049382-tlr0u0mt4-12",
+          "type": "paragraph",
+          "text": "Silver tends to experience larger price swings than gold because it has a dual role. It is both a precious metal and an industrial input. When economic uncertainty rises, demand expectations for industrial use weaken, making silver more vulnerable during sudden market shifts."
+        },
+        {
+          "id": "block-1769771049382-jcewo7cve-13",
+          "type": "heading",
+          "text": "Global Markets Are Adding Pressure"
+        },
+        {
+          "id": "block-1769771049382-jhuhr7uev-14",
+          "type": "paragraph",
+          "text": "Weakness in Asian and US markets has reinforced the downward move in silver. As global stocks swing sharply, investors are prioritizing liquidity and capital preservation. This environment leaves little room for metals that depend on stable risk sentiment."
+        },
+        {
+          "id": "block-1769771049382-ztgs92f7k-15",
+          "type": "heading",
+          "text": "Is This a Trend or a Short-Term Shock"
+        },
+        {
+          "id": "block-1769771049382-0e9aqm0mb-16",
+          "type": "paragraph",
+          "text": "The speed and size of the drop suggest panic-driven selling rather than a slow structural decline. However, continued uncertainty around interest rates and central bank leadership could keep silver under pressure in the near term. Much will depend on how markets digest upcoming policy signals."
+        },
+        {
+          "id": "block-1769771049382-yaxsr88vc-17",
+          "type": "heading",
+          "text": "What This Means for Investors"
+        },
+        {
+          "id": "block-1769771049382-85exre6pi-18",
+          "type": "paragraph",
+          "text": "For long-term investors, sharp declines often test conviction but can also reset valuations. Short-term traders face heightened volatility, where prices can swing quickly in either direction. Managing risk becomes critical during such sudden market moves."
+        },
+        {
+          "id": "block-1769771049382-pyu93grr8-19",
+          "type": "quote",
+          "text": "Sharp sell-offs change behavior faster than fundamentals."
+        },
+        {
+          "id": "block-1769771049382-4djpkdyvl-20",
+          "type": "heading",
+          "text": "The Bigger Picture for Precious Metals"
+        },
+        {
+          "id": "block-1769771049382-fe64sf7sh-21",
+          "type": "paragraph",
+          "text": "Silver's plunge highlights how sensitive precious metals are to shifts in policy expectations and global risk appetite. Until clarity emerges on interest rates and economic direction, price stability may remain elusive. Silver is now acting as a mirror of broader market uncertainty rather than a traditional safe haven."
+        }
+      ],
+      "keywords": "silver price crash, silver trend US, silver price today, gold and silver fall, precious metals selloff, silver ETFs",
+      "metaDescription": "Silver prices plunged sharply as Fed chair uncertainty and market volatility hit precious metals, dragging miners and ETFs lower.",
+      "id": 13,
+      "createdAt": "2026-01-30T11:07:35.230Z",
+      "updatedAt": "2026-02-13T15:44:48.600Z"
+    },
+    {
+      "title": "Apple Stock Surges on Explosive iPhone Demand - Why Wall Street Is Repricing AAPL",
+      "slug": "apple-stock-surges-on-explosive-iphone-demand-why-wall-street-is-repricing-aapl",
+      "description": "Apple's latest earnings shocked the market as iPhone sales roared back.\nHere's why AAPL is trending and what changed investor sentiment overnight.",
+      "author": "DailyInstruct Editorial Team",
+      "date": "January 30, 2026",
+      "readTime": "4 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1769771820/Pi7_Vision_6_tgljlk.png ",
+      "category": "markets",
+      "specific": "Stock Market",
+      "trending": true,
+      "featured": false,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": false,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1769771967798-a5ydqc5vq-1",
+          "type": "heading",
+          "text": "Apple Stock Rallies as iPhone Demand Shocks Wall Street"
+        },
+        {
+          "id": "block-1769771967798-mkgingmwi-2",
+          "type": "paragraph",
+          "text": "Apple has become a new trend in US markets after reporting stronger-than-expected quarterly results. Shares moved higher as investors reacted to a sharp rebound in iPhone sales, easing fears about slowing growth and Apple's long-term strategy."
+        },
+        {
+          "id": "block-1769771967798-zij18ef2p-3",
+          "type": "heading",
+          "text": "Apple Delivers a Strong Earnings Surprise"
+        },
+        {
+          "id": "block-1769771967798-r8b69yf8u-4",
+          "type": "paragraph",
+          "text": "Apple topped Wall Street expectations for its latest quarter, driven mainly by a powerful surge in iPhone revenue. Overall sales rose by around 16 percent, marking one of Apple's strongest growth periods in recent years. The results highlighted resilient consumer demand despite economic uncertainty."
+        },
+        {
+          "id": "block-1769771967798-9wq3xph34-5",
+          "type": "quote",
+          "text": "Apple's earnings showed that demand for its core products remains far stronger than many expected."
+        },
+        {
+          "id": "block-1769771967798-loq56szfe-6",
+          "type": "heading",
+          "text": "iPhone Sales Are Back in the Spotlight"
+        },
+        {
+          "id": "block-1769771967798-645z2e18p-7",
+          "type": "paragraph",
+          "text": "Record-breaking iPhone sales played a central role in lifting Apple's results. Strong upgrade cycles, new device features, and solid international demand helped reverse concerns that consumers were delaying smartphone purchases. The performance of the iPhone once again proved its importance to Apple's overall business."
+        },
+        {
+          "id": "block-1769771967798-vvmnvss4u-8",
+          "type": "heading",
+          "text": "How the iPhone 17 Changed Market Sentiment"
+        },
+        {
+          "id": "block-1769771967798-sc1qtirax-9",
+          "type": "paragraph",
+          "text": "Optimism around the upcoming iPhone 17 has also helped calm investor anxiety. Wall Street sees the new model as a stabilizing force for Apple, particularly at a time when questions remain about the company's artificial intelligence roadmap. Expectations for hardware-led growth are supporting confidence."
+        },
+        {
+          "id": "block-1769771967798-plk4luxao-10",
+          "type": "quote",
+          "text": "Hardware strength is buying Apple time as investors wait for clearer AI progress."
+        },
+        {
+          "id": "block-1769771967798-fanwf8y2f-11",
+          "type": "heading",
+          "text": "AI Concerns Are Not Gone, But Less Urgent"
+        },
+        {
+          "id": "block-1769771967798-n42unr5vv-12",
+          "type": "paragraph",
+          "text": "While Apple continues to face scrutiny over its pace in artificial intelligence, the latest earnings suggest AI is no longer the immediate concern for investors. Strong device sales and services revenue are giving Apple breathing room to develop its AI strategy without heavy market pressure."
+        },
+        {
+          "id": "block-1769771967798-1ciy9rx0j-13",
+          "type": "heading",
+          "text": "Services and Ecosystem Continue to Support Growth"
+        },
+        {
+          "id": "block-1769771967798-bko0uxax0-14",
+          "type": "paragraph",
+          "text": "Beyond the iPhone, Apple's services business continues to provide stable, recurring revenue. Subscriptions, digital payments, and app-related income remain key strengths, helping smooth performance during hardware cycles and supporting long-term margins."
+        },
+        {
+          "id": "block-1769771967798-seguvdy87-15",
+          "type": "heading",
+          "text": "Why Apple Stock Is Trending Now"
+        },
+        {
+          "id": "block-1769771967798-bvbjydb5f-16",
+          "type": "paragraph",
+          "text": "The recent rally reflects a broader shift in how investors view Apple. Rather than focusing only on future technologies, markets are rewarding proven execution and cash-generating products. Apple's ability to deliver strong results in a challenging environment has renewed confidence in the stock."
+        },
+        {
+          "id": "block-1769771967798-rindavdxx-17",
+          "type": "quote",
+          "text": "When Apple performs well, it often resets expectations for the entire tech sector."
+        },
+        {
+          "id": "block-1769771967798-m0qoeluwt-18",
+          "type": "heading",
+          "text": "What This Means for Investors"
+        },
+        {
+          "id": "block-1769771967798-a58nsm3jv-19",
+          "type": "paragraph",
+          "text": "For long-term investors, the latest results reinforce Apple's position as a stable market leader with strong fundamentals. Short-term traders may see continued volatility as earnings momentum meets broader market conditions, but sentiment around Apple has clearly improved."
+        },
+        {
+          "id": "block-1769771967798-vbbb9weih-20",
+          "type": "heading",
+          "text": "The Bigger Picture Ahead"
+        },
+        {
+          "id": "block-1769771967798-lces7jxdf-21",
+          "type": "paragraph",
+          "text": "Apple's strong quarter highlights how established technology companies can still surprise markets. As consumer demand, product cycles, and innovation continue to evolve, Apple remains a key signal stock for the direction of US equities and global technology trends."
+        }
+      ],
+      "metaDescription": "Apple stock jumped after earnings as iPhone sales surged and eased fears over growth and AI concerns. AAPL is back in focus.",
+      "keywords": "AAPL stock, Apple earnings, iPhone sales surge, Apple stock trend US, Apple Q1 earnings, iPhone 17 demand",
+      "id": 14,
+      "createdAt": "2026-01-30T11:19:49.519Z",
+      "updatedAt": "2026-02-11T14:51:56.091Z"
+    },
+    {
+      "title": "Stock Market News Today Reveals a Quiet Shift in Power, Confidence, and Risk",
+      "slug": "stock-market-news-today-reveals-a-quiet-shift-in-power-confidence-and-risk",
+      "description": "From Berkshire's portfolio shake-up to Bitcoin slipping below key levels,\ntoday's stock market news shows investors quietly changing their playbook.",
+      "author": "DailyInstruct Editorial Team",
+      "date": "February 1, 2026",
+      "readTime": "3 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1769947495/Pi7_Vision_7_yjwuya.png",
+      "category": "markets",
+      "specific": "Cryptocurrency",
+      "trending": false,
+      "featured": true,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1769947690797-55nns0c2o-1",
+          "type": "heading",
+          "text": "Stock Market News Today Signals a Shift in Investor Confidence"
+        },
+        {
+          "id": "block-1769947690797-v2rylf9xe-2",
+          "type": "paragraph",
+          "text": "Stock market news today has turned into a clear trend as investors react to sharp moves across equities, cryptocurrencies, and commodities. From changes inside Berkshire Hathaway's portfolio to renewed pressure on Bitcoin, markets are sending mixed signals about risk, confidence, and leadership."
+        },
+        {
+          "id": "block-1769947690797-syuw6tvyr-3",
+          "type": "heading",
+          "text": "Berkshire Hathaway Portfolio Shift Draws Attention"
+        },
+        {
+          "id": "block-1769947690797-jdn0jvtbx-4",
+          "type": "paragraph",
+          "text": "One of the most discussed developments is American Express challenging Apple as the top holding in Berkshire Hathaway's portfolio. This shift highlights how value-focused investors are reassessing exposure to technology stocks and leaning toward financial firms with stable cash flows and pricing power."
+        },
+        {
+          "id": "block-1769947690797-z9i98o9mz-5",
+          "type": "quote",
+          "text": "Portfolio changes at Berkshire often reflect long-term conviction rather than short-term market noise."
+        },
+        {
+          "id": "block-1769947690797-53722db8e-6",
+          "type": "heading",
+          "text": "Bitcoin Weakness Adds to Market Unease"
+        },
+        {
+          "id": "block-1769947690797-yx5iljnif-7",
+          "type": "paragraph",
+          "text": "At the same time, Bitcoin has slipped below key psychological levels, falling under 79,000 dollars. The decline followed a sharp sell-off in silver and renewed uncertainty around US monetary leadership. Crypto markets are reacting quickly to broader risk-off sentiment."
+        },
+        {
+          "id": "block-1769947690797-ah3iblsqg-8",
+          "type": "heading",
+          "text": "Why Bitcoin's Drop Matters for Stocks"
+        },
+        {
+          "id": "block-1769947690797-0lw84z6sf-9",
+          "type": "paragraph",
+          "text": "Bitcoin's break below 80,000 dollars is being watched closely because it often acts as a sentiment indicator for risk assets. When crypto confidence weakens, it can spill into equities, especially growth and technology stocks that rely on optimistic market conditions."
+        },
+        {
+          "id": "block-1769947690797-urxiguxdg-10",
+          "type": "quote",
+          "text": "When speculative assets lose momentum, caution spreads across markets."
+        },
+        {
+          "id": "block-1769947690797-0swxpa65y-11",
+          "type": "heading",
+          "text": "Commodities and Volatility Are Driving the Narrative"
+        },
+        {
+          "id": "block-1769947690797-57jiy7sml-12",
+          "type": "paragraph",
+          "text": "The sharp fall in silver and pressure on gold have added another layer of uncertainty. Commodities usually benefit during inflation or crisis periods, so sudden declines suggest investors are prioritizing liquidity and reducing exposure across asset classes."
+        },
+        {
+          "id": "block-1769947690797-b7k7lzt2l-13",
+          "type": "heading",
+          "text": "A Market Caught Between Fear and Opportunity"
+        },
+        {
+          "id": "block-1769947690797-9l22hxolb-14",
+          "type": "paragraph",
+          "text": "Current stock market news reflects a market that is struggling to find direction. Strong corporate balance sheets coexist with macro uncertainty, political speculation, and shifting interest rate expectations. This tension is leading to sudden rotations rather than stable trends."
+        },
+        {
+          "id": "block-1769947690797-v8yo3yzpa-15",
+          "type": "heading",
+          "text": "What This Means for Everyday Investors"
+        },
+        {
+          "id": "block-1769947690797-t3c16dd30-16",
+          "type": "paragraph",
+          "text": "For long-term investors, today's market signals reinforce the importance of diversification and patience. Short-term traders face a challenging environment where headlines can move prices quickly. Understanding the bigger picture matters more than reacting to every dip."
+        },
+        {
+          "id": "block-1769947690797-ptu8qpd85-17",
+          "type": "quote",
+          "text": "Markets move fastest when confidence is fragile."
+        },
+        {
+          "id": "block-1769947690797-53chgwe3m-18",
+          "type": "heading",
+          "text": "The Bigger Picture Ahead"
+        },
+        {
+          "id": "block-1769947690797-t2h76k4sr-19",
+          "type": "paragraph",
+          "text": "Stock market news today shows that investors are reassessing risk across the board. Leadership shifts, crypto weakness, and commodity volatility all point to a cautious phase. Until clarity emerges on policy and growth, markets may remain sensitive to every major headline."
+        }
+      ],
+      "metaDescription": "Stock market news today highlights shifting investor confidence as Berkshire adjusts holdings and Bitcoin weakness adds pressure to markets.",
+      "keywords": "stock market news today, US stock market trend, Berkshire Hathaway portfolio, Bitcoin price today, market confidence, financial markets",
+      "id": 15,
+      "createdAt": "2026-02-01T12:07:00.740Z",
+      "updatedAt": "2026-02-01T12:07:00.740Z"
+    },
+    {
+      "title": "US CPI Report Signals a Turning Point - Why January Inflation Data Is Changing the Narrative",
+      "slug": "us-cpi-report-signals-a-turning-point-why-january-inflation-data-is-changing-the-narrative",
+      "description": "Inflation cooled more than expected in January, reshaping market and policy expectations.\nHere's what the latest CPI report really means for the US economy.",
+      "author": "Saad",
+      "date": "February 13, 2026",
+      "readTime": "5 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1770995299/Pi7_Vision_8_htrena.png",
+      "category": "markets",
+      "specific": "Economic News",
+      "trending": true,
+      "featured": true,
+      "topStory": false,
+      "grid": false,
+      "homeFeatured": true,
+      "homeLatest": true,
+      "homeTrending": false,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1770995559372-dnqfungbd-1",
+          "type": "heading",
+          "text": "US CPI Report Sparks a New Inflation Trend in Early 2026"
+        },
+        {
+          "id": "block-1770995559372-1a6pmvpgx-2",
+          "type": "paragraph",
+          "text": "The latest Consumer Price Index report has become a major trend in the United States as fresh data shows inflation cooling more than expected. The January CPI release is shaping market expectations around interest rates, consumer spending, and the broader economic outlook."
+        },
+        {
+          "id": "block-1770995559372-l8bvufn7v-3",
+          "type": "heading",
+          "text": "What the January CPI Report Shows"
+        },
+        {
+          "id": "block-1770995559372-gt5cjnvbn-4",
+          "type": "paragraph",
+          "text": "Inflation eased in January, with consumer prices rising about 2.4 percent compared to the same period last year. This marks a continued slowdown from previous months and suggests that price pressures across the economy are gradually stabilizing."
+        },
+        {
+          "id": "block-1770995559372-z80y3oooo-5",
+          "type": "quote",
+          "text": "Inflation easing faster than expected changes the conversation around economic risk."
+        },
+        {
+          "id": "block-1770995559372-jzmrp7gk2-6",
+          "type": "heading",
+          "text": "Why This CPI Data Matters Right Now"
+        },
+        {
+          "id": "block-1770995559372-pgvurxvu1-7",
+          "type": "paragraph",
+          "text": "The CPI report plays a central role in shaping expectations for US monetary policy. Lower inflation reduces pressure on the Federal Reserve to keep interest rates high for longer. Markets closely track this data because it influences borrowing costs, investment decisions, and household confidence."
+        },
+        {
+          "id": "block-1770995559372-l4jiiolp3-8",
+          "type": "heading",
+          "text": "How Markets Are Reacting"
+        },
+        {
+          "id": "block-1770995559372-1dqymj59i-9",
+          "type": "paragraph",
+          "text": "Stocks, bonds, and risk assets responded cautiously but positively to the inflation data. Slower inflation supports the idea that the economy may achieve a soft landing, where growth continues without triggering renewed price spikes. This has helped stabilize market sentiment after weeks of volatility."
+        },
+        {
+          "id": "block-1770995559372-hr94662e3-10",
+          "type": "heading",
+          "text": "What Is Driving Inflation Lower"
+        },
+        {
+          "id": "block-1770995559372-s30g5qmd4-11",
+          "type": "paragraph",
+          "text": "Several factors are contributing to easing inflation. Energy prices have moderated, supply chains are functioning more smoothly, and consumer demand is showing signs of normalization. Together, these trends are reducing upward pressure on prices across goods and services."
+        },
+        {
+          "id": "block-1770995559372-47nk0etbs-12",
+          "type": "quote",
+          "text": "Cooling inflation suggests that past policy tightening is finally taking effect."
+        },
+        {
+          "id": "block-1770995559372-gr3qqy2dl-13",
+          "type": "heading",
+          "text": "How This Affects Everyday Consumers"
+        },
+        {
+          "id": "block-1770995559372-vz23mpsra-14",
+          "type": "paragraph",
+          "text": "For households, slower inflation means the cost of living is rising at a more manageable pace. While prices remain higher than a few years ago, the rate of increase has slowed, offering some relief on essentials such as food, housing, and transportation."
+        },
+        {
+          "id": "block-1770995559372-12jt896kr-15",
+          "type": "heading",
+          "text": "What the CPI Trend Means for Interest Rates"
+        },
+        {
+          "id": "block-1770995559372-e0amhqnk3-16",
+          "type": "paragraph",
+          "text": "With inflation easing, attention is shifting to when and how the Federal Reserve may adjust interest rates. Investors are watching upcoming data closely to see whether this trend continues or stalls. Future CPI reports will be critical in confirming whether inflation is truly under control."
+        },
+        {
+          "id": "block-1770995559372-knnpsof8p-17",
+          "type": "heading",
+          "text": "The Bigger Picture for the US Economy"
+        },
+        {
+          "id": "block-1770995559372-7srz84r6s-18",
+          "type": "paragraph",
+          "text": "The new CPI trend points to a more balanced economic environment. Slowing inflation, steady employment, and cautious consumer spending suggest the economy is transitioning away from extreme conditions. However, policymakers remain alert to potential shocks that could reverse progress."
+        },
+        {
+          "id": "block-1770995559372-sx31ltnfg-19",
+          "type": "quote",
+          "text": "Inflation trends do not move in straight lines, but direction matters more than speed."
+        },
+        {
+          "id": "block-1770995559372-4jgfif8ek-20",
+          "type": "heading",
+          "text": "Final Takeaway"
+        },
+        {
+          "id": "block-1770995559372-lg4pslhxn-21",
+          "type": "paragraph",
+          "text": "The January CPI report has reshaped expectations across markets and households alike. While inflation has not disappeared, the easing trend provides confidence that price pressures are no longer accelerating. The next few months will determine whether this shift becomes a lasting pattern."
+        }
+      ],
+      "metaDescription": "US inflation eased in January as CPI rose 2.4% year over year. The data is shifting expectations for rates, markets, and growth.",
+      "keywords": "CPI report today, US inflation January, CPI inflation trend, consumer price index US, inflation data 2026, US economy",
+      "id": 16,
+      "createdAt": "2026-02-13T15:11:24.081Z",
+      "updatedAt": "2026-02-13T15:11:24.081Z"
     }
   ]
 }

@@ -228,7 +228,7 @@
       "keywords": "iPhone 18, iPhone 18 release date, iPhone 18 features, iPhone 18 leaks, iPhone 18 price, iPhone 18 rumors, iPhone 18 specifications, iPhone 18 design, iPhone 18 camera, Apple iPhone 18",
       "id": 3,
       "createdAt": "2025-12-29T14:25:58.856Z",
-      "updatedAt": "2026-01-19T05:52:47.130Z"
+      "updatedAt": "2026-02-11T15:45:45.476Z"
     },
     {
       "title": "Manus Explained: The AI Company Suddenly Making Headlines After Meta Acquisition Buzz",
@@ -771,7 +771,7 @@
       "grid": true,
       "homeFeatured": true,
       "homeLatest": false,
-      "homeTrending": true,
+      "homeTrending": false,
       "homeTopStory": true,
       "content": [
         {
@@ -873,7 +873,7 @@
       "keywords": "gmail address change, new gmail update 2026, google gmail decision, gmail username change, email identity security, gmail privacy update, united states gmail news, uk gmail users, china email policy, google account changes 2026, digital identity trends, online privacy 2026, tech news global, gmail rebranding, email security future",
       "id": 9,
       "createdAt": "2026-01-17T17:49:55.188Z",
-      "updatedAt": "2026-01-17T17:51:44.111Z"
+      "updatedAt": "2026-02-13T15:44:54.171Z"
     },
     {
       "title": "Windows 11 Emergency Update Triggers Global Alarm - What Microsoft Fixed Overnight and Why It Matters in 2026",
@@ -890,7 +890,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1013,7 +1013,7 @@
       "keywords": "Windows 11 emergency update, Microsoft Windows 11 2026, Nvidia GPU Windows update issue, Windows 11 shutdown bug, Microsoft emergency patch, Windows performance drop, Windows update problems 2026, United States Windows update, UK Windows 11 news, China Windows market, Microsoft Nvidia issue, Windows 11 stability fix",
       "id": 10,
       "createdAt": "2026-01-19T11:13:55.427Z",
-      "updatedAt": "2026-01-19T11:13:55.427Z"
+      "updatedAt": "2026-02-12T15:56:58.847Z"
     },
     {
       "title": "AOL Just Went Dark Across the United States - What This Sudden Outage Reveals About Aging Internet Giants in 2026",
@@ -1030,7 +1030,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1113,7 +1113,7 @@
       "keywords": "aol outage, aol down today, yahoo aol outage, email outage united states, legacy tech failure, internet services down, aol mail not working, yahoo mail outage, united states internet outage, china tech comparison, uk internet services, global email disruption, tech infrastructure 2026, digital reliability crisis, aging tech platforms",
       "id": 11,
       "createdAt": "2026-01-21T16:41:20.342Z",
-      "updatedAt": "2026-01-21T16:41:20.342Z"
+      "updatedAt": "2026-02-12T15:56:27.486Z"
     },
     {
       "title": "Why the Word Community Is Suddenly Everywhere in 2026 - And How It Is Quietly Reshaping Power, Money, and Influence",
@@ -1131,7 +1131,7 @@
       "grid": false,
       "homeFeatured": false,
       "homeLatest": false,
-      "homeTrending": true,
+      "homeTrending": false,
       "homeTopStory": false,
       "content": [
         {
@@ -1233,7 +1233,7 @@
       "keywords": "community trend 2026, creator community youtube, digital communities united states, community driven platforms, social infrastructure growth, china community models, uk community projects, online creator economy 2026, inclusive communities, global community movement, community based innovation, internet communities future",
       "id": 12,
       "createdAt": "2026-01-22T15:53:00.648Z",
-      "updatedAt": "2026-01-22T15:53:00.649Z"
+      "updatedAt": "2026-02-13T15:44:52.086Z"
     },
     {
       "title": "Microsoft Services Suddenly Went Silent - What This Global Outage Reveals About Digital Dependence in 2026",
@@ -1250,7 +1250,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": true,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -1353,7 +1353,113 @@
       "keywords": "microsoft outage, outlook down today, microsoft teams outage, office 365 down, microsoft services outage, united states tech outage, global cloud disruption, china cloud comparison, uk microsoft outage, enterprise software failure, digital infrastructure 2026, cloud reliability crisis",
       "id": 13,
       "createdAt": "2026-01-23T14:44:15.550Z",
-      "updatedAt": "2026-01-23T14:44:15.550Z"
+      "updatedAt": "2026-02-12T15:53:44.894Z"
+    },
+    {
+      "title": "DB Navigator Breakdown Exposes a Bigger Problem for Germany's Rail System",
+      "slug": "db-navigator-breakdown-exposes-a-bigger-problem-for-germanys-rail-system",
+      "description": "A short technical failure caused nationwide disruption.\nGermany's rail dependency on DB Navigator is now under fresh scrutiny.",
+      "author": "DailyInstruct Editorial Team",
+      "date": "February 17, 2026",
+      "readTime": "3 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1771352771/Pi7_Vision_11_llo4rp.png",
+      "category": "tech",
+      "specific": "Gadgets & Devices",
+      "trending": true,
+      "featured": true,
+      "topStory": false,
+      "grid": false,
+      "homeFeatured": false,
+      "homeLatest": true,
+      "homeTrending": false,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1771353024163-c2r8ythiz-1",
+          "type": "heading",
+          "text": "DB Navigator Disruption Triggers Nationwide Attention in Germany"
+        },
+        {
+          "id": "block-1771353024163-5p9u5othz-2",
+          "type": "paragraph",
+          "text": "A sudden disruption in Deutsche Bahn's DB Navigator app has triggered widespread attention across Germany. Millions of passengers rely on the app for ticket booking, real-time schedules, and platform information, making even short outages highly visible."
+        },
+        {
+          "id": "block-1771353024163-wd12kkqfl-3",
+          "type": "heading",
+          "text": "What Happened to the DB Navigator App"
+        },
+        {
+          "id": "block-1771353024163-g20vk27mv-4",
+          "type": "paragraph",
+          "text": "Users reported booking failures and missing travel information across both the DB Navigator app and bahn.de. The issue affected ticket purchases and journey planning, causing confusion for commuters and long-distance travelers during peak travel hours."
+        },
+        {
+          "id": "block-1771353024163-fefs7s02w-5",
+          "type": "heading",
+          "text": "Why the Outage Spread So Quickly"
+        },
+        {
+          "id": "block-1771353024163-6whirg4gx-6",
+          "type": "paragraph",
+          "text": "DB Navigator is central to Germany's rail system. When the app fails, it impacts daily commuters, business travelers, and tourists at the same time. Social media amplified the issue as users shared screenshots and warnings in real time."
+        },
+        {
+          "id": "block-1771353024163-v230qphox-7",
+          "type": "quote",
+          "text": "When digital rail systems fail, the impact is immediate and nationwide."
+        },
+        {
+          "id": "block-1771353024163-6cg817xvt-8",
+          "type": "heading",
+          "text": "Deutsche Bahn's Response"
+        },
+        {
+          "id": "block-1771353024163-4c503f42v-9",
+          "type": "paragraph",
+          "text": "Deutsche Bahn confirmed technical problems and said its information and booking systems were affected. Engineers worked to stabilize services, and later reports indicated that core systems were running normally again."
+        },
+        {
+          "id": "block-1771353024163-hwmpd3etn-10",
+          "type": "heading",
+          "text": "Is the System Fully Stable Now"
+        },
+        {
+          "id": "block-1771353024163-hgcenbk78-11",
+          "type": "paragraph",
+          "text": "While services were restored, the disruption raised questions about system resilience. Passengers were advised to double-check bookings and allow extra time, reflecting lingering caution even after the fix."
+        },
+        {
+          "id": "block-1771353024163-cfufrgyur-12",
+          "type": "heading",
+          "text": "Why This Matters Beyond One Outage"
+        },
+        {
+          "id": "block-1771353024163-ah91q7ct9-13",
+          "type": "paragraph",
+          "text": "Germany's transport network is increasingly digital. Dependence on apps like DB Navigator means technical failures can quickly become national issues, influencing public trust and policy discussions around infrastructure reliability."
+        },
+        {
+          "id": "block-1771353024163-87pzbkhaz-14",
+          "type": "quote",
+          "text": "Reliable digital infrastructure is now as important as physical rail tracks."
+        },
+        {
+          "id": "block-1771353024163-kn3z5ifk9-15",
+          "type": "heading",
+          "text": "The Bigger Picture for German Transport"
+        },
+        {
+          "id": "block-1771353024163-a7ljrm09h-16",
+          "type": "paragraph",
+          "text": "This incident highlights the growing pressure on transport operators to maintain stable digital platforms. As rail travel becomes more app-driven, system reliability will remain a critical public expectation."
+        }
+      ],
+      "metaDescription": "DB Navigator outage disrupts bookings across Germany, raising concerns over digital reliability in the national rail system.",
+      "keywords": "DB Navigator outage, Deutsche Bahn app down, Germany rail disruption, bahn.de booking problem, German transport news",
+      "id": 14,
+      "createdAt": "2026-02-17T18:29:05.940Z",
+      "updatedAt": "2026-02-17T18:29:05.940Z"
     }
   ]
 }

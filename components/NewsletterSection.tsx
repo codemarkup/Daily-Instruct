@@ -21,10 +21,10 @@ const NewsletterSection: React.FC = () => {
           <div className={styles.newsletterContent}>
             <h2 className={styles.newsletterTitle}>Stay Informed</h2>
             <p className={styles.newsletterDescription}>
-              Get the latest insights, analysis, and breaking news delivered directly to your inbox. 
+              Get the latest insights, analysis, and breaking news delivered directly to your inbox.
               Join thousands of professionals who trust DailyInstruct.
             </p>
-            
+
             <form onSubmit={handleSubmit} className={styles.newsletterForm}>
               <div className={styles.inputGroup}>
                 <input
@@ -34,19 +34,20 @@ const NewsletterSection: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className={styles.emailInput}
                   required
+                  suppressHydrationWarning={true}
                 />
-                <button type="submit" className={styles.subscribeBtn}>
+                <button type="submit" className={styles.subscribeBtn} suppressHydrationWarning={true}>
                   Subscribe
                 </button>
               </div>
-              
+
               <p className={styles.newsletterNote}>
                 No spam. Unsubscribe at any time. Read our{' '}
                 <a href="/privacy" className={styles.privacyLink}>Privacy Policy</a>.
               </p>
             </form>
           </div>
-          
+
           <div className={styles.newsletterGraphic}>
             <div className={styles.graphicElement}></div>
           </div>

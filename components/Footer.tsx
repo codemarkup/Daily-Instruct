@@ -1,8 +1,17 @@
+"use client";
+
 import React from "react";
 import styles from "./Footer.module.css";
+import { usePathname } from "next/navigation";
 
 const Footer: React.FC = () => {
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  // Hide Footer on admin pages
+  if (pathname && pathname.startsWith('/admin')) {
+    return null;
+  }
 
   return (
     <footer className={styles.footer}>

@@ -14,11 +14,11 @@ const EditArticlePage = () => {
 
 
   useEffect(() => {
-      const hasCookie = document.cookie.includes('admin-auth=true');
-      if (!hasCookie) {
-        router.push('/login');
-      }
-    }, [router]);
+    const hasCookie = document.cookie.includes('admin-auth=true');
+    if (!hasCookie) {
+      router.push('/login');
+    }
+  }, [router]);
 
   const [article, setArticle] = useState<
     Partial<Article> & { category: string }
@@ -141,7 +141,16 @@ const EditArticlePage = () => {
   };
 
   const handlePreview = () => {
-    window.open(`/articles/${slug}`, "_blank");
+    // 1. Save current state to localStorage
+    try {
+      localStorage.setItem("admin_preview_draft", JSON.stringify(article));
+
+      // 2. Open preview window
+      window.open("/admin/preview", "_blank");
+    } catch (error) {
+      console.error("Failed to save preview data:", error);
+      alert("Failed to launch preview. Please try again.");
+    }
   };
 
   if (loading) {
@@ -188,6 +197,15 @@ const EditArticlePage = () => {
             >
               <span className="button-icon">🗑️</span>
               Delete
+            </button>
+            <button
+              onClick={handlePreview}
+              className="secondary-button"
+              disabled={loading}
+              title="Preview changes"
+            >
+              <span className="button-icon">👁️</span>
+              Preview
             </button>
             <button
               onClick={() => setShowSaveModal(true)}
@@ -289,8 +307,8 @@ const EditArticlePage = () => {
                 </div>
                 <div className="card-body">
                   <div className="preview-actions">
-                    <button onClick={handlePreview} className="preview-button">
-                      🔗 Live Preview
+                    <button type="button" onClick={handlePreview} className="preview-button">
+                      👁️ Preview Draft
                     </button>
                     <div className="preview-info">
                       <p className="info-text">

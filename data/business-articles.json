@@ -530,7 +530,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -618,7 +618,7 @@
       "keywords": "Canadian exports 2026, Canada trade deficit, Canada United States trade, Canada China exports, UK Canada trade, gold exports Canada, Canada economy 2026, global trade shift, Canada export diversification, North America trade trends, international trade analysis",
       "id": 7,
       "createdAt": "2026-01-09T10:16:38.298Z",
-      "updatedAt": "2026-01-09T10:19:21.030Z"
+      "updatedAt": "2026-02-12T16:02:10.961Z"
     },
     {
       "title": "Why Chase Bank Is Closing All Branches for 24 Hours - The Real Reason Behind Americas Sudden Banking Shutdown",
@@ -635,7 +635,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -723,7 +723,7 @@
       "keywords": "Chase Bank closure, Chase Bank 24 hour shutdown, U.S. bank closures 2026, United States banking news, Wells Fargo branch shutdown, bank holiday closures, Chase branches closed, banking system update, China banking comparison, UK bank closures, global banking trends 2026",
       "id": 8,
       "createdAt": "2026-01-11T16:58:18.973Z",
-      "updatedAt": "2026-01-11T16:58:18.973Z"
+      "updatedAt": "2026-02-12T16:02:03.344Z"
     },
     {
       "title": "A Mall Icon Quietly Disappears - Why Francesca's Is Closing All Stores and What It Signals for Retail in 2026",
@@ -740,7 +740,7 @@
       "topStory": false,
       "grid": true,
       "homeFeatured": false,
-      "homeLatest": true,
+      "homeLatest": false,
       "homeTrending": false,
       "homeTopStory": true,
       "content": [
@@ -843,7 +843,476 @@
       "metaDescription": "Francesca's is closing all stores following a Chapter 11 bankruptcy filing, triggering layoffs and liquidation sales. Here is what led to the collapse, how workers were affected, and why this moment matters for retail in the United States, UK, China, and beyond in 2026.",
       "id": 9,
       "createdAt": "2026-01-20T19:02:59.990Z",
-      "updatedAt": "2026-01-20T19:06:31.673Z"
+      "updatedAt": "2026-02-12T15:56:38.294Z"
+    },
+    {
+      "title": "NASA-SpaceX Launch Ignites Global Buzz - Why This ISS Mission Has Canada Watching Closely",
+      "slug": "nasa-spacex-launch-ignites-global-buzz-why-this-iss-mission-has-canada-watching-closely",
+      "description": "A routine crew rotation turns into a global moment.\nHere is why the latest NASA-SpaceX launch matters more than it seems.",
+      "author": "Saad",
+      "date": "February 13, 2026",
+      "readTime": "3 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1770997359/Pi7_Vision_9_cexwro.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": false,
+      "featured": true,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1770997385335-siu54u4cu-1",
+          "type": "heading",
+          "text": "NASA and SpaceX Launch Mission Grabs Attention Across Canada"
+        },
+        {
+          "id": "block-1770997385336-hc11b9q6b-2",
+          "type": "paragraph",
+          "text": "A new space trend is drawing attention in Canada as NASA and SpaceX successfully launched four astronauts toward the International Space Station. The mission comes at a critical moment, with the ISS operating on a reduced crew and growing public focus on space security and international cooperation."
+        },
+        {
+          "id": "block-1770997385336-1wzmrltjr-3",
+          "type": "heading",
+          "text": "Why This Launch Matters Right Now"
+        },
+        {
+          "id": "block-1770997385337-sgx5p72ld-4",
+          "type": "paragraph",
+          "text": "This mission is not routine. It was designed to relieve a bare-bones crew aboard the ISS, ensuring station safety, research continuity, and long-term orbital operations. The timing has amplified interest, as governments and investors closely watch space reliability and human spaceflight readiness."
+        },
+        {
+          "id": "block-1770997385337-6uv66o0l8-5",
+          "type": "heading",
+          "text": "Crew-12 and the Mission Objective"
+        },
+        {
+          "id": "block-1770997385337-f7p6sb2ek-6",
+          "type": "paragraph",
+          "text": "The Crew-12 mission carries four astronauts from multiple backgrounds, highlighting NASA's continued partnership with SpaceX. The spacecraft will dock with the ISS after a carefully timed orbital approach, replacing astronauts who have been working under extended mission conditions."
+        },
+        {
+          "id": "block-1770997385337-bhwwjp94c-7",
+          "type": "quote",
+          "text": "This mission underscores how critical dependable launch systems have become for maintaining a constant human presence in space."
+        },
+        {
+          "id": "block-1770997385337-1zjwb7xhg-8",
+          "type": "heading",
+          "text": "Why Canadians Are Paying Attention"
+        },
+        {
+          "id": "block-1770997385337-04l1ygbxa-9",
+          "type": "paragraph",
+          "text": "Canadian audiences are closely following the launch due to Canada's long-standing role in ISS operations, robotics, and space research. Any mission affecting ISS staffing directly impacts experiments and systems supported by Canadian technology."
+        },
+        {
+          "id": "block-1770997385337-jku1cv7r5-10",
+          "type": "heading",
+          "text": "SpaceX's Growing Role in Human Spaceflight"
+        },
+        {
+          "id": "block-1770997385337-ns9set2zv-11",
+          "type": "paragraph",
+          "text": "SpaceX has moved from a private disruptor to a core launch provider for NASA. Its ability to conduct frequent, crewed missions has reshaped expectations around cost, speed, and reliability in space travel."
+        },
+        {
+          "id": "block-1770997385337-5q24m0wb5-12",
+          "type": "heading",
+          "text": "What Happens Next"
+        },
+        {
+          "id": "block-1770997385337-jfn9wgm41-13",
+          "type": "paragraph",
+          "text": "After docking, the new crew will begin a handover period, taking control of station operations and research. Their arrival stabilizes ISS staffing and reduces operational risk over the coming months."
+        },
+        {
+          "id": "block-1770997385337-gwxcnl2nr-14",
+          "type": "quote",
+          "text": "Human spaceflight is no longer rare. It is becoming routine, strategic, and globally watched."
+        },
+        {
+          "id": "block-1770997385337-hy3mpkfo2-15",
+          "type": "heading",
+          "text": "The Bigger Picture"
+        },
+        {
+          "id": "block-1770997385337-zc7d0yshd-16",
+          "type": "paragraph",
+          "text": "This launch reflects a broader shift toward dependable, partnership-driven space missions. As geopolitical and scientific stakes rise, successful crew launches are no longer just achievements. They are necessities."
+        }
+      ],
+      "metaDescription": "NASA and SpaceX launch a new ISS crew, drawing major attention in Canada. Here is what happened, why it matters, and what comes next.",
+      "keywords": "NASA SpaceX launch, ISS crew mission, SpaceX Crew Dragon, Falcon 9 launch, NASA astronauts ISS, Canada space news, SpaceX NASA mission",
+      "id": 10,
+      "createdAt": "2026-02-13T15:43:25.786Z",
+      "updatedAt": "2026-02-13T15:43:25.786Z"
+    },
+    {
+      "title": "Canada's New Defence Strategy Signals a Break From the Past - Here's What Changed",
+      "slug": "canadas-new-defence-strategy-signals-a-break-from-the-past-heres-what-changed",
+      "description": "Canada is reshaping how it defends itself.\nFrom domestic arms production to reduced reliance on U.S. suppliers, this strategy marks a decisive shift.",
+      "author": "Saad",
+      "date": "February 17, 2026",
+      "readTime": "4 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1771351845/Pi7_Vision_10_n9ccwv.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": false,
+      "featured": true,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": true,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1771352072868-3ltf615z1-1",
+          "type": "heading",
+          "text": "Canada's Defence Strategy Takes a Sharp Turn"
+        },
+        {
+          "id": "block-1771352072868-4r10w8uit-2",
+          "type": "paragraph",
+          "text": "A new defence trend is emerging in Canada as the federal government rolls out a revised defence industrial strategy. The plan focuses on strengthening domestic arms production, reducing reliance on foreign suppliers, and reshaping how Canada spends billions on national security."
+        },
+        {
+          "id": "block-1771352072869-vj0soblmh-3",
+          "type": "heading",
+          "text": "Why Canada Is Rethinking Defence Spending"
+        },
+        {
+          "id": "block-1771352072869-appm8tta4-4",
+          "type": "paragraph",
+          "text": "Global conflicts, supply chain disruptions, and rising geopolitical pressure have exposed weaknesses in Canada's defence readiness. Delays in equipment delivery and dependence on external partners pushed policymakers to rethink how and where military hardware is built."
+        },
+        {
+          "id": "block-1771352072869-2t1fjb4zn-5",
+          "type": "heading",
+          "text": "Build at Home or Buy Abroad"
+        },
+        {
+          "id": "block-1771352072869-dute99bb0-6",
+          "type": "paragraph",
+          "text": "The core debate behind the new strategy is simple but costly. Canada must decide whether to build defence systems domestically or continue purchasing them from foreign manufacturers. The government is now signaling a stronger preference for local production, even if it costs more upfront."
+        },
+        {
+          "id": "block-1771352072869-s9867d7i6-7",
+          "type": "quote",
+          "text": "National security is no longer just about buying weapons. It is about controlling supply, speed, and sovereignty."
+        },
+        {
+          "id": "block-1771352072869-n4vyb1z70-8",
+          "type": "heading",
+          "text": "A Shift Away From Traditional U.S. Suppliers"
+        },
+        {
+          "id": "block-1771352072869-dpry27oqv-9",
+          "type": "paragraph",
+          "text": "Canada's updated approach cools long-standing reliance on U.S. arms makers. Officials argue that domestic manufacturing improves resilience and ensures Canada is not vulnerable to foreign political shifts or export restrictions."
+        },
+        {
+          "id": "block-1771352072869-1z9klw6e9-10",
+          "type": "heading",
+          "text": "What the New Defence Industrial Strategy Includes"
+        },
+        {
+          "id": "block-1771352072869-0wtf2kopf-11",
+          "type": "paragraph",
+          "text": "The strategy emphasizes Canadian factories, skilled labour, and long-term contracts for local firms. It also prioritizes faster procurement, innovation partnerships, and support for emerging defence technologies."
+        },
+        {
+          "id": "block-1771352072869-kxy6550u7-12",
+          "type": "heading",
+          "text": "Economic and Political Implications"
+        },
+        {
+          "id": "block-1771352072869-3h09fuz4c-13",
+          "type": "paragraph",
+          "text": "Defence spending is becoming an economic policy tool. Increased domestic production could create jobs and boost industrial capacity, but it may also strain budgets and raise questions about efficiency and cost control."
+        },
+        {
+          "id": "block-1771352072869-2twy3yncq-14",
+          "type": "quote",
+          "text": "Defence policy is now economic policy, and the two can no longer be separated."
+        },
+        {
+          "id": "block-1771352072869-qz5uoxy8d-15",
+          "type": "heading",
+          "text": "Why This Matters to Canadians"
+        },
+        {
+          "id": "block-1771352072869-y89ztqzyc-16",
+          "type": "paragraph",
+          "text": "A stronger domestic defence industry affects taxes, employment, and national security. For Canadians, the shift means greater control over military readiness but also higher expectations for transparency and results."
+        },
+        {
+          "id": "block-1771352072869-osrb9ml30-17",
+          "type": "heading",
+          "text": "The Bigger Picture"
+        },
+        {
+          "id": "block-1771352072869-n18emu6ib-18",
+          "type": "paragraph",
+          "text": "Canada's defence strategy marks a move toward independence and long-term planning. In a world of unstable alliances and fast-changing threats, the country is choosing control over convenience."
+        }
+      ],
+      "metaDescription": "Canada unveils a new defence strategy focused on domestic production, supply security, and long-term military readiness.",
+      "keywords": "Canada defence strategy, Canada military spending, defence industrial strategy Canada, Canadian arms production, national security Canada",
+      "id": 11,
+      "createdAt": "2026-02-17T18:14:01.513Z",
+      "updatedAt": "2026-02-17T18:14:01.513Z"
+    },
+    {
+      "title": "City-Killer Asteroids Are Closer Than We Think - And the U.S. Is Not Fully Ready",
+      "slug": "city-killer-asteroids-are-closer-than-we-think-and-the-us-is-not-fully-ready",
+      "description": "Scientists are raising alarms about thousands of hidden asteroids near Earth.\nThe threat is rare, but the consequences could be devastating.",
+      "author": "DailyInstruct Editorial Team",
+      "date": "February 18, 2026",
+      "readTime": "4 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1771406950/Pi7_Vision_ogacay.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": true,
+      "featured": false,
+      "topStory": false,
+      "grid": true,
+      "homeFeatured": false,
+      "homeLatest": false,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1771403941750-i3tpgtncx-1",
+          "type": "heading",
+          "text": "City-Killing Asteroids Become a Growing Concern in the United States"
+        },
+        {
+          "id": "block-1771403941750-vmpivncqt-2",
+          "type": "paragraph",
+          "text": "A new space-related trend is gaining attention in the United States as scientists warn about thousands of large asteroids capable of destroying entire cities. Recent comments from researchers have sparked public concern about how prepared Earth really is for such a threat."
+        },
+        {
+          "id": "block-1771403941750-fuzauv0y6-3",
+          "type": "heading",
+          "text": "What Are City-Killer Asteroids"
+        },
+        {
+          "id": "block-1771403941750-4eaevzxe5-4",
+          "type": "paragraph",
+          "text": "City-killer asteroids are space rocks large enough to cause massive destruction if they hit a populated area. They are smaller than planet-ending asteroids but powerful enough to wipe out a major city through blast waves, heat, and debris."
+        },
+        {
+          "id": "block-1771403941750-8pc4uo9e8-5",
+          "type": "heading",
+          "text": "Why Scientists Are Worried"
+        },
+        {
+          "id": "block-1771403941750-00zkyzag7-6",
+          "type": "paragraph",
+          "text": "Many of these asteroids remain undetected because they approach from angles that are difficult to monitor. Some travel close to the Sun's glare, making them nearly invisible to current detection systems until they pass Earth."
+        },
+        {
+          "id": "block-1771403941750-rjrtau8sk-7",
+          "type": "quote",
+          "text": "The most dangerous asteroids are often the ones we have not found yet."
+        },
+        {
+          "id": "block-1771403941750-6dpg9woso-8",
+          "type": "heading",
+          "text": "Limits of Current Planetary Defense"
+        },
+        {
+          "id": "block-1771403941750-7loflvmhj-9",
+          "type": "paragraph",
+          "text": "While space agencies track many near-Earth objects, there is currently no guaranteed system to stop a city-killer asteroid on short notice. Detection, warning time, and deflection technology all remain limited."
+        },
+        {
+          "id": "block-1771403941750-29j1s7jp0-10",
+          "type": "heading",
+          "text": "What NASA Can and Cannot Do"
+        },
+        {
+          "id": "block-1771403941750-uo20mol95-11",
+          "type": "paragraph",
+          "text": "Recent test missions have shown that asteroid deflection is possible in controlled situations. However, these methods require years of advance warning, which is not available for many hidden or newly discovered objects."
+        },
+        {
+          "id": "block-1771403941750-l5mxgv51r-12",
+          "type": "heading",
+          "text": "How Real Is the Risk"
+        },
+        {
+          "id": "block-1771403941750-scm0h10jg-13",
+          "type": "paragraph",
+          "text": "Scientists stress that large impacts are rare, but not impossible. The concern is not panic, but preparation. Even a low-probability event becomes serious when the potential damage is catastrophic."
+        },
+        {
+          "id": "block-1771403941750-cond5zom1-14",
+          "type": "quote",
+          "text": "This is not about fear. It is about readiness."
+        },
+        {
+          "id": "block-1771403941750-600y3bewv-15",
+          "type": "heading",
+          "text": "What Comes Next"
+        },
+        {
+          "id": "block-1771403941750-w2uxd8m1o-16",
+          "type": "paragraph",
+          "text": "Researchers are calling for better detection systems, more space telescopes, and global cooperation. The focus is shifting from science fiction to realistic risk management."
+        },
+        {
+          "id": "block-1771403941750-uuoziggtx-17",
+          "type": "heading",
+          "text": "The Bigger Picture"
+        },
+        {
+          "id": "block-1771403941750-4o3q2zc7g-18",
+          "type": "paragraph",
+          "text": "The debate around city-killing asteroids reflects a broader question about planetary defense. As detection improves, awareness grows, and with it, pressure to act before a real emergency occurs."
+        }
+      ],
+      "metaDescription": "NASA scientists warn thousands of city-killer asteroids remain undetected, raising concerns about Earth's planetary defense readiness.",
+      "keywords": "city killer asteroids, asteroid threat Earth, NASA asteroid warning, near Earth objects, planetary defense",
+      "id": 12,
+      "createdAt": "2026-02-18T09:30:43.855Z",
+      "updatedAt": "2026-02-18T09:30:43.855Z"
+    },
+    {
+      "title": "Heathrow Flights Are Being Quietly Cut for 2026 - What US Travelers Need to Know Now",
+      "slug": "heathrow-flights-are-being-quietly-cut-for-2026-what-us-travelers-need-to-know-now",
+      "description": "Major airlines are reducing Heathrow flights for spring 2026.\nUS travelers are spotting fewer options, tighter seats, and rising fares.\nHere is what is really happening behind the scenes.",
+      "author": "Saad",
+      "date": "February 18, 2026",
+      "readTime": "5 min read",
+      "image": "https://res.cloudinary.com/ditlndm9j/image/upload/v1771407535/Pi7_Vision_1_kewbth.png",
+      "category": "business",
+      "specific": "Company Updates",
+      "trending": false,
+      "featured": true,
+      "topStory": false,
+      "grid": false,
+      "homeFeatured": false,
+      "homeLatest": true,
+      "homeTrending": true,
+      "homeTopStory": true,
+      "content": [
+        {
+          "id": "block-1771404301455-t5405xqpm-1",
+          "type": "heading",
+          "text": "Heathrow Flights Face Fresh Disruptions as Airlines Quietly Cut Routes"
+        },
+        {
+          "id": "block-1771404301455-xyccwrgmd-2",
+          "type": "paragraph",
+          "text": "A new travel disruption trend is emerging in the United States and across international booking platforms: fewer flights connected to London Heathrow. As spring 2026 schedules begin to appear, major airlines are trimming frequencies and suspending select routes, triggering confusion and concern among travelers planning transatlantic and Europe-bound trips."
+        },
+        {
+          "id": "block-1771404301455-3qbmiuyl0-3",
+          "type": "heading",
+          "text": "Why Heathrow Is Suddenly in the Spotlight"
+        },
+        {
+          "id": "block-1771404301455-o90vj778h-4",
+          "type": "paragraph",
+          "text": "Heathrow has long been one of the most connected airports in the world, especially for US travelers. But behind the scenes, airlines are reassessing how much capacity the airport can realistically support. Congestion, high operating costs, and limited expansion options are forcing carriers to make tough decisions about where to fly and how often."
+        },
+        {
+          "id": "block-1771404301455-xa201bmrz-5",
+          "type": "heading",
+          "text": "Airlines Are Cutting Flights, Not Demand"
+        },
+        {
+          "id": "block-1771404301455-jliufcsih-6",
+          "type": "paragraph",
+          "text": "Recent schedule updates show airlines reducing flight frequencies rather than exiting markets entirely. Carriers are prioritizing profitability over volume, focusing on routes that deliver consistently high yields. For passengers, this means fewer daily options, tighter seat availability, and higher chances of schedule changes."
+        },
+        {
+          "id": "block-1771404301455-ndnm1y5ke-7",
+          "type": "heading",
+          "text": "Qatar Airways and the Shift in Long-Haul Strategy"
+        },
+        {
+          "id": "block-1771404301455-3i5utayhx-8",
+          "type": "paragraph",
+          "text": "Qatar Airways is among the airlines adjusting its European network for spring 2026. While demand for long-haul travel remains strong, the airline is reallocating aircraft to routes with better margins, particularly across Asia and North America. London remains a key market, but it is no longer immune to tighter capacity controls."
+        },
+        {
+          "id": "block-1771404301455-iaxkzhsrb-9",
+          "type": "heading",
+          "text": "Heathrow's Structural Limits Are Driving Decisions"
+        },
+        {
+          "id": "block-1771404301455-5aakt7hvq-10",
+          "type": "paragraph",
+          "text": "Heathrow Airport is operating close to full capacity for most of the year. Slot constraints, staffing pressures, and rising airport charges are making it one of the most expensive hubs for airlines to operate, pushing carriers to reduce flights rather than expand."
+        },
+        {
+          "id": "block-1771404301455-eiu331iw7-11",
+          "type": "heading",
+          "text": "Why US Travelers Are Seeing This Trend First"
+        },
+        {
+          "id": "block-1771404301455-ye9djge91-12",
+          "type": "paragraph",
+          "text": "Many US-based travelers are noticing these changes early because transatlantic routes are often adjusted months in advance. Airlines tend to test capacity reductions in shoulder seasons like spring, when demand is strong but not at peak summer levels. This makes spring 2026 an ideal window for airlines to quietly rebalance networks."
+        },
+        {
+          "id": "block-1771404301455-qxknmcoow-13",
+          "type": "heading",
+          "text": "What This Means for Ticket Prices and Availability"
+        },
+        {
+          "id": "block-1771404301455-reljy1lhx-14",
+          "type": "paragraph",
+          "text": "Fewer flights usually translate into higher average fares, especially on popular departure days. Travelers may also see less flexibility when rebooking, as reduced schedules leave fewer alternatives if a flight is canceled or retimed. Connecting itineraries via secondary European hubs may become more common."
+        },
+        {
+          "id": "block-1771404301455-z5ztjktas-15",
+          "type": "heading",
+          "text": "The Bigger Aviation Trend Behind the Cuts"
+        },
+        {
+          "id": "block-1771404301455-ypbdesl72-16",
+          "type": "paragraph",
+          "text": "This is not just a Heathrow story. Globally, airlines are shifting away from aggressive expansion and toward controlled growth. Aircraft delivery delays, higher fuel costs, and pressure from shareholders are pushing airlines to favor reliability and margins over headline capacity growth."
+        },
+        {
+          "id": "block-1771404301455-fdcir91b9-17",
+          "type": "quote",
+          "text": "Airlines are no longer chasing market share at any cost; they are chasing stability, predictability, and profit."
+        },
+        {
+          "id": "block-1771404301455-za7703s4q-18",
+          "type": "heading",
+          "text": "What Travelers Should Do Now"
+        },
+        {
+          "id": "block-1771404301455-jvg0satf2-19",
+          "type": "paragraph",
+          "text": "Passengers planning trips involving Heathrow should monitor schedules closely, avoid tight connections, and book flexible fares where possible. Considering alternate airports or routing through other European hubs can also reduce risk as airlines continue fine-tuning their 2026 plans."
+        },
+        {
+          "id": "block-1771404301455-hozkw6kul-20",
+          "type": "heading",
+          "text": "The Outlook for Heathrow Flights in 2026"
+        },
+        {
+          "id": "block-1771404301455-4t32k96xm-21",
+          "type": "paragraph",
+          "text": "Heathrow will remain a global aviation powerhouse, but the era of constant flight growth is clearly over. For travelers, spring 2026 may mark the beginning of a new normal: fewer flights, fuller planes, and a renewed emphasis on planning ahead."
+        }
+      ],
+      "metaDescription": "Airlines are cutting Heathrow flights for spring 2026. Learn why routes are shrinking, how it affects US travelers, and what to do next.",
+      "keywords": "Heathrow flights, Heathrow flight cuts, Qatar Airways London flights, Heathrow 2026 schedules, US to London flights, airline route reductions, Heathrow travel news",
+      "id": 13,
+      "createdAt": "2026-02-18T09:39:27.077Z",
+      "updatedAt": "2026-02-18T09:39:27.077Z"
     }
   ]
 }
