@@ -189,6 +189,14 @@ export async function updateArticle(slug: string, articleData: any): Promise<Art
 }
 
 export async function deleteArticle(slug: string): Promise<boolean> {
+  // Find the article ID first to clean up related data
+  const { data: article } = await supabase.from('articles').select('id').eq('slug', slug).single();
+  
+  if (article) {
+    // Clean up any tracker updates linked to this article to prevent orphaned updates
+    await supabase.from('tracker_updates').delete().eq('linked_article_id', article.id);
+  }
+
   const { error } = await supabase.from('articles').delete().eq('slug', slug);
   if (error) {
     console.error('Supabase delete error:', error);
