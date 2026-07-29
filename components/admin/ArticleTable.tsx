@@ -85,7 +85,7 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
                 Try adjusting your search or filter to find what you're looking
                 for.
               </p>
-              <Link href="/admin/articles/new" className="empty-action">
+              <Link href="/hq/articles/new" className="empty-action">
                 Create your first article
               </Link>
               <button onClick={onRefresh} className="empty-refresh">
@@ -146,7 +146,7 @@ const ArticleTable: React.FC<ArticleTableProps> = ({
                 <div className="table-cell actions-cell extra">
                   <div className="action-buttons">
                     <Link
-                      href={`/admin/articles/edit/${article.slug}`}
+                      href={`/hq/articles/edit/${article.slug}`}
                       className="action-button edit"
                       title="Edit"
                     >

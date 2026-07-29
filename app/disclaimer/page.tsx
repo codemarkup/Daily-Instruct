@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../legal-pages.module.css";
 
 export const metadata = {
-  title: "Disclaimer - Daily Instruct",
+  title: "Disclaimer",
   description:
     "Important disclaimer regarding the content and information provided on Daily Instruct.",
 };

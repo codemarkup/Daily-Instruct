@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Contact Us - Daily Instruct',
+  title: 'Contact Us',
   description: 'Get in touch with the Daily Instruct team for inquiries, partnerships, and support.',
 };
 

@@ -4,15 +4,13 @@ import styles from "./CategoriesSection.module.css";
 import techArticlesData from "@/data/tech-articles.json";
 import businessArticlesData from "@/data/business-articles.json";
 import marketArticlesData from "@/data/markets-articles.json";
-import guidesArticlesData from "@/data/guides-articles.json";
 
 const CategoriesSection: React.FC = () => {
   // Combine all articles
   const allArticles = [
     ...techArticlesData.articles,
     ...businessArticlesData.articles,
-    ...marketArticlesData.articles,
-    ...guidesArticlesData.articles
+    ...marketArticlesData.articles
   ];
 
   const categories = [
@@ -32,14 +30,6 @@ const CategoriesSection: React.FC = () => {
       icon: "business.svg",
       color: "#10B981",
     },
-    // {
-    //   id: 3,
-    //   name: "Startups",
-    //   slug: "business/startup-news", // This is a subcategory of Business
-    //   count: businessArticlesData.articles.filter(article => article.specific === "Startup News").length,
-    //   icon: "bulb.svg",
-    //   color: "#F59E0B",
-    // },
     {
       id: 4,
       name: "Markets",
@@ -48,29 +38,13 @@ const CategoriesSection: React.FC = () => {
       icon: "chart.svg",
       color: "#EF4444",
     },
-    // {
-    //   id: 5,
-    //   name: "Science",
-    //   slug: "tech/artificial-intelligence", // Using AI as proxy for Science
-    //   count: techArticlesData.articles.filter(article => article.specific === "Artificial Intelligence").length,
-    //   icon: "microscope.svg",
-    //   color: "#8B5CF6",
-    // },
-    // {
-    //   id: 6,
-    //   name: "AI & ML",
-    //   slug: "tech/artificial-intelligence",
-    //   count: techArticlesData.articles.filter(article => article.specific === "Artificial Intelligence").length,
-    //   icon: "robot.svg",
-    //   color: "#06B6D4",
-    // },
     {
       id: 7,
-      name: "Guides",
-      slug: "guides",
-      count: guidesArticlesData.articles.length,
-      icon: "book.svg",
-      color: "#84CC16",
+      name: "Geopolitics",
+      slug: "geopolitics",
+      count: 0,
+      icon: "globe.svg",
+      color: "#F59E0B",
     },
     // {
     //   id: 8,

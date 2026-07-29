@@ -7,12 +7,12 @@ export default function LogoutButton() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("/api/admin/auth", {
+      const response = await fetch("/api/hq/auth", {
         method: "DELETE",
       });
       
       if (response.ok) {
-        router.push("/admin/login");
+        router.push("/hq/login");
         router.refresh(); // Refresh to clear auth state
       } else {
         console.error("Logout failed");

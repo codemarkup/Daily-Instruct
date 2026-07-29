@@ -8,7 +8,7 @@ import Footer from '@/components/Footer';
 
 export default function AdminLayoutCheck() {
   const pathname = usePathname();
-  const isAdminPage = pathname?.startsWith('/admin');
+  const isAdminPage = pathname?.startsWith('/hq');
 
   useEffect(() => {
     // Add admin-page class to body when on admin pages

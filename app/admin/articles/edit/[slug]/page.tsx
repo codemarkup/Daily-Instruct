@@ -69,7 +69,7 @@ const EditArticlePage = () => {
     } catch (error) {
       console.error("Error loading article:", error);
       alert("Article not found!");
-      router.push("/admin/articles");
+      router.push("/hq/articles");
     } finally {
       setLoading(false);
     }
@@ -86,6 +86,20 @@ const EditArticlePage = () => {
 
       // Update article
       await AdminService.updateArticle(slug, article);
+
+      // Revalidate paths
+      await fetch('/api/revalidate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          secret: 'saad@saad4242',
+          paths: [
+            '/',
+            `/${article.category?.toLowerCase()}`,
+            `/articles/${article.slug}`
+          ]
+        })
+      });
 
       setShowSaveModal(false);
       setHasChanges(false);
@@ -106,7 +120,7 @@ const EditArticlePage = () => {
       await AdminService.deleteArticle(slug);
       setShowDeleteModal(false);
       alert("Article deleted successfully!");
-      router.push("/admin/articles");
+      router.push("/hq/articles");
     } catch (error) {
       console.error("Error deleting article:", error);
       alert("Failed to delete article. Please try again.");

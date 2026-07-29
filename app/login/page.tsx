@@ -3,17 +3,43 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import "@/styles/admin/components.css";
+import "@/styles/admin/admin.css";
 
 export default function LoginPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("from") || "/admin";
+  const redirectTo = searchParams.get("from") || "/hq";
+  const supabase = createClient();
+
+  useEffect(() => {
+    // FORCE HIDE public layout elements
+    const mainNavbar = document.querySelector('.navbar') as HTMLElement | null;
+    const mainFooter = document.querySelector('.footer') as HTMLElement | null;
+    const mainElement = document.querySelector('main') as HTMLElement | null;
+    
+    if (mainNavbar) mainNavbar.style.display = 'none';
+    if (mainFooter) mainFooter.style.display = 'none';
+    
+    document.body.classList.add('admin-page');
+    document.body.style.background = '#0a0a0a';
+    document.body.style.color = '#ffffff';
+    
+    return () => {
+      if (mainNavbar) mainNavbar.style.display = '';
+      if (mainFooter) mainFooter.style.display = '';
+      document.body.classList.remove('admin-page');
+      document.body.style.background = '';
+      document.body.style.color = '';
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,18 +47,17 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch("/api/admin/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      if (response.ok) {
+      if (signInError) {
+        setError(signInError.message);
+      } else {
         // Redirect back to where they were trying to go
         router.push(redirectTo);
         router.refresh();
-      } else {
-        setError("Incorrect password. Please try again.");
       }
     } catch (err) {
       setError("Login failed. Please try again.");
@@ -51,7 +76,21 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
-            <label className="form-label">Admin Password</label>
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+              placeholder="Enter admin email"
+              required
+              disabled={loading}
+              style={{ marginBottom: '16px' }}
+            />
+          </div>
+          
+          <div className="form-group">
+            <label className="form-label">Password</label>
             <input
               type="password"
               value={password}

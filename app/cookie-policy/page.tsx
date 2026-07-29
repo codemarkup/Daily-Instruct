@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Cookie Policy - Daily Instruct',
+  title: 'Cookie Policy',
   description: 'Learn about how Daily Instruct uses cookies and similar technologies to enhance your browsing experience.',
 };
 

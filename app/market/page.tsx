@@ -1,30 +1,19 @@
+export const revalidate = 60;
 import React from 'react';
-import FeaturedMarketStory from '../../components/markets/FeaturedMarketStory';
-import MarketArticlesGrid from '../../components/markets/MarketArticlesGrid';
-import TrendingInMarket from '../../components/markets/TrendingInMarket';
-import MarketSubcategories from '../../components/markets/MarketSubcategories';
-import styles from './market.module.css';
-import MarketHeader from '../../components/markets/MarketHeader';
-// import MarketNewsLetter from '../../components/markets/MarketNewsLetter';
+import CategoryDashboard from '@/components/CategoryDashboard';
+import { Metadata } from 'next';
 
-// app/market/page.tsx
-export const metadata = {
-  title: 'Market Analysis & Financial Insights | Daily Instruct',
-  description: 'Stock market updates, cryptocurrency news, investment strategies, and economic analysis. Make informed financial decisions.',
-  keywords: 'stock market, cryptocurrency, investing, finance, trading, economics, investment tips',
+export const metadata: Metadata = {
+  title: 'Markets & Financial News',
+  description: 'Live updates and analysis on the stock market, crypto, and financial indicators.',
 };
 
-const MarketPage: React.FC = () => {
+export default function MarketPage() {
   return (
-    <div className={styles.marketPage}>
-      <MarketHeader />
-      <FeaturedMarketStory />
-      <MarketArticlesGrid/>
-      <TrendingInMarket/>
-      <MarketSubcategories/>
-      {/* <MarketNewsLetter/> */}
-    </div>
+    <CategoryDashboard 
+      categoryName="markets" 
+      categoryTitle="Markets" 
+      categoryDescription="Live updates and analysis on the stock market, crypto, and financial indicators." 
+    />
   );
-};
-
-export default MarketPage;
+}

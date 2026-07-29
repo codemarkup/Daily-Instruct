@@ -1,28 +1,19 @@
-// app/tech/page.tsx
+export const revalidate = 60;
 import React from 'react';
-import TechHeader from '../../components/tech/TechHeader';
-import FeaturedTechStory from '../../components/tech/FeaturedTechStory';
-import TechArticlesGrid from '../../components/tech/TechArticlesGrid';
-import TrendingInTech from '../../components/tech/TrendingInTech';
-import TechSubcategories from '../../components/tech/TechSubcategories';
-import styles from './tech.module.css';
+import CategoryDashboard from '@/components/CategoryDashboard';
+import { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Technology & Latest Tech Trends | Daily Instruct',
-  description: 'Stay updated with the latest technology news, AI developments, software updates, and tech innovations. Daily coverage of emerging tech trends.',
-  keywords: 'technology news, tech trends, AI, software, hardware, innovation, gadgets, tech reviews',
+export const metadata: Metadata = {
+  title: 'Technology & Latest Tech Trends',
+  description: 'Stay updated with the latest technology news, AI developments, software updates, and tech innovations.',
 };
 
-const TechPage: React.FC = () => {
+export default function TechPage() {
   return (
-    <div className={styles.techPage}>
-      <TechHeader />
-      <FeaturedTechStory />
-      <TechArticlesGrid />
-      <TrendingInTech />
-      <TechSubcategories />
-    </div>
+    <CategoryDashboard 
+      categoryName="tech" 
+      categoryTitle="Technology" 
+      categoryDescription="Stay updated with the latest technology news, AI developments, software updates, and tech innovations." 
+    />
   );
-};
-
-export default TechPage;
+}

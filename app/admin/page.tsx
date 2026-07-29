@@ -83,28 +83,28 @@ const AdminDashboard = () => {
       title: "New Article",
       icon: "/icons/admin/new.svg",
       color: "gold",
-      path: "/admin/articles/new",
-      onClick: () => router.push("/admin/articles/new"),
+      path: "/hq/articles/new",
+      onClick: () => router.push("/hq/articles/new"),
     },
     {
       title: "Manage Categories",
       icon: "/icons/admin/article.svg",
       color: "purple",
-      path: "/admin/categories",
-      onClick: () => router.push("/admin/categories"),
+      path: "/hq/categories",
+      onClick: () => router.push("/hq/categories"),
     },
     {
       title: "View Analytics",
       icon: "/icons/admin/analytics.svg",
       color: "blue",
-      path: "/admin/analytics",
+      path: "/hq/analytics",
       onClick: () => alert("Analytics page coming soon!"),
     },
     {
       title: "Backup Data",
       icon: "/icons/admin/backup.svg",
       color: "green",
-      path: "/admin/utilities/backup",
+      path: "/hq/utilities/backup",
       onClick: () => handleBackup(),
     },
   ];
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
   };
 
   const handleEditArticle = (slug: string) => {
-    router.push(`/admin/articles/edit/${slug}`);
+    router.push(`/hq/articles/edit/${slug}`);
   };
 
   const handleDeleteArticle = async (slug: string, category: string) => {
@@ -249,7 +249,7 @@ const AdminDashboard = () => {
   };
 
   const handleViewAllArticles = () => {
-    router.push("/admin/articles");
+    router.push("/hq/articles");
   };
 
   // Get current date

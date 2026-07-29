@@ -1,0 +1,41 @@
+name: Check Mojibake
+
+on:
+  pull_request:
+    paths:
+      - 'data/**/*.json'
+
+jobs:
+  check-mojibake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          
+      - name: Check for Mojibake
+        run: |
+          python -c "
+          import json, sys, glob
+          files = glob.glob('data/*.json')
+          failed = False
+          for file in files:
+              try:
+                  with open(file, 'r', encoding='utf-8') as f:
+                      data = json.load(f)
+                  articles = data.get('articles', [])
+                  for article in articles:
+                      title = article.get('title', '')
+                      for block in article.get('content', []):
+                          text = block.get('text', '')
+                          if 'Ã' in text or 'Â' in text or 'â' in text:
+                              print(f'::error file={file}::Found mojibake in article: {title}')
+                              failed = True
+              except Exception as e:
+                  print(f'Error reading {file}: {e}')
+          if failed:
+              sys.exit(1)
+          "

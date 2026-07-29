@@ -30,15 +30,69 @@ const Navbar: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [popularSearches, setPopularSearches] = useState<string[]>([
-    'Technology', 'Business', 'AI', 'Startup', 'Investing', 'Crypto', 'Web3', 'Marketing'
-  ]);
+  const [popularSearches, setPopularSearches] = useState<string[]>([]);
   
   const pathname = usePathname();
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Generate algorithmic popular searches based on available content
+  useEffect(() => {
+    const generatePopularSearches = async () => {
+      try {
+        const [techData, businessData, marketData, guidesData] = await Promise.all([
+          import('@/data/tech-articles.json'),
+          import('@/data/business-articles.json'),
+          import('@/data/markets-articles.json'),
+          import('@/data/guides-articles.json').catch(() => ({ articles: [] }))
+        ]);
+
+        const allArticles = [
+          ...(techData.articles || []),
+          ...(businessData.articles || []),
+          ...(marketData.articles || []),
+          ...(guidesData.articles || [])
+        ];
+
+        // Algorithm: weight categories and specific topics by trending status
+        const keywordScores: Record<string, number> = {};
+        
+        allArticles.forEach((article: any) => {
+          const weight = article.trending ? 3 : (article.topStory ? 2 : 1);
+          
+          if (article.category) {
+            keywordScores[article.category] = (keywordScores[article.category] || 0) + weight;
+          }
+          if (article.specific) {
+            keywordScores[article.specific] = (keywordScores[article.specific] || 0) + weight;
+          }
+        });
+
+        // Sort by score and take top 6
+        const topKeywords = Object.entries(keywordScores)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 6)
+          .map(entry => {
+            // Capitalize first letter
+            return entry[0].charAt(0).toUpperCase() + entry[0].slice(1);
+          });
+
+        if (topKeywords.length > 0) {
+          setPopularSearches(topKeywords);
+        } else {
+          // Fallback if data loading fails
+          setPopularSearches(['Technology', 'Business', 'AI', 'Investing', 'Crypto', 'Markets']);
+        }
+      } catch (error) {
+        console.error('Failed to generate popular searches algo:', error);
+        setPopularSearches(['Technology', 'Business', 'AI', 'Investing', 'Crypto', 'Markets']);
+      }
+    };
+    
+    generatePopularSearches();
+  }, []);
 
   // Load recent searches from localStorage
   useEffect(() => {
@@ -287,10 +341,10 @@ const performLocalSearch = async (query: string) => {
   // Rest of the component remains exactly the same...
   const navLinks = [
     { name: 'Home', href: '/' },
+    { name: 'Geopolitics', href: '/geopolitics' },
     { name: 'Tech', href: '/tech' },
-    { name: 'Business', href: '/business' },
     { name: 'Markets', href: '/market' },
-    { name: 'Guides', href: '/guides' },
+    { name: 'Business', href: '/business' },
   ];
 
   const isActiveLink = (href: string) => {
@@ -480,19 +534,6 @@ const performLocalSearch = async (query: string) => {
                             </button>
                           ))}
                         </div>
-                      </div>
-
-                      {/* Search Tips */}
-                      <div className={styles.searchTips}>
-                        <div className={styles.sectionHeader}>
-                          <span className={styles.sectionTitle}>Search Tips</span>
-                        </div>
-                        <ul className={styles.tipsList}>
-                          <li>Try using specific keywords</li>
-                          <li>Search by author name</li>
-                          <li>Use category names like "Tech" or "Business"</li>
-                          <li>Try trending topics</li>
-                        </ul>
                       </div>
                     </>
                   )}

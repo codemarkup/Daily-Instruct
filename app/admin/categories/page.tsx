@@ -20,10 +20,7 @@ const CategoriesPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const hasCookie = document.cookie.includes('admin-auth=true');
-    if (!hasCookie) {
-      router.push('/login');
-    }
+    // Auth is now handled by middleware.ts
   }, [router]);
 
 
@@ -57,12 +54,12 @@ const CategoriesPage = () => {
       color: "#F59E0B",
     },
     {
-      name: "Guides",
-      slug: "guides",
+      name: "Geopolitics",
+      slug: "geopolitics",
       articleCount: 0,
       featuredCount: 0,
       trendingCount: 0,
-      description: "Tutorials, How-To, Beginners Guides",
+      description: "Global Affairs, Defense, Security, Trade",
       color: "#8B5CF6",
     },
   ]);
@@ -140,7 +137,7 @@ const CategoriesPage = () => {
   };
 
   const handleEditArticle = (slug: string) => {
-    router.push(`/admin/articles/edit/${slug}`);
+    router.push(`/hq/articles/edit/${slug}`);
     setShowArticlesModal(false);
   };
 
@@ -357,7 +354,7 @@ const CategoriesPage = () => {
                     className="empty-action"
                     onClick={() => {
                       setShowArticlesModal(false);
-                      router.push("/admin/articles/new");
+                      router.push("/hq/articles/new");
                     }}
                   >
                     Create New Article
@@ -465,7 +462,7 @@ const CategoriesPage = () => {
                 className="primary-button"
                 onClick={() => {
                   setShowArticlesModal(false);
-                  router.push("/admin/articles/new");
+                  router.push("/hq/articles/new");
                 }}
               >
                 + Add to {selectedCategory}

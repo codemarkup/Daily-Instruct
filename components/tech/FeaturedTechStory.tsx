@@ -1,70 +1,19 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './FeaturedTechStory.module.css';
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const FeaturedTechStory: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const FeaturedTechStory = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('tech-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchTechArticles = async () => {
-      try {
-        console.log('🔄 FETCH STARTED: FeaturedTechStory');
-        const response = await fetch('/api/github/articles?category=tech');
-        console.log('📡 RESPONSE STATUS:', response.status);
-        
-        const data = await response.json();
-        console.log('📊 DATA RECEIVED:', data);
-        console.log('📈 ARTICLES COUNT:', data.articles?.length || 0);
-        
-        // Log each article to see featured status
-        if (data.articles && data.articles.length > 0) {
-          console.log('🔍 ALL ARTICLES:');
-          data.articles.forEach((article: Article, index: number) => {
-            console.log(`  ${index + 1}. ${article.title} - Featured: ${article.featured} - Date: ${article.date}`);
-          });
-        }
-        
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('❌ ERROR fetching tech articles:', error);
-      } finally {
-        setLoading(false);
-        console.log('✅ LOADING COMPLETE');
-      }
-    };
-    
-    fetchTechArticles();
-  }, []);
 
   // Get the most recent featured article
   const featuredArticles = articles.filter(article => article.featured);
@@ -107,20 +56,6 @@ const FeaturedTechStory: React.FC = () => {
   if (featuredArticle) {
     console.log('📅 SELECTED ARTICLE DATE:', featuredArticle.date);
     console.log('📅 PARSED DATE:', new Date(featuredArticle.date));
-  }
-
-  if (loading) {
-    console.log('⏳ SHOWING LOADING STATE');
-    return (
-      <section className={styles.featuredTechStory}>
-        <div className="container">
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading featured story...</p>
-          </div>
-        </div>
-      </section>
-    );
   }
 
   // Debug: Check what we have

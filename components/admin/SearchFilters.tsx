@@ -20,7 +20,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   categoryFilter,
   onCategoryFilterChange,
 }) => {
-  const categories = ['Tech', 'Business', 'Markets', 'Guides'];
+  const categories = ['Tech', 'Business', 'Markets', 'Geopolitics'];
   const statuses = [
     { value: 'all', label: 'All Status' },
     { value: 'published', label: 'Published' },

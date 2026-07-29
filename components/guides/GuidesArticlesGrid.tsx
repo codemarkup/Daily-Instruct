@@ -1,75 +1,25 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './GuidesArticlesGrid.module.css';
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const GuidesArticlesGrid: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const GuidesArticlesGrid = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('guides-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchGuidesArticles = async () => {
-      try {
-        const response = await fetch('/api/github/articles?category=guides');
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching guides articles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchGuidesArticles();
-  }, []);
 
   // Get only articles that should appear in the grid (limit to 6 for homepage)
   const gridArticles = articles
   .filter(article => Boolean(article.grid))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
   .slice(0, 6); // Show only 6 articles on homepage
-
-  if (loading) {
-    return (
-      <section className={styles.techArticlesGrid333}>
-        <div className="container">
-          <h2 className={styles.sectionTitle333}>Latest in Guides</h2>
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading guides...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (gridArticles.length === 0) {
     return (

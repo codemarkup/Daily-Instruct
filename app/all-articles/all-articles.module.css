@@ -326,17 +326,56 @@
     font-size: 0.8rem;
   }
   
+  /* Aljazeera-style mobile list format for All Articles */
+  .articlesGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .articleCard {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--gray-200);
+    border-radius: 0;
+    padding: 16px 0;
+    gap: 12px;
+    box-shadow: none;
+    height: auto;
+  }
+
+  .articleLink:last-child .articleCard {
+    border-bottom: none;
+  }
+
+  .articleLink:hover .articleCard {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .cardImage {
+    width: 100px;
+    height: 70px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .articleBadges, .cardDescription, .cardMeta {
+    display: none;
+  }
+
   .cardContent {
-    padding: 1.2rem;
-  }
-  
-  .cardMeta {
+    padding: 0;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    justify-content: flex-start;
   }
-  
-  .metaDetails {
-    align-items: flex-start;
+
+  .cardTitle {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 0;
   }
 }

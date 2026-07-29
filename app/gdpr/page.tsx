@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../legal-pages.module.css";
 
 export const metadata = {
-  title: "GDPR Compliance - Daily Instruct",
+  title: "GDPR Compliance",
   description:
     "Information about Daily Instruct compliance with the General Data Protection Regulation (GDPR).",
 };

@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./page.module.css";
 
 export const metadata = {
-  title: "Privacy Policy - Daily Instruct",
+  title: "Privacy Policy",
   description:
     "Learn how Daily Instruct collects, uses, and protects your personal information in accordance with global privacy standards.",
 };

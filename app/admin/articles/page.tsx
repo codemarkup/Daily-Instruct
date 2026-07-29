@@ -21,13 +21,8 @@ const ArticlesPage = () => {
 
   // =========== AUTH CHECK ===========
   useEffect(() => {
-    const hasCookie = document.cookie.includes('admin-auth=true');
-    
-    if (!hasCookie) {
-      router.push('/login');
-    } else {
-      setAuthChecking(false); // Auth passed
-    }
+    // Auth is now handled by middleware.ts
+    setAuthChecking(false);
   }, [router]);
   // =========== END AUTH CHECK ===========
 
@@ -110,12 +105,10 @@ const ArticlesPage = () => {
         // Get articles to delete
         const articlesToDelete = articles.filter(a => selectedArticles.includes(a.slug));
         
-        // Delete each article
-        const deletePromises = articlesToDelete.map(async (article) => {
+        // Delete each article sequentially to prevent JSON file write race conditions
+        for (const article of articlesToDelete) {
           await AdminService.deleteArticle(article.slug); 
-        });
-        
-        await Promise.all(deletePromises);
+        }
         
         // Update local state
         setArticles(prev => prev.filter(article => !selectedArticles.includes(article.slug)));
@@ -194,7 +187,7 @@ const ArticlesPage = () => {
   };
 
   const handleNewArticle = () => {
-    router.push('/admin/articles/new');
+    router.push('/hq/articles/new');
   };
 
   const handleExport = () => {
@@ -278,6 +271,7 @@ const ArticlesPage = () => {
           onStatusChange={(status) => {
             alert('Status update functionality coming soon!');
           }}
+          onClear={() => setSelectedArticles([])}
         />
       )}
 

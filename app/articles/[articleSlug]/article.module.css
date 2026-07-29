@@ -474,12 +474,16 @@
 
 @media (max-width: 480px) {
   .articleTitle {
-    font-size: 1.3rem;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
   }
   
   .articleMeta {
-    flex-direction: column;
+    flex-direction: row;
     gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
   }
   
   .contentWrapper {
@@ -501,16 +505,74 @@
     font-size: 16px;
   }
 
-  .paragraph{
+  .paragraph {
     font-size: 16px;
   }
 
-  .articleExcerpt{
-    margin-bottom: 0rem;
+  .articleExcerpt {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
   }
 
-  .articleContent{
+  .articleContent {
     padding: 1rem 0;
+  }
+
+  /* Aljazeera-style mobile list format for Related Articles */
+  .relatedGrid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .relatedCard {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-start;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--gray-200);
+    border-radius: 0;
+    padding: 16px 0;
+    gap: 12px;
+    box-shadow: none;
+  }
+
+  .relatedCard:last-child {
+    border-bottom: none;
+  }
+
+  .relatedCard:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .relatedImage {
+    width: 100px;
+    height: 70px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .relatedImage::after {
+    display: none;
+  }
+
+  .relatedContent {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .relatedCardTitle {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 0;
+  }
+
+  .relatedCardDescription, .relatedMeta {
+    display: none;
   }
 }
 

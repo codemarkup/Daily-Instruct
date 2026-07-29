@@ -1,55 +1,19 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './FeaturedMarketStory.module.css';
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const FeaturedMarketStory: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const FeaturedMarketStory = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('markets-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchMarketArticles = async () => {
-      try {
-        const response = await fetch('/api/github/articles?category=markets');
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching market articles:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchMarketArticles();
-  }, []);
 
   // Get the first featured article
   // Get the most recent featured article
@@ -59,19 +23,6 @@ const featuredArticle = featuredArticles.length > 0
       new Date(b.date).getTime() - new Date(a.date).getTime()
     )[0]
   : undefined;
-
-  if (loading) {
-    return (
-      <section className={styles.featuredTechStory1}>
-        <div className="container">
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading featured market story...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   // If no featured article, use the first one as fallback
   if (!featuredArticle) {

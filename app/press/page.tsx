@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Press - Daily Instruct',
+  title: 'Press',
   description: 'Press resources, media kit, and news about Daily Instruct.',
 };
 

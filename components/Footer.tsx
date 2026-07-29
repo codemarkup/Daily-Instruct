@@ -15,8 +15,8 @@ const Footer: React.FC = () => {
               <span className={styles.logoSans}>Instruct</span>
             </div>
             <p className={styles.footerDescription}>
-              Premium insights and analysis on technology, business, and
-              innovation. Trusted by professionals worldwide.
+              Durable explainers and deep analysis across technology, business,
+              markets, and global affairs. Trusted by professionals worldwide.
             </p>
             <div className={styles.socialLinks}>
               <a href="#" className={styles.socialLink} aria-label="Twitter">
@@ -59,13 +59,13 @@ const Footer: React.FC = () => {
               <h4 className={styles.columnTitle}>Categories</h4>
               <ul className={styles.linkList}>
                 <li>
-                  <a href="/tech" className={styles.footerLink}>
-                    Technology
+                  <a href="/geopolitics" className={styles.footerLink}>
+                    Geopolitics
                   </a>
                 </li>
                 <li>
-                  <a href="/business" className={styles.footerLink}>
-                    Business
+                  <a href="/tech" className={styles.footerLink}>
+                    Technology
                   </a>
                 </li>
                 <li>
@@ -74,8 +74,8 @@ const Footer: React.FC = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="/guides" className={styles.footerLink}>
-                    Guides
+                  <a href="/business" className={styles.footerLink}>
+                    Business
                   </a>
                 </li>
               </ul>

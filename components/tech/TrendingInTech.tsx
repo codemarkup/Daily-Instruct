@@ -1,78 +1,25 @@
-"use client";
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './TrendingInTech.module.css';
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const TrendingInTech: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const TrendingInTech = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('tech-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchTechArticles = async () => {
-      try {
-        const response = await fetch('/api/github/articles?category=tech');
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching tech articles for trending:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchTechArticles();
-  }, []);
 
   // Filter only trending articles - use Boolean() to handle duplicates
   const trendingArticles = articles
   .filter(article => Boolean(article.trending))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
   .slice(0, 6); // Limit to 6 trending articles
-
-  if (loading) {
-    return (
-      <section className={styles.trendingInTech}>
-        <div className="container">
-          <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Trending in Tech</h2>
-            <p className={styles.sectionSubtitle}>Most popular tech stories this week</p>
-          </div>
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading trending articles...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (trendingArticles.length === 0) {
     return (

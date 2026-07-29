@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /api/admin
 
-Sitemap: https://daily-instruct.vercel.app/sitemap.xml
+Sitemap: https://www.dailyinstruct.com/sitemap.xml

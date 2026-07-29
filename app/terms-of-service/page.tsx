@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Terms of Service - Daily Instruct',
+  title: 'Terms of Service',
   description: 'Terms and conditions governing your use of Daily Instruct services and content.',
 };
 

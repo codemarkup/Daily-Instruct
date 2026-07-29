@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Community - Daily Instruct',
+  title: 'Community',
   description: 'Join the Daily Instruct community of professionals, enthusiasts, and experts.',
 };
 

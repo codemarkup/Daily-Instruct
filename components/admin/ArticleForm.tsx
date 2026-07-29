@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import "../../styles/admin/components.css";
-import { Article } from "@/services/admin-service";
+import { Article, AdminService } from "@/services/admin-service";
 
 interface ContentBlock {
   id: string;
@@ -22,7 +22,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   onUpdate,
   isEditing = false,
 }) => {
-  const [slugPreview, setSlugPreview] = useState("");
+  const [isGeneratingSlug, setIsGeneratingSlug] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -31,6 +31,64 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [quickFillText, setQuickFillText] = useState("");
   const [quickFillError, setQuickFillError] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [keywordInput, setKeywordInput] = useState("");
+  
+  // Analytics Feature States
+  const [analyzeTargetKeyword, setAnalyzeTargetKeyword] = useState("");
+  const [isKeywordAutoSuggested, setIsKeywordAutoSuggested] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
+  const [analysisReport, setAnalysisReport] = useState<any>(null);
+  const [revisedBlocks, setRevisedBlocks] = useState<ContentBlock[]>([]);
+  const [acceptedBlocks, setAcceptedBlocks] = useState<boolean[]>([]);
+  const handleKeywordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const newKeyword = keywordInput.trim().replace(/^,+|,+$/g, '');
+      if (newKeyword) {
+        const currentKeywords = article.keywords ? article.keywords.split(',').map(k => k.trim()).filter(Boolean) : [];
+        if (!currentKeywords.includes(newKeyword)) {
+          const updatedKeywords = [...currentKeywords, newKeyword].join(', ');
+          onUpdate({ ...article, keywords: updatedKeywords });
+        }
+        setKeywordInput("");
+      }
+    }
+  };
+
+  const removeKeyword = (keywordToRemove: string) => {
+    const currentKeywords = article.keywords ? article.keywords.split(',').map(k => k.trim()).filter(Boolean) : [];
+    const updatedKeywords = currentKeywords.filter(k => k !== keywordToRemove).join(', ');
+    onUpdate({ ...article, keywords: updatedKeywords });
+  };
+
+  // Custom Dropdown States
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [isSubcategoryOpen, setIsSubcategoryOpen] = useState(false);
+  const categoryRef = useRef<HTMLDivElement>(null);
+  const subcategoryRef = useRef<HTMLDivElement>(null);
+
+  const [activeTrackers, setActiveTrackers] = useState<any[]>([]);
+
+  useEffect(() => {
+    AdminService.getAllTrackers().then(trackers => {
+      setActiveTrackers(trackers.filter(t => t.status === 'active'));
+    }).catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
+        setIsCategoryOpen(false);
+      }
+      if (subcategoryRef.current && !subcategoryRef.current.contains(event.target as Node)) {
+        setIsSubcategoryOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // FIX: Changed "market" to "markets" to match your JSON files
   const categories = [
@@ -70,38 +128,40 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       ],
     },
     {
-      value: "guides",
-      label: "Guides",
+      value: "geopolitics",
+      label: "Geopolitics",
       subcategories: [
-        "Technology Guides",
-        "Finance & Investing Guides",
-        "Business & Entrepreneurship Guides",
-        "Productivity & Work-Life Guides",
-        "Software & Tools How-Tos",
-        "Career & Skills Development Guides",
+        "Global Affairs",
+        "Defense & Security",
+        "International Trade",
+        "Elections & Policy",
       ],
-    },
+    }
   ];
 
-  const generateSlug = (title: string) => {
-    if (!title) return "";
-    return title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/--+/g, "-")
-      .trim();
-  };
-
-  useEffect(() => {
-    if (article.title && !isEditing) {
-      const slug = generateSlug(article.title);
-      setSlugPreview(slug);
-      if (!article.slug || article.slug === generateSlug(article.title)) {
-        onUpdate({ slug });
+  const handleGenerateSlug = async () => {
+    if (!article.title) return;
+    setIsGeneratingSlug(true);
+    try {
+      const content = article.content as ContentBlock[] || [];
+      const response = await fetch('/api/hq/generate-slug', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          title: article.title, 
+          paragraph: (content.length > 0 && content[0].type === 'paragraph') ? content[0].text : '' 
+        })
+      });
+      const data = await response.json();
+      if (data.slug) {
+        onUpdate({ slug: data.slug });
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsGeneratingSlug(false);
     }
-  }, [article.title, isEditing]);
+  };
 
   const handleChange = (field: keyof Article, value: any) => {
     console.log(`Form changing ${field} to:`, value);
@@ -250,6 +310,135 @@ PARAGRAPH: Begin with simple automation tasks...`;
   };
   // =========== END QUICK FILL FUNCTIONALITY ===========
 
+  // =========== GROQ ANALYZE & OPTIMIZE ===========
+  const handleAnalyze = async () => {
+    const currentContent = article.content as ContentBlock[] || [];
+    if (currentContent.length === 0 || (currentContent.length === 1 && !currentContent[0].text)) {
+      alert("Please add some content first.");
+      return;
+    }
+
+    const rawContent = currentContent.map(b => {
+      if (b.type === 'quote') {
+        return `QUOTE: ${b.text}${b.author ? ` (Author: ${b.author})` : ''}`;
+      }
+      if (b.type === 'heading') return `HEADING: ${b.text}`;
+      return `PARAGRAPH: ${b.text}`;
+    }).join('\n');
+
+    setIsAnalyzing(true);
+    try {
+      const res = await fetch('/api/hq/analyze-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: rawContent, keyword: analyzeTargetKeyword })
+      });
+      
+      if (!res.ok) {
+        const errText = await res.text();
+        try {
+          const errData = JSON.parse(errText);
+          setTimeout(() => alert(errData.error || "Analysis failed."), 10);
+        } catch {
+          setTimeout(() => alert(`Analysis failed (${res.status}): ${errText.substring(0, 100)}`), 10);
+        }
+        return;
+      }
+      
+      const data = await res.json();
+      
+      let effectiveKeyword = analyzeTargetKeyword;
+      if (!analyzeTargetKeyword && data.detectedKeyword) {
+        const contentLower = rawContent.toLowerCase();
+        const keywordLower = data.detectedKeyword.toLowerCase();
+        const keywordWords = keywordLower.split(/\s+/).filter((w: string) => w.length > 3);
+        
+        let isValid = contentLower.includes(keywordLower);
+        if (!isValid && keywordWords.length > 0) {
+          isValid = keywordWords.some((w: string) => contentLower.includes(w));
+        }
+        
+        if (!isValid) {
+          setTimeout(() => alert(`Couldn't confidently detect a target keyword (suggested: "${data.detectedKeyword}"). Please enter one manually and try again.`), 10);
+          return;
+        }
+        
+        effectiveKeyword = data.detectedKeyword;
+        setAnalyzeTargetKeyword(effectiveKeyword);
+        setIsKeywordAutoSuggested(true);
+      }
+
+      const lines = data.revisedContent.split('\n').filter((l: string) => l.trim());
+      const newBlocks: ContentBlock[] = [];
+      lines.forEach((line: string) => {
+        let type: "paragraph" | "heading" | "quote" = "paragraph";
+        let text = line.trim();
+        let author = "";
+        
+        if (line.toUpperCase().startsWith('HEADING:')) {
+          type = "heading";
+          text = line.substring(8).trim();
+        } else if (line.toUpperCase().startsWith('PARAGRAPH:')) {
+          type = "paragraph";
+          text = line.substring(10).trim();
+        } else if (line.toUpperCase().startsWith('QUOTE:')) {
+          type = "quote";
+          text = line.substring(6).trim();
+          const authorMatch = text.match(/\(Author:\s*(.*?)\)$/i);
+          if (authorMatch) {
+            author = authorMatch[1].trim();
+            text = text.replace(authorMatch[0], "").trim();
+          }
+        } else {
+          return; 
+        }
+        newBlocks.push({
+          id: `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          type,
+          text,
+          author
+        });
+      });
+
+      if (newBlocks.length === 0) {
+        setTimeout(() => alert("AI returned a malformed response. Please try again."), 10);
+        return;
+      }
+
+      setRevisedBlocks(newBlocks);
+      setAnalysisReport(data.report);
+      setAcceptedBlocks(new Array(newBlocks.length).fill(true));
+      setShowAnalysisModal(true);
+    } catch (err: any) {
+      console.error(err);
+      setTimeout(() => alert(`Error during analysis: ${err.message}`), 10);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
+  const applyAnalysis = () => {
+    const currentContent = article.content as ContentBlock[] || [];
+    const finalContent = currentContent.map((block, index) => {
+      if (index < revisedBlocks.length && acceptedBlocks[index]) {
+        return revisedBlocks[index];
+      }
+      return block;
+    });
+    
+    if (revisedBlocks.length > currentContent.length) {
+      for (let i = currentContent.length; i < revisedBlocks.length; i++) {
+        if (acceptedBlocks[i]) {
+          finalContent.push(revisedBlocks[i]);
+        }
+      }
+    }
+    
+    handleChange("content", finalContent);
+    setShowAnalysisModal(false);
+  };
+  // =========== END GROQ ANALYZE & OPTIMIZE ===========
+
   // Image Upload Functions
   const handleImageUpload = async (file: File) => {
     if (!file) return;
@@ -288,11 +477,31 @@ PARAGRAPH: Begin with simple automation tasks...`;
         });
       }, 100);
 
+      // 1. Get signature from backend
+      const folder = `dailyinstruct/${article.category || "uncategorized"}`;
+      const sigResponse = await fetch("/api/hq/cloudinary-sign", { 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ folder })
+      });
+      if (!sigResponse.ok) {
+        throw new Error("Failed to get upload signature");
+      }
+      const { timestamp, signature } = await sigResponse.json();
+
+      // 2. Upload to Cloudinary
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("category", article.category || "uncategorized");
+      formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY || "dummy_key");
+      formData.append("timestamp", timestamp.toString());
+      formData.append("signature", signature);
+      formData.append("folder", folder);
 
-      const response = await fetch("/api/upload", {
+      // We need cloud_name, assume NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME is available
+      const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "demo";
+      const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+      const response = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
       });
@@ -301,12 +510,12 @@ PARAGRAPH: Begin with simple automation tasks...`;
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Upload failed");
+        throw new Error(errorData.error?.message || "Upload failed");
       }
 
       const data = await response.json();
       setUploadProgress(100);
-      handleChange("image", data.url);
+      handleChange("image", data.secure_url);
 
       setTimeout(() => {
         setUploadProgress(0);
@@ -475,18 +684,59 @@ PARAGRAPH: Continue writing...`}
             placeholder="article-slug"
             required
           />
+          <button 
+            type="button" 
+            onClick={handleGenerateSlug}
+            disabled={isGeneratingSlug || !article.title}
+            className={`seo-optimize-btn ${isGeneratingSlug ? 'loading' : ''}`}
+          >
+            <span className="btn-icon">
+              {isGeneratingSlug ? (
+                <svg className="spinner" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+              )}
+            </span>
+            {isGeneratingSlug ? "Optimizing..." : "Optimize"}
+          </button>
         </div>
-        <div className="input-hint">
-          <span className="hint-text">Preview: {slugPreview}</span>
-          {!isEditing && (
-            <button
-              type="button"
-              onClick={() => handleChange("slug", slugPreview)}
-              className="hint-button"
-            >
-              Use suggested
-            </button>
-          )}
+        <div className="input-hint" style={{ marginTop: '8px' }}>
+          <span className="hint-text" style={{ display: 'flex', gap: '15px' }}>
+            <span>Words: {(article.slug || "").split('-').filter(w => w.length > 0).length} (Target: 3-5)</span>
+          </span>
+          <span className="hint-count" style={{ color: (article.slug?.length || 0) > 70 ? '#ef4444' : 'inherit', fontWeight: (article.slug?.length || 0) > 70 ? 'bold' : 'normal' }}>
+            {article.slug?.length || 0}/70 chars
+          </span>
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
+          <label className="form-label required">Content Type</label>
+          <select
+            value={article.content_type || "article"}
+            onChange={(e) => handleChange("content_type", e.target.value)}
+            className="form-input"
+          >
+            <option value="article">Standard Article</option>
+            <option value="opinion">Opinion</option>
+            <option value="explainer">Explainer</option>
+          </select>
+        </div>
+        
+        <div className="form-group">
+          <label className="form-label">
+            Featured Position
+            <span className="label-hint">Order on homepage/category (1 is top)</span>
+          </label>
+          <input
+            type="number"
+            value={article.featured_position || ""}
+            onChange={(e) => handleChange("featured_position", e.target.value ? parseInt(e.target.value) : undefined)}
+            className="form-input"
+            placeholder="e.g. 1"
+            min="1"
+          />
         </div>
       </div>
 
@@ -515,18 +765,74 @@ PARAGRAPH: Continue writing...`}
         <div className="form-group">
           <label className="form-label">
             SEO Keywords
-            <span className="label-hint">Separate with commas</span>
+            <span className="label-hint">Press Enter to add</span>
           </label>
-          <input
-            type="text"
-            value={article.keywords || ""}
-            onChange={(e) => handleChange("keywords", e.target.value)}
-            className="form-input"
-            placeholder="javascript, web development, coding tutorial"
-          />
+          <div className="form-input keywords-container" style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '6px', 
+            padding: '6px 12px', 
+            height: 'auto',
+            minHeight: '42px',
+            alignItems: 'center'
+          }}>
+            {(article.keywords ? article.keywords.split(',').map(k => k.trim()).filter(Boolean) : []).map((keyword, index) => (
+              <span key={index} className="keyword-tag" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'rgba(212, 175, 55, 0.15)',
+                border: '1px solid rgba(212, 175, 55, 0.3)',
+                color: '#D4AF37',
+                padding: '4px 10px',
+                borderRadius: '6px',
+                fontSize: '13px',
+                fontWeight: 500
+              }}>
+                {keyword}
+                <button 
+                  type="button" 
+                  onClick={() => removeKeyword(keyword)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#D4AF37',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '2px',
+                    opacity: 0.7,
+                    fontSize: '14px',
+                    lineHeight: 1
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+                  onMouseOut={(e) => e.currentTarget.style.opacity = '0.7'}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <input
+              type="text"
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              onKeyDown={handleKeywordKeyDown}
+              placeholder={!article.keywords ? "Type keyword & press Enter..." : ""}
+              style={{
+                flex: 1,
+                minWidth: '150px',
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: 'white',
+                fontSize: '14px',
+                padding: '4px'
+              }}
+            />
+          </div>
           <div className="input-hint">
             <span className="hint-text">3-5 keywords people search for</span>
-            <span className="hint-count">{(article.keywords || "").length}/200</span>
+            <span className="hint-count">{(article.keywords ? article.keywords.split(',').filter(Boolean).length : 0)}/10 tags</span>
           </div>
         </div>
         
@@ -550,40 +856,65 @@ PARAGRAPH: Continue writing...`}
       </div>
 
       <div className="form-row">
-        <div className="form-group">
+        <div className="form-group" ref={categoryRef}>
           <label className="form-label required">Category</label>
-          <select
-            value={article.category || "tech"}
-            onChange={(e) => {
-              console.log("Category dropdown changed to:", e.target.value);
-              handleChange("category", e.target.value);
-              handleChange("specific", "");
-            }}
-            className="form-select"
-            required
-          >
-            {categories.map((cat) => (
-              <option key={cat.value} value={cat.value}>
-                {cat.label}
-              </option>
-            ))}
-          </select>
+          <div className={`glossy-select-container ${isCategoryOpen ? 'open' : ''}`}>
+            <div 
+              className="glossy-select-trigger" 
+              onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+            >
+              <span>
+                {categories.find(c => c.value === (article.category || "tech"))?.label || "Select Category"}
+              </span>
+              <svg className="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            {isCategoryOpen && (
+              <div className="glossy-select-dropdown">
+                {categories.map((cat) => (
+                  <div
+                    key={cat.value}
+                    className={`glossy-select-option ${(article.category || "tech") === cat.value ? 'selected' : ''}`}
+                    onClick={() => {
+                      handleChange("category", cat.value);
+                      handleChange("specific", "");
+                      setIsCategoryOpen(false);
+                    }}
+                  >
+                    {cat.label}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="form-group">
+        
+        <div className="form-group" ref={subcategoryRef}>
           <label className="form-label required">Subcategory (Specific)</label>
-          <select
-            value={article.specific || ""}
-            onChange={(e) => handleChange("specific", e.target.value)}
-            className="form-select"
-            required
-          >
-            <option value="">Select subcategory</option>
-            {getSubcategories().map((subcat) => (
-              <option key={subcat} value={subcat}>
-                {subcat}
-              </option>
-            ))}
-          </select>
+          <div className={`glossy-select-container ${isSubcategoryOpen ? 'open' : ''}`}>
+            <div 
+              className="glossy-select-trigger"
+              onClick={() => setIsSubcategoryOpen(!isSubcategoryOpen)}
+            >
+              <span>{article.specific || "Select subcategory"}</span>
+              <svg className="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+            {isSubcategoryOpen && (
+              <div className="glossy-select-dropdown">
+                {getSubcategories().map((subcat) => (
+                  <div
+                    key={subcat}
+                    className={`glossy-select-option ${article.specific === subcat ? 'selected' : ''}`}
+                    onClick={() => {
+                      handleChange("specific", subcat);
+                      setIsSubcategoryOpen(false);
+                    }}
+                  >
+                    {subcat}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -634,9 +965,11 @@ PARAGRAPH: Continue writing...`}
               </div>
               <label
                 htmlFor="image-upload"
-                className={`upload-button ${uploading ? "uploading" : ""}`}
+                className={`upload-button glossy-upload-btn ${uploading ? "uploading" : ""}`}
               >
-                <span className="button-icon">📁</span>
+                <span className="button-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                </span>
                 Browse Files
               </label>
             </div>
@@ -721,8 +1054,8 @@ PARAGRAPH: Continue writing...`}
             </div>
           </div>
 
-          <div className="manual-url-section">
-            <label className="url-input-label">
+          <div className="manual-url-section" style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+            <label className="url-input-label" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: 'var(--text-light)' }}>
               Or enter image URL manually:
             </label>
             <div className="url-input-group">
@@ -734,13 +1067,6 @@ PARAGRAPH: Continue writing...`}
                 placeholder="/images/category/filename.png"
                 disabled={uploading}
               />
-              <button
-                type="button"
-                className="url-help-btn"
-                title="Image URLs should be relative paths starting with /images/"
-              >
-                ?
-              </button>
             </div>
             <div className="url-hint"></div>
           </div>
@@ -795,17 +1121,34 @@ PARAGRAPH: Continue writing...`}
       </div>
 
       <div className="form-section">
-        <h3 className="section-title">Article Flags</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h3 className="section-title" style={{ margin: 0 }}>Article Flags</h3>
+          <div className="flags-status-counter" style={{ color: 'var(--text-muted)', fontSize: '14px', fontWeight: 600 }}>
+            {[
+              article.trending,
+              article.featured,
+              article.topStory,
+              article.grid,
+              article.homeFeatured,
+              article.homeLatest,
+              article.homeTrending,
+              article.homeTopStory,
+            ].filter(Boolean).length}/8 Selected
+          </div>
+        </div>
         <div className="flags-grid">
           {["trending", "featured", "topStory", "grid", "homeFeatured", "homeLatest", "homeTrending", "homeTopStory"].map((flag) => (
             <div key={flag} className="flag-group">
-              <label className="flag-label">
+              <label className="glossy-toggle-label">
                 <input
                   type="checkbox"
                   checked={Boolean(article[flag as keyof Article]) || false}
                   onChange={(e) => handleChange(flag as keyof Article, e.target.checked)}
-                  className="flag-checkbox"
+                  className="hidden-checkbox"
                 />
+                <div className="glossy-toggle-track">
+                  <div className="glossy-toggle-thumb"></div>
+                </div>
                 <span className="flag-text">
                   {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
                 </span>
@@ -813,36 +1156,161 @@ PARAGRAPH: Continue writing...`}
             </div>
           ))}
         </div>
-        <div className="flags-status-counter">
-          {[
-            article.trending,
-            article.featured,
-            article.topStory,
-            article.grid,
-            article.homeFeatured,
-            article.homeLatest,
-            article.homeTrending,
-            article.homeTopStory,
-          ].filter(Boolean).length}
-          /8
-        </div>
       </div>
+
+      {activeTrackers.length > 0 && (
+        <div className="form-section">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div>
+              <h3 className="section-title" style={{ margin: 0 }}>Link to Trackers</h3>
+              <p className="section-subtitle" style={{ marginTop: '4px' }}>Automatically post this article to the selected situation trackers</p>
+            </div>
+            <div className="flags-status-counter" style={{ color: 'var(--text-muted)', fontSize: '14px', fontWeight: 600 }}>
+              {(article.trackers || []).length} Selected
+            </div>
+          </div>
+          <div className="flags-grid">
+            {activeTrackers.map((tracker) => {
+              const isChecked = (article.trackers || []).includes(tracker.id);
+              return (
+                <div key={tracker.id} className="flag-group" title={tracker.title}>
+                  <label className="glossy-toggle-label">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={(e) => {
+                        const currentTrackers = [...(article.trackers || [])];
+                        if (e.target.checked) {
+                          currentTrackers.push(tracker.id);
+                        } else {
+                          const idx = currentTrackers.indexOf(tracker.id);
+                          if (idx > -1) currentTrackers.splice(idx, 1);
+                        }
+                        handleChange("trackers" as any, currentTrackers);
+                      }}
+                      className="hidden-checkbox"
+                    />
+                    <div className="glossy-toggle-track">
+                      <div className="glossy-toggle-thumb"></div>
+                    </div>
+                    <span className="flag-text" style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+                      {tracker.title}
+                    </span>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* =========== CONTENT SECTION WITH QUICK FILL BUTTON =========== */}
       <div className="form-section">
-        <div className="content-section-header">
+        <div className="content-section-header" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
           <div>
             <h3 className="section-title required">Article Content</h3>
             <p className="section-subtitle">Add paragraphs, headings, and quotes</p>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowQuickFill(true)}
-            className="quick-fill-trigger-button"
-          >
-            <span className="button-icon">⚡</span>
-            Quick Fill Content
-          </button>
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <input 
+                type="text" 
+                placeholder="SEO Target Keyword (Optional)" 
+                className="form-input" 
+                style={{ width: '260px', marginBottom: 0, paddingRight: isKeywordAutoSuggested ? '135px' : '10px' }}
+                value={analyzeTargetKeyword}
+                onChange={(e) => {
+                  setAnalyzeTargetKeyword(e.target.value);
+                  if (isKeywordAutoSuggested) setIsKeywordAutoSuggested(false);
+                }}
+              />
+              {isKeywordAutoSuggested && (
+                <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.65rem', background: '#fef08a', color: '#854d0e', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>
+                  ✨ Suggested by Groq
+                </span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={handleAnalyze}
+              disabled={isAnalyzing}
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                gap: '8px', 
+                padding: '0 18px', 
+                height: '42px',
+                background: 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)', 
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)', 
+                borderTop: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '8px',
+                color: '#ffffff',
+                fontSize: '14px',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                cursor: isAnalyzing ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)',
+                position: 'relative'
+              }}
+              onMouseEnter={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%)';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                  e.currentTarget.style.borderTop = '1px solid rgba(255, 255, 255, 0.45)';
+                  e.currentTarget.style.boxShadow = '0 12px 40px 0 rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.background = 'linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%)';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.borderTop = '1px solid rgba(255, 255, 255, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 8px 32px 0 rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }
+              }}
+              onMouseDown={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.transform = 'translateY(0) scale(0.97)';
+                }
+              }}
+              onMouseUp={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1)';
+                }
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
+                <path d="M10 2L11.5658 7.47954L17 9.15494L11.5658 10.8303L10 16.3099L8.43419 10.8303L3 9.15494L8.43419 7.47954L10 2Z" fill="url(#paint0_linear)"/>
+                <path d="M19 14L19.7829 16.7398L22.5 17.5775L19.7829 18.4152L19 21.1549L18.2171 18.4152L15.5 17.5775L18.2171 16.7398L19 14Z" fill="url(#paint1_linear)"/>
+                <defs>
+                  <linearGradient id="paint0_linear" x1="10" y1="2" x2="10" y2="16.3099" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#FACC15"/>
+                    <stop offset="1" stopColor="#F97316"/>
+                  </linearGradient>
+                  <linearGradient id="paint1_linear" x1="19" y1="14" x2="19" y2="21.1549" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#60A5FA"/>
+                    <stop offset="1" stopColor="#3B82F6"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              {isAnalyzing ? "Analyzing..." : "Analyze & Optimize"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowQuickFill(true)}
+              className="quick-fill-trigger-button"
+            >
+              <span className="button-icon">⚡</span>
+              Quick Fill Content
+            </button>
+          </div>
         </div>
 
         <div className="quick-fill-hint">
@@ -909,6 +1377,150 @@ PARAGRAPH: Continue writing...`}
           </button>
         </div>
       </div>
+
+      {/* =========== ANALYZE & OPTIMIZE MODAL =========== */}
+      {showAnalysisModal && (
+        <div className="modal-overlay">
+          <div className="modal-container" style={{ maxWidth: '900px', width: '95%' }}>
+            <div className="modal-header">
+              <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 2L11.5658 7.47954L17 9.15494L11.5658 10.8303L10 16.3099L8.43419 10.8303L3 9.15494L8.43419 7.47954L10 2Z" fill="url(#paint0_linear_modal)"/>
+                  <path d="M19 14L19.7829 16.7398L22.5 17.5775L19.7829 18.4152L19 21.1549L18.2171 18.4152L15.5 17.5775L18.2171 16.7398L19 14Z" fill="url(#paint1_linear_modal)"/>
+                  <defs>
+                    <linearGradient id="paint0_linear_modal" x1="10" y1="2" x2="10" y2="16.3099" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#FACC15"/>
+                      <stop offset="1" stopColor="#F97316"/>
+                    </linearGradient>
+                    <linearGradient id="paint1_linear_modal" x1="19" y1="14" x2="19" y2="21.1549" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#60A5FA"/>
+                      <stop offset="1" stopColor="#3B82F6"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+                Review Analysis & Optimizations
+              </h3>
+              <button onClick={() => setShowAnalysisModal(false)} className="modal-close">×</button>
+            </div>
+            
+            <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto', color: '#1e293b' }}>
+              {analysisReport && (
+                <div style={{ marginBottom: '2rem', padding: '1rem', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <h4 style={{ margin: '0 0 1rem 0' }}>Report Summary</h4>
+                  
+                  {/* Tells Fixed */}
+                  <div style={{ marginBottom: '1rem' }}>
+                    <strong>✅ AI Tells Reduced/Fixed:</strong>
+                    {analysisReport.tellsFixed?.length > 0 ? (
+                      <ul style={{ margin: '0.5rem 0 0 1.5rem', fontSize: '0.9rem' }}>
+                        {analysisReport.tellsFixed.map((t: any, i: number) => (
+                          <li key={i}>{t.category} ({t.count}x): {t.description}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p style={{ margin: '0.5rem 0 0', fontSize: '0.9rem', color: '#64748b' }}>None found.</p>
+                    )}
+                  </div>
+
+                  {/* Human Input Needed */}
+                  <div style={{ marginBottom: '1rem' }}>
+                    <strong>⚠️ Needs Human Input:</strong>
+                    {analysisReport.humanInputNeeded?.length > 0 ? (
+                      <ul style={{ margin: '0.5rem 0 0 1.5rem', fontSize: '0.9rem', color: '#b45309' }}>
+                        {analysisReport.humanInputNeeded.map((h: string, i: number) => (
+                          <li key={i}>{h}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p style={{ margin: '0.5rem 0 0', fontSize: '0.9rem', color: '#64748b' }}>No empty claims flagged.</p>
+                    )}
+                  </div>
+
+                  {/* SEO Check */}
+                  <div>
+                    <strong>🔍 On-Page SEO (Keyword: {analyzeTargetKeyword}):</strong>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                      <div style={{ color: analysisReport.seo?.keywordInFirst100Words ? '#15803d' : '#b91c1c' }}>
+                        {analysisReport.seo?.keywordInFirst100Words ? '✓' : '✗'} Keyword in first 100 words
+                      </div>
+                      <div style={{ color: analysisReport.seo?.keywordInHeading ? '#15803d' : '#b91c1c' }}>
+                        {analysisReport.seo?.keywordInHeading ? '✓' : '✗'} Keyword in a Heading
+                      </div>
+                      <div style={{ color: analysisReport.seo?.topicalCompleteness ? '#15803d' : '#b91c1c' }}>
+                        {analysisReport.seo?.topicalCompleteness ? '✓' : '✗'} Topical Completeness
+                      </div>
+                      <div style={{ color: !analysisReport.seo?.keywordStuffing ? '#15803d' : '#b91c1c' }}>
+                        {!analysisReport.seo?.keywordStuffing ? '✓' : '✗'} Keyword Stuffing Check
+                      </div>
+                      <div style={{ color: analysisReport.seo?.answerFirstOpening ? '#15803d' : '#b91c1c' }}>
+                        {analysisReport.seo?.answerFirstOpening ? '✓' : '✗'} Answer-first opening paragraph
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="diff-viewer">
+                <h4 style={{ marginBottom: '1rem', color: '#0f172a' }}>Review Suggested Changes</h4>
+                {contentBlocks.map((origBlock, idx) => {
+                  const revBlock = revisedBlocks[idx];
+                  const hasChanged = revBlock && (origBlock.text !== revBlock.text || origBlock.type !== revBlock.type);
+                  
+                  if (!revBlock) return null;
+
+                  return (
+                    <div key={idx} style={{ 
+                      display: 'flex', gap: '1rem', marginBottom: '1rem', padding: '1rem', 
+                      background: hasChanged ? '#fefce8' : '#ffffff', 
+                      border: '1px solid #e2e8f0', borderRadius: '8px',
+                      alignItems: 'stretch'
+                    }}>
+                      <div style={{ flex: '0 0 50px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <input 
+                          type="checkbox" 
+                          checked={acceptedBlocks[idx]} 
+                          onChange={(e) => {
+                            const newAccepted = [...acceptedBlocks];
+                            newAccepted[idx] = e.target.checked;
+                            setAcceptedBlocks(newAccepted);
+                          }}
+                          style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                        />
+                        <span style={{ fontSize: '0.75rem', marginTop: '0.5rem', color: '#64748b' }}>Accept</span>
+                      </div>
+                      
+                      <div style={{ flex: 1, paddingRight: '1rem', borderRight: '1px solid #e2e8f0' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Original {origBlock.type}</div>
+                        <div style={{ whiteSpace: 'pre-wrap', fontSize: '0.9rem', color: '#334155' }}>{origBlock.text}</div>
+                      </div>
+                      
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginBottom: '0.5rem', textTransform: 'uppercase' }}>Suggested {revBlock.type}</div>
+                        <div style={{ 
+                          whiteSpace: 'pre-wrap', 
+                          fontSize: '0.9rem',
+                          color: hasChanged ? '#047857' : '#334155',
+                          fontWeight: hasChanged ? 500 : 'normal'
+                        }}>{revBlock.text}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            
+            <div className="modal-footer">
+              <button type="button" onClick={() => setShowAnalysisModal(false)} className="modal-button secondary">
+                Cancel
+              </button>
+              <button type="button" onClick={applyAnalysis} className="modal-button primary">
+                Apply Accepted Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

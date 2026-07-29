@@ -1,40 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/middleware'
 
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  
-  console.log('Middleware running for path:', path); // Debug log
-  
-  // Check if accessing admin routes
-  if (path.startsWith('/admin')) {
-    const isAuthenticated = request.cookies.get('admin-auth')?.value === 'true';
-    
-    console.log('Admin route detected. Authenticated:', isAuthenticated); // Debug
-    
-    // If NOT authenticated, redirect to login
-    if (!isAuthenticated) {
-      console.log('Redirecting to login...'); // Debug
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('from', path);
-      return NextResponse.redirect(loginUrl);
-    }
-  }
-  
-  // If accessing login page but already authenticated, redirect to admin
-  if (path === '/login') {
-    const isAuthenticated = request.cookies.get('admin-auth')?.value === 'true';
-    if (isAuthenticated) {
-      return NextResponse.redirect(new URL('/admin', request.url));
-    }
-  }
-  
-  return NextResponse.next();
+export async function middleware(request: NextRequest) {
+  return await updateSession(request)
 }
 
-// CRITICAL: Make sure middleware runs on ALL admin and login routes
 export const config = {
   matcher: [
-    '/admin/:path*',  // All admin routes
-    '/login',         // Login page
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * Feel free to modify this pattern to include more paths.
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
-};
+}

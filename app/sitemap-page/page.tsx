@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../legal-pages.module.css';
 
 export const metadata = {
-  title: 'Sitemap - Daily Instruct',
+  title: 'Sitemap',
   description: 'Complete sitemap of Daily Instruct website structure and pages.',
 };
 

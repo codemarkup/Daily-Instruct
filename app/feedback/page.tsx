@@ -2,7 +2,7 @@ import React from "react";
 import styles from "../legal-pages.module.css";
 
 export const metadata = {
-  title: "Feedback - Daily Instruct",
+  title: "Feedback",
   description: "Share your feedback to help us improve Daily Instruct.",
 };
 

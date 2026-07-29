@@ -1,60 +1,24 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import styles from "./GuidesSubcategories.module.css";
 import Link from "next/link";
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const GuidesSubcategories: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const GuidesSubcategories = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('guides-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchGuidesArticles = async () => {
-      try {
-        const response = await fetch('/api/github/articles?category=guides');
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching guides articles for subcategories:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchGuidesArticles();
-  }, []);
 
   const subcategories = [
     {
       id: 1,
       name: "Technology Guides",
-      description: "Step-by-step tutorials for software, apps, tools, and gadgets",
+      description: "Clear explainers breaking down complex software, tools, and platforms",
       icon: "desktop.svg",
       color: "#3B82F6"
     },
@@ -75,14 +39,14 @@ const GuidesSubcategories: React.FC = () => {
     {
       id: 4,
       name: "Productivity & Work-Life Guides",
-      description: "Tips, hacks, and tutorials to improve productivity, remote work, and workflow",
+      description: "Deep-dives into modern workflows, productivity frameworks, and remote operations",
       icon: "book.svg",
       color: "#EF4444"
     },
     {
       id: 5,
       name: "Software & Tools How-Tos",
-      description: "Tutorials for popular software, online tools, and platforms",
+      description: "Detailed breakdowns of how emerging platforms and tools actually work",
       icon: "gear.svg",
       color: "#8B5CF6"
     },
@@ -115,23 +79,6 @@ const GuidesSubcategories: React.FC = () => {
       articleCount: `${count} Articles`,
     };
   });
-
-  if (loading) {
-    return (
-      <section className={styles.techSubcategories555}>
-        <div className="container">
-          <div className={styles.sectionHeader555}>
-            <h2 className={styles.sectionTitle555}>Explore Categories</h2>
-            <p className={styles.sectionSubtitle555}>Dive deeper into specific Guides domains</p>
-          </div>
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading guides categories...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className={styles.techSubcategories555}>

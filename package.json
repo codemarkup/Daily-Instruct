@@ -9,9 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.9",
+    "@types/dotenv": "^6.1.1",
     "archiver": "^7.0.1",
+    "cloudinary": "^2.10.0",
+    "dotenv": "^17.4.2",
     "framer-motion": "^12.23.25",
-    "next": "16.0.7",  
+    "next": "16.0.7",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-dropzone": "^14.3.8",
@@ -25,7 +30,7 @@
     "@types/react-dropzone": "^4.2.2",
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
-    "eslint-config-next": "16.0.7", 
+    "eslint-config-next": "16.0.7",
     "typescript": "^5"
   }
 }

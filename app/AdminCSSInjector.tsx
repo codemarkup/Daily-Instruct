@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 export default function AdminCSSInjector() {
   const pathname = usePathname();
-  const isAdminPage = pathname?.startsWith('/admin');
+  const isAdminPage = pathname?.startsWith('/hq');
 
   useEffect(() => {
     if (isAdminPage) {

@@ -13,15 +13,15 @@ export default function FAQPage() {
   const faqs = [
     {
       question: 'What is Daily Instruct?',
-      answer: 'Daily Instruct is an educational blogging platform that provides daily tutorials, how-to guides, and informative articles on various topics including technology, lifestyle, productivity, and learning resources.'
+      answer: 'Daily Instruct is an explainers-and-analysis site covering tech, business, markets, and global affairs, providing durable context on why major stories are happening and what they mean.'
     },
     {
       question: 'Is Daily Instruct free to use?',
-      answer: 'Yes, Daily Instruct is completely free! All our educational content, tutorials, and articles are available without any subscription fees or paywalls.'
+      answer: 'Yes, Daily Instruct is completely free! All of our explainers, analysis, and situation trackers are available without any subscription fees or paywalls.'
     },
     {
       question: 'How often is new content published?',
-      answer: 'We publish new educational content daily, with fresh tutorials, guides, and articles covering a wide range of topics to help you learn something new every day.'
+      answer: 'We continuously update our coverage with fresh analysis, explainers, and trackers across technology, business, markets, and geopolitics to keep you informed on what matters.'
     },
     {
       question: 'Can I contribute content to Daily Instruct?',
@@ -70,7 +70,7 @@ export default function FAQPage() {
               Frequently Asked Questions
             </h1>
             <p className={styles.heroDescription}>
-              Find answers to common questions about Daily Instruct and how to make the most of our educational platform.
+              Find answers to common questions about Daily Instruct and how to navigate our analysis and trackers.
             </p>
           </div>
         </div>

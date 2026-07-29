@@ -264,11 +264,14 @@ function SearchResults() {
               >
                 <div className={styles.cardImage}>
                   <Image 
-                    src={article.image}
+                    src={article.adaptiveImage || article.image}
                     alt={article.title}
                     width={400}
                     height={250}
                     className={styles.image}
+                    placeholder={article.blurDataURL ? "blur" : "empty"}
+                    blurDataURL={article.blurDataURL}
+                    sizes="(max-width: 768px) 100vw, 400px"
                   />
                 </div>
                 

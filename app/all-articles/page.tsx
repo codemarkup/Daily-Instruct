@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import AdaptiveImage from '@/components/AdaptiveImage';
 import Link from 'next/link';
 import styles from './all-articles.module.css';
 import techArticlesData from '@/data/tech-articles.json';
@@ -54,12 +54,13 @@ const AllArticlesPage: React.FC = () => {
               >
                 <article className={styles.articleCard}>
                   <div className={styles.cardImage}>
-                    <Image 
+                    <AdaptiveImage 
                       src={article.image}
                       alt={article.title}
                       width={400}
                       height={250}
                       className={styles.image}
+                      sizes="(max-width: 768px) 100vw, 400px"
                     />
                     <div className={styles.articleBadges}>
                       {/* <div className={styles.categoryBadge}>{article.category}</div> */}

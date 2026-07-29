@@ -1,30 +1,19 @@
+export const revalidate = 60;
 import React from 'react';
-import BusinessHeader from '../../components/business/BusinessHeader';
-import FeaturedBusinessStory from '../../components/business/FeaturedBusinessStory';
-import BusinessArticlesGrid from '../../components/business/BusinessArticlesGrid';
-import TrendingInBusiness from '../../components/business/TrendingInBusiness';
-import BusinessSubcategories from '../../components/business/BusinessSubcategories';
-// import BusinessNewsLetter from '../../components/business/BusinessNewsLetter';
-import styles from './business.module.css';
+import CategoryDashboard from '@/components/CategoryDashboard';
+import { Metadata } from 'next';
 
-// app/business/page.tsx
-export const metadata = {
-  title: 'Business News & Entrepreneurship | Daily Instruct',
-  description: 'Latest business news, entrepreneurship tips, startup advice, and market analysis. Learn business strategies and leadership skills.',
-  keywords: 'business news, entrepreneurship, startups, finance, leadership, marketing, management',
+export const metadata: Metadata = {
+  title: 'Business & Market Analysis',
+  description: 'In-depth analysis of global business moves, corporate strategy, and macroeconomic trends.',
 };
 
-const BusinessPage: React.FC = () => {
+export default function BusinessPage() {
   return (
-    <div className={styles.businessPage}>
-      <BusinessHeader />
-      <FeaturedBusinessStory />
-      <BusinessArticlesGrid/>
-      <TrendingInBusiness/>
-      <BusinessSubcategories/>
-      {/* <BusinessNewsLetter/> */}
-    </div>
+    <CategoryDashboard 
+      categoryName="business" 
+      categoryTitle="Business" 
+      categoryDescription="In-depth analysis of global business moves, corporate strategy, and macroeconomic trends." 
+    />
   );
-};
-
-export default BusinessPage;
+}

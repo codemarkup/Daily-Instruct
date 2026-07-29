@@ -3,6 +3,8 @@ import { Inter, DM_Serif_Display, Playfair_Display } from 'next/font/google';
 import '../styles/globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import AdminCSSInjector from './AdminCSSInjector';
+import Analytics from '../components/Analytics';
 import type { Metadata } from 'next';
 
 // Optimized font loading with next/font
@@ -32,13 +34,13 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dailyinstruct.com'),
+  metadataBase: new URL('https://www.dailyinstruct.com'),
   title: {
-    default: 'Daily Instruct - Where Learning Meets Innovation',
+    default: 'Daily Instruct - Explainers & Analysis',
     template: '%s | Daily Instruct',
   },
   description:
-    'Daily Instruct delivers timely, in-depth coverage of technology, business, markets, and global trends—providing professionals and decision-makers with clear insights, analysis, and informed perspectives.',
+    'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.',
   keywords:
     'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
   authors: [{ name: 'Daily Instruct' }],
@@ -48,9 +50,9 @@ export const metadata: Metadata = {
     canonical: '/',
   },
   openGraph: {
-    url: 'https://dailyinstruct.com',
-    title: 'Daily Instruct - Educational Platform',
-    description: 'Daily tutorials, how-to guides, and informative articles',
+    url: 'https://www.dailyinstruct.com',
+    title: 'Daily Instruct - Explainers & Analysis',
+    description: 'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.',
     type: 'website',
     images: [
       {
@@ -63,8 +65,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Daily Instruct - Educational Platform',
-    description: 'Daily tutorials, how-to guides, and informative articles',
+    title: 'Daily Instruct - Explainers & Analysis',
+    description: 'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.',
     images: ['/og-image.png'],
   },
 };
@@ -77,9 +79,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${dmSerifDisplay.variable} ${playfairDisplay.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
+        <meta charSet="utf-8" />
         <style
           dangerouslySetInnerHTML={{
             __html: `
@@ -89,9 +89,14 @@ export default function RootLayout({
               --accent-gold: #d4af37;
             }
             * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+            html, body {
+              width: 100%;
+              max-width: 100vw;
+              overflow-x: hidden;
+            }
             body {
               font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-              margin:0; padding:0; overflow-x:hidden; color:#1a1a1a; background:#ffffff;
+              margin:0; padding:0; color:#1a1a1a; background:#ffffff;
               -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
             }
             .navbar {
@@ -102,8 +107,8 @@ export default function RootLayout({
             @media (max-width:768px) { main { padding-top:70px; } }
             
             /* Admin-specific overrides - HIDE navbar/footer on admin pages */
-            body.admin-page .navbar,
-            body.admin-page .footer {
+            body.admin-page #public-navbar,
+            body.admin-page #public-footer {
               display: none !important;
             }
             body.admin-page main {
@@ -113,7 +118,6 @@ export default function RootLayout({
           }}
         />
 
-        <meta charSet="utf-8" />
         <meta name="theme-color" content="#ffffff" />
         <link
           rel="preload"
@@ -135,11 +139,34 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* NAVBAR IS BACK! */}
-        <Navbar />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Daily Instruct",
+              "description": "Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.",
+              "url": "https://www.dailyinstruct.com",
+              "logo": "https://www.dailyinstruct.com/og-image.png",
+              "sameAs": [
+                "https://twitter.com/dailyinstruct",
+                "https://www.linkedin.com/company/dailyinstruct"
+              ]
+            })
+          }}
+        />
+        <Analytics />
+        <AdminCSSInjector />
+        <div id="public-navbar">
+          {/* NAVBAR IS BACK! */}
+          <Navbar />
+        </div>
         <main>{children}</main>
-        {/* FOOTER IS BACK! */}
-        <Footer />
+        <div id="public-footer">
+          {/* FOOTER IS BACK! */}
+          <Footer />
+        </div>
       </body>
     </html>
   );

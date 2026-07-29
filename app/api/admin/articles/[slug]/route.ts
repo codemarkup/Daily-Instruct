@@ -1,14 +1,12 @@
-// /app/api/admin/articles/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { 
-  readJsonFile, 
-  writeJsonFile, 
-  getCategoryFilename, 
   findArticleBySlug,
+  updateArticle,
+  deleteArticle,
+  sanitizeArticle,
   Article 
 } from '@/lib/json-utils';
 
-// Type-safe way to handle Next.js 15 params
 async function getParams(context: any): Promise<{ slug: string }> {
   return context.params;
 }
@@ -19,9 +17,6 @@ export async function GET(request: NextRequest, context: any) {
   const slug = params.slug;
 
   try {
-    console.log('GET request URL:', request.url);
-    console.log('GET params slug:', slug);
-    
     if (!slug) {
       return NextResponse.json(
         { success: false, error: 'Slug parameter is required' },
@@ -57,32 +52,14 @@ export async function DELETE(request: NextRequest, context: any) {
   const slug = params.slug;
 
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const category = searchParams.get('category');
+    const success = await deleteArticle(slug);
     
-    if (!category) {
-      return NextResponse.json(
-        { success: false, error: 'Category query parameter is required' },
-        { status: 400 }
-      );
-    }
-    
-    const filename = getCategoryFilename(category);
-    const data = await readJsonFile<{ articles: Article[] }>(filename);
-    
-    const articleIndex = data.articles.findIndex(a => 
-      a.slug.toLowerCase() === slug.toLowerCase()
-    );
-    
-    if (articleIndex === -1) {
+    if (!success) {
       return NextResponse.json(
         { success: false, error: `Article "${slug}" not found` },
         { status: 404 }
       );
     }
-    
-    data.articles.splice(articleIndex, 1);
-    await writeJsonFile(filename, data);
     
     return NextResponse.json({ 
       success: true, 
@@ -103,44 +80,25 @@ export async function PUT(request: NextRequest, context: any) {
 
   try {
     const updateData = await request.json();
-    const { category, ...articleUpdates } = updateData;
     
-    if (!category) {
+    const newArticleData = sanitizeArticle(updateData);
+    const updatedArticle = await updateArticle(slug, newArticleData);
+    
+    if (!updatedArticle) {
       return NextResponse.json(
-        { success: false, error: 'Category is required for update' },
-        { status: 400 }
-      );
-    }
-    
-    const filename = getCategoryFilename(category);
-    const data = await readJsonFile<{ articles: Article[] }>(filename);
-    
-    const articleIndex = data.articles.findIndex(a => a.slug === slug);
-    
-    if (articleIndex === -1) {
-      return NextResponse.json(
-        { success: false, error: 'Article not found' },
+        { success: false, error: 'Article not found or update failed' },
         { status: 404 }
       );
     }
     
-    data.articles[articleIndex] = {
-      ...data.articles[articleIndex],
-      ...articleUpdates,
-      id: data.articles[articleIndex].id,
-      slug: data.articles[articleIndex].slug
-    };
-    
-    await writeJsonFile(filename, data);
-    
     return NextResponse.json({ 
       success: true, 
-      article: data.articles[articleIndex],
+      article: updatedArticle,
       message: 'Article updated successfully'
     });
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { success: false, error: 'Failed to update article' },
+      { success: false, error: 'Failed to update article', details: error.message },
       { status: 500 }
     );
   }

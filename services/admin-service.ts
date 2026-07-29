@@ -1,11 +1,13 @@
 // /services/admin-service.ts - FIXED UTF-8 VERSION
-const API_BASE = '/api/admin';
+const API_BASE = '/api/hq';
 
 // UPDATE THIS INTERFACE - ADD THE SEO FIELDS
 export interface Article {
   id: number;
   slug: string;
   title: string;
+  content_type?: 'article' | 'opinion' | 'explainer';
+  featured_position?: number;
   description: string;
   author: string;
   date: string;
@@ -29,6 +31,35 @@ export interface Article {
   // ADD THESE TWO SEO FIELDS:
   keywords?: string;
   metaDescription?: string;
+  trackers?: string[];
+}
+
+export interface Tracker {
+  id?: string;
+  slug: string;
+  title: string;
+  summary: string;
+  cover_image_url: string;
+  status: 'active' | 'resolved';
+  category: string;
+  priority?: number;
+  created_at?: string;
+  updated_at?: string;
+  updates?: TrackerUpdate[];
+}
+
+export interface TrackerUpdate {
+  id?: string;
+  tracker_id: string;
+  published_at: string;
+  content: string;
+  source_note?: string;
+  linked_article_id?: number;
+}
+
+export interface HomepageConfig {
+  id: number;
+  trending_tags: Array<{ label: string; link: string }>;
 }
 
 // UTF-8 Sanitizer function to fix smart quotes and special characters
@@ -123,6 +154,27 @@ export const AdminService = {
   // UTF-8 Sanitizer (export for use elsewhere if needed)
   sanitizeArticleData,
   
+  // Real-time Notifications
+  addNotification(text: string) {
+    if (typeof window === 'undefined') return;
+    try {
+      const stored = localStorage.getItem('admin_notifications');
+      const notifications = stored ? JSON.parse(stored) : [];
+      const newNotification = {
+        id: Date.now(),
+        text,
+        timestamp: Date.now(),
+        read: false
+      };
+      
+      const updated = [newNotification, ...notifications].slice(0, 50);
+      localStorage.setItem('admin_notifications', JSON.stringify(updated));
+      window.dispatchEvent(new Event('admin_notifications_updated'));
+    } catch (e) {
+      console.error("Failed to add notification", e);
+    }
+  },
+  
   async createArticle(articleData: Omit<Article, 'id'>): Promise<Article> {
     console.log('Original article data:', JSON.stringify(articleData).substring(0, 200));
     
@@ -146,6 +198,7 @@ export const AdminService = {
     
     const data = await response.json();
     console.log('Article created successfully:', data.article?.slug);
+    this.addNotification(`Published new article: "${sanitizedData.title}"`);
     return data.article;
   },
 
@@ -198,6 +251,7 @@ export const AdminService = {
     
     const data = await response.json();
     console.log('Article updated successfully:', data.article?.slug);
+    this.addNotification(`Updated article: "${sanitizedData.title}"`);
     return data.article;
   },
 
@@ -214,6 +268,8 @@ export const AdminService = {
       throw new Error(`Failed to delete article: ${error}`);
     }
     
+    console.log('Article deleted successfully:', slug);
+    this.addNotification(`Deleted article: /${slug}`);
     return await response.json();
   },
 
@@ -286,5 +342,75 @@ export const AdminService = {
     } catch (error) {
       console.error('Error checking article encoding:', error);
     }
+  },
+  
+  // ================== TRACKERS API ==================
+  
+  async getAllTrackers(): Promise<Tracker[]> {
+    const res = await fetch(`${API_BASE}/trackers`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch trackers');
+    return res.json();
+  },
+
+  async getTracker(slug: string): Promise<Tracker> {
+    const res = await fetch(`${API_BASE}/trackers/${slug}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to fetch tracker');
+    return res.json();
+  },
+
+  async createTracker(tracker: Partial<Tracker>): Promise<Tracker> {
+    const res = await fetch(`${API_BASE}/trackers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tracker),
+    });
+    if (!res.ok) throw new Error('Failed to create tracker');
+    return res.json();
+  },
+
+  async updateTracker(slug: string, tracker: Partial<Tracker>): Promise<Tracker> {
+    const res = await fetch(`${API_BASE}/trackers/${slug}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tracker),
+    });
+    if (!res.ok) throw new Error('Failed to update tracker');
+    return res.json();
+  },
+
+  async deleteTracker(slug: string): Promise<void> {
+    const res = await fetch(`${API_BASE}/trackers/${slug}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Failed to delete tracker');
+    this.addNotification(`Deleted tracker: ${slug}`);
+  },
+
+  async createTrackerUpdate(update: Partial<TrackerUpdate>): Promise<TrackerUpdate> {
+    const res = await fetch(`${API_BASE}/trackers/updates`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(update),
+    });
+    if (!res.ok) throw new Error('Failed to create tracker update');
+    
+    this.addNotification(`Added update to tracker`);
+    return res.json();
+  },
+
+  async getHomepageConfig(): Promise<HomepageConfig> {
+    const res = await fetch(`${API_BASE}/config/homepage`, { cache: 'no-store' });
+    if (!res.ok) return { id: 1, trending_tags: [] };
+    return res.json();
+  },
+
+  async updateHomepageConfig(config: Partial<HomepageConfig>): Promise<HomepageConfig> {
+    const res = await fetch(`${API_BASE}/config/homepage`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config),
+    });
+    if (!res.ok) throw new Error('Failed to update homepage config');
+    return res.json();
   }
 };

@@ -76,7 +76,7 @@ const GuidesNewsPage: React.FC = () => {
             <div className={styles.heroContent}>
               <h1 className={styles.heroTitle}>All Guides</h1>
               <p className={styles.heroSubtitle}>
-                Complete collection of step-by-step tutorials, how-tos, and comprehensive guides
+                Complete collection of comprehensive explainers and deep-dives into complex issues
               </p>
             </div>
           </div>
@@ -103,7 +103,7 @@ const GuidesNewsPage: React.FC = () => {
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>All Guides</h1>
             <p className={styles.heroSubtitle}>
-              Complete collection of step-by-step tutorials, how-tos, and comprehensive guides
+              Complete collection of comprehensive explainers and deep-dives into complex issues
             </p>
           </div>
         </div>

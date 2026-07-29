@@ -4,9 +4,9 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 export const metadata = {
-  title: "About Us - Daily Instruct",
+  title: "About Us",
   description:
-    "Learn about Daily Instruct, a premium publication from Saad Capital Group delivering expert insights on technology, business, and innovation.",
+    "Learn about Daily Instruct, an explainers-and-analysis site from Saad Capital Group covering tech, business, markets, and global affairs.",
 };
 
 export default function AboutPage() {
@@ -18,8 +18,7 @@ export default function AboutPage() {
           <div className={styles.heroContent}>
             <h1 className={styles.heroTitle}>About Daily Instruct</h1>
             <p className={styles.heroSubtitle}>
-              Premium insights from the intersection of technology, business,
-              and innovation. A Saad Capital Group venture.
+              Durable explainers and deep analysis across technology, business, markets, and global affairs. A Saad Capital Group venture.
             </p>
           </div>
         </div>
@@ -32,17 +31,10 @@ export default function AboutPage() {
       <div className={styles.missionContent}>
         <h2 className={styles.sectionTitle}>Our Mission</h2>
         <p className={styles.missionText}>
-          At Daily Instruct, we're committed to delivering actionable
-          insights and in-depth analysis that empower professionals,
-          entrepreneurs, and innovators to navigate the rapidly evolving
-          landscape of technology and business.
+          At Daily Instruct, we provide durable context on why major stories are happening and what they mean. Our mission is to empower professionals to navigate the rapidly evolving landscape of technology, business, markets, and global affairs through in-depth analysis and ongoing situation trackers.
         </p>
         <p className={styles.missionText}>
-          Founded under the visionary leadership of{" "}
-          <strong>Saad Capital Group</strong>, we combine financial
-          expertise with technological insight to provide unparalleled
-          coverage of markets, emerging technologies, and business
-          strategies.
+          Backed by <strong>Saad Capital Group</strong>, we combine deep domain expertise to go beyond breaking news, offering the analytical framework needed to understand the complexities of today's markets and international developments.
         </p>
       </div>
       <div className={styles.missionImage}>

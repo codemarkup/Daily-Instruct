@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image";
+import AdaptiveImage from "@/components/AdaptiveImage";
 import Link from "next/link";
 import TechHeader from "@/components/tech/TechHeader";
 import BusinessHeader from "@/components/business/BusinessHeader";
@@ -7,7 +7,7 @@ import MarketHeader from "@/components/markets/MarketHeader";
 import GuidesHeader from "@/components/guides/GuidesHeader";
 import styles from "./article.module.css";
 import { Metadata } from "next";
-import { findArticleBySlug } from "@/lib/json-utils";
+import { findArticleBySlug, getAllArticles } from "@/lib/json-utils";
 
 interface ContentSection {
   type: 'paragraph' | 'heading' | 'quote';
@@ -39,6 +39,15 @@ interface Article {
   metaDescription?: string;
 }
 
+// =========== SSG PARAMS ===========
+export async function generateStaticParams() {
+  const articles = await getAllArticles();
+  
+  return articles.map((article) => ({
+    articleSlug: article.slug,
+  }));
+}
+
 // =========== ADD THIS SEO METADATA FUNCTION ===========
 export async function generateMetadata({ params }: { 
   params: Promise<{ articleSlug: string }>
@@ -50,7 +59,7 @@ export async function generateMetadata({ params }: {
     
     if (!result || !result.article) {
       return {
-        title: "Article Not Found - Daily Instruct",
+        title: "Article Not Found",
         description: "The article you're looking for doesn't exist.",
       };
     }
@@ -84,13 +93,15 @@ export async function generateMetadata({ params }: {
     };
   } catch (error) {
     return {
-      title: "Error Loading Article - Daily Instruct",
+      title: "Error Loading Article",
       description: "There was an error loading this article.",
     };
   }
 }
 
 // =========== MAIN PAGE COMPONENT ===========
+export const revalidate = 3600;
+
 export default async function ArticlePage({ 
   params 
 }: { 
@@ -122,9 +133,9 @@ export default async function ArticlePage({
     
     try {
       // Import the functions we need
-      const { readJsonFile, getCategoryFilename } = await import('@/lib/json-utils');
+      const { readJsonFile } = await import('@/lib/json-utils');
       
-      const filename = getCategoryFilename(category);
+      const filename = `${category}-articles.json`;
       const data = await readJsonFile<{ articles: Article[] }>(filename);
       
       relatedArticles = data.articles
@@ -146,8 +157,66 @@ export default async function ArticlePage({
       ? GuidesHeader 
       : TechHeader;
 
+    const articleJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": article.title,
+      "image": [article.image],
+      "datePublished": new Date(article.date).toISOString(),
+      "dateModified": new Date(article.date).toISOString(),
+      "author": [{
+          "@type": "Person",
+          "name": article.author
+      }],
+      "publisher": {
+        "@type": "Organization",
+        "name": "Daily Instruct",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.dailyinstruct.com/og-image.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://www.dailyinstruct.com/articles/${article.slug}`
+      }
+    };
+
+    const breadcrumbJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.dailyinstruct.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": article.category,
+          "item": `https://www.dailyinstruct.com/${article.category.toLowerCase()}`
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": article.title,
+          "item": `https://www.dailyinstruct.com/articles/${article.slug}`
+        }
+      ]
+    };
+
     return (
       <div className={styles.articlePage}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
         {/* <HeaderComponent /> */}
         
         {/* Article Hero Section */}
@@ -171,12 +240,13 @@ export default async function ArticlePage({
             </div>
             
             <div className={styles.heroImage}>
-              <Image
+              <AdaptiveImage
                 src={article.image}
                 alt={article.title}
                 width={800}
                 height={450}
                 className={styles.image}
+                sizes="(max-width: 768px) 100vw, 800px"
                 priority
               />
             </div>
@@ -229,12 +299,13 @@ export default async function ArticlePage({
                     className={styles.relatedCard}
                   >
                     <div className={styles.relatedImage}>
-                      <Image
+                      <AdaptiveImage
                         src={relatedArticle.image}
                         alt={relatedArticle.title}
                         width={300}
                         height={200}
                         className={styles.image}
+                        sizes="(max-width: 768px) 100vw, 300px"
                       />
                     </div>
                     <div className={styles.relatedContent}>

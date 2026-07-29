@@ -1,54 +1,18 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
+import React from 'react';
+import { readJsonFile, Article } from '../../lib/json-utils';
 import styles from "./MarketSubcategories.module.css";
 import Link from "next/link";
 
-interface Article {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  author: string;
-  date: string;
-  readTime: string;
-  image: string;
-  category: string;
-  specific: string;
-  trending: boolean;
-  featured: boolean;
-  topStory: boolean;
-  grid: boolean;
-  homeFeatured: boolean;
-  homeLatest: boolean;
-  homeTrending: boolean;
-  homeTopStory: boolean;
-  content: Array<{
-    type: 'paragraph' | 'heading' | 'quote';
-    text: string;
-    author?: string;
-  }>;
-}
 
-const MarketSubcategories: React.FC = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+const MarketSubcategories = async () => {
+  let articles: Article[] = [];
+  try {
+    const data = await readJsonFile<{ articles: Article[] }>('markets-articles.json');
+    articles = data.articles || [];
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+  }
 
-  useEffect(() => {
-    const fetchMarketArticles = async () => {
-      try {
-        const response = await fetch('/api/github/articles?category=markets');
-        const data = await response.json();
-        setArticles(data.articles || []);
-      } catch (error) {
-        console.error('Error fetching market articles for subcategories:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchMarketArticles();
-  }, []);
 
   const subcategories = [
     {
@@ -110,23 +74,6 @@ const MarketSubcategories: React.FC = () => {
       articleCount: `${count} Articles`,
     };
   });
-
-  if (loading) {
-    return (
-      <section className={styles.techSubcategories5}>
-        <div className="container">
-          <div className={styles.sectionHeader5}>
-            <h2 className={styles.sectionTitle5}>Explore Categories</h2>
-            <p className={styles.sectionSubtitle5}>Dive deeper into specific market domains</p>
-          </div>
-          <div className={styles.loadingPlaceholder}>
-            <div className={styles.loadingSpinner}></div>
-            <p>Loading market categories...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className={styles.techSubcategories5}>

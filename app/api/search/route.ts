@@ -44,29 +44,26 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Dynamically import your data files
-    const [techData, businessData, marketData, guidesData] = await Promise.all([
-      import('@/data/tech-articles.json'),
-      import('@/data/business-articles.json'),
-      import('@/data/markets-articles.json'),
-      import('@/data/guides-articles.json')
-    ]);
-
-    // Combine all articles
-    const allArticles = [
-      ...techData.articles,
-      ...businessData.articles,
-      ...marketData.articles,
-      ...guidesData.articles
-    ];
+    const { getAllArticles } = await import('@/lib/json-utils');
+    const { getAdaptiveCloudinaryUrl, getBlurDataUrl } = await import('@/lib/cloudinary');
+    const allArticles = await getAllArticles();
 
     // Perform search with ranking
     const searchResults = performRankedSearch(allArticles, q, parseInt(limit));
+    
+    // Attach optimized image data to results
+    const enhancedResults = await Promise.all(searchResults.map(async (article) => {
+      if (article.image) {
+        article.adaptiveImage = await getAdaptiveCloudinaryUrl(article.image);
+        article.blurDataURL = await getBlurDataUrl(article.image);
+      }
+      return article;
+    }));
 
     const responseData = {
       query: q,
-      total: searchResults.length,
-      results: searchResults,
+      total: enhancedResults.length,
+      results: enhancedResults,
       cached: false,
       timestamp: Date.now()
     };
