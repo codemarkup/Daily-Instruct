@@ -126,10 +126,6 @@ const ArticlesPage = () => {
   };
 
   const handleDeleteArticle = async (slug: string, category: string) => {
-    if (!confirm('Are you sure you want to delete this article?')) {
-      return;
-    }
-
     try {
       console.log(`Deleting article: ${slug}, category: ${category}`);
       
