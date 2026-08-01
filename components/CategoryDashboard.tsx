@@ -30,9 +30,9 @@ export default async function CategoryDashboard({ categoryName, categoryTitle, c
     { data: trendingData },
     { data: gridData }
   ] = await Promise.all([
-    supabase.from('articles').select('*').eq('category', categoryName).eq('featured', true).order('date', { ascending: false }).limit(1),
-    supabase.from('articles').select('*').eq('category', categoryName).eq('trending', true).order('date', { ascending: false }).limit(4),
-    supabase.from('articles').select('*').eq('category', categoryName).eq('grid', true).order('date', { ascending: false }).limit(4)
+    supabase.from('articles').select('*').eq('category', categoryName).eq('featured', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(1),
+    supabase.from('articles').select('*').eq('category', categoryName).eq('trending', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('category', categoryName).eq('grid', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4)
   ]);
 
   const heroArticle = featuredData && featuredData.length > 0 ? featuredData[0] : null;

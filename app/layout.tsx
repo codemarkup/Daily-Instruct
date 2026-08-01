@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import AdminCSSInjector from './AdminCSSInjector';
 import Analytics from '../components/Analytics';
 import type { Metadata } from 'next';
+import CanonicalTag from "@/components/CanonicalTag";
 
 // Optimized font loading with next/font
 const inter = Inter({
@@ -44,9 +45,6 @@ export const metadata: Metadata = {
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   robots: 'index, follow',
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     url: 'https://www.dailyinstruct.com',
     title: 'Daily Instruct - Explainers & Analysis',
@@ -135,6 +133,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <CanonicalTag />
       </head>
       <body>
         <script

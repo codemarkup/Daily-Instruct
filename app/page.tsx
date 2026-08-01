@@ -41,12 +41,12 @@ export default async function HomePage() {
     { data: trackers },
     { data: trendingStats }
   ] = await Promise.all([
-    supabase.from('articles').select('*').eq('homeFeatured', true).order('date', { ascending: false }).limit(1),
-    supabase.from('articles').select('*').eq('homeTopStory', true).order('date', { ascending: false }).limit(4),
-    supabase.from('articles').select('*').eq('homeLatest', true).order('date', { ascending: false }).limit(4),
-    supabase.from('articles').select('*').eq('homeTrending', true).order('date', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('homeFeatured', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(1),
+    supabase.from('articles').select('*').eq('homeTopStory', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('homeLatest', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('homeTrending', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
     supabase.from('homepage_config').select('*').eq('id', 1).single(),
-    supabase.from('articles').select('*').in('category', ['tech', 'business', 'geopolitics', 'market', 'guides']).order('date', { ascending: false }),
+    supabase.from('articles').select('*').in('category', ['tech', 'business', 'geopolitics', 'market', 'guides']).order('date', { ascending: false }).order('id', { ascending: false }),
     supabase.from('trackers').select('*, updates:tracker_updates(id, content, published_at, linked_article_id)').eq('status', 'active').order('priority', { ascending: false }).order('updated_at', { ascending: false }),
     supabase.from('daily_page_stats').select('path, views').gte('date', sevenDaysAgo.toISOString().split('T')[0]).like('path', '/articles/%')
   ]);
@@ -60,7 +60,7 @@ export default async function HomePage() {
   const bottomCategoriesList = ['market', 'guides'];
   
   const categorized = [...topCategoriesList, ...bottomCategoriesList].reduce((acc, cat) => {
-    acc[cat] = categoriesData?.filter(a => a.category === cat).slice(0, 4) || [];
+    acc[cat] = categoriesData?.filter(a => a.category === cat) || [];
     return acc;
   }, {} as Record<string, any[]>);
 
@@ -91,8 +91,16 @@ export default async function HomePage() {
           const articles = categorized[cat];
           if (!articles || articles.length === 0) return null;
           
-          const catHero = articles[0];
-          const catOthers = articles.slice(1);
+          let featuredArticles = articles.filter(a => a.featured === true);
+          featuredArticles.sort((a, b) => {
+             const posA = a.featured_position != null ? a.featured_position : Infinity;
+             const posB = b.featured_position != null ? b.featured_position : Infinity;
+             if (posA === posB) return 0;
+             return posA - posB; 
+          });
+
+          const catHero = featuredArticles.length > 0 ? featuredArticles[0] : articles[0];
+          const catOthers = articles.filter(a => a.id !== catHero.id).slice(0, 3);
           
           return (
             <section key={cat}>

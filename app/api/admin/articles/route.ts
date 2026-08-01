@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllArticles, createArticle, sanitizeArticle } from '@/lib/json-utils';
 import { supabase } from '@/lib/supabase';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: NextRequest) {
   try {
@@ -58,6 +59,9 @@ export async function POST(request: NextRequest) {
     // Create article
     const newArticleData = sanitizeArticle(articleData);
     const created = await createArticle(newArticleData as any);
+    
+    // Invalidate full site cache so new articles appear instantly on category and home pages
+    revalidatePath('/', 'layout');
 
     return NextResponse.json({
       success: true,
@@ -91,6 +95,9 @@ export async function PUT(request: NextRequest) {
     if (!updatedArticle) {
       return NextResponse.json({ success: false, error: 'Article not found or update failed' }, { status: 404 });
     }
+    
+    // Invalidate full site cache
+    revalidatePath('/', 'layout');
     
     return NextResponse.json({ success: true, article: updatedArticle, message: 'Article updated successfully' });
   } catch (error: any) {
@@ -149,6 +156,9 @@ export async function DELETE(request: NextRequest) {
     if (!success) {
       return NextResponse.json({ success: false, error: `Article "${slug}" not found` }, { status: 404 });
     }
+    
+    // Invalidate full site cache
+    revalidatePath('/', 'layout');
     
     return NextResponse.json({ success: true, message: 'Article and associated media deleted successfully' });
   } catch (error: any) {
