@@ -400,10 +400,7 @@ PARAGRAPH: Begin with simple automation tasks...`;
         });
       });
 
-      if (newBlocks.length === 0) {
-        setTimeout(() => alert("AI returned a malformed response. Please try again."), 10);
-        return;
-      }
+      if (newBlocks.length === 0 || newBlocks.length !== currentContent.length) { setTimeout(() => alert(`AI returned a malformed response (expected ${currentContent.length} blocks, got ${newBlocks.length}). Please try again.`), 10); return; }
 
       setRevisedBlocks(newBlocks);
       setAnalysisReport(data.report);
@@ -1526,3 +1523,4 @@ PARAGRAPH: Continue writing...`}
 };
 
 export default ArticleForm;
+
