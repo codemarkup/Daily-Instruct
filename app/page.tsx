@@ -30,39 +30,41 @@ export default async function HomePage() {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  // Fetch data concurrently
+  // Fetch data concurrently using explicit homepage flags
   const [
-    { data: featuredArticles },
+    { data: homeFeaturedData },
+    { data: homeTopStoryData },
+    { data: homeLatestData },
+    { data: homeTrendingData },
     { data: config },
     { data: categoriesData },
     { data: trackers },
-    { data: trendingStats },
-    { data: latestArticlesData }
+    { data: trendingStats }
   ] = await Promise.all([
-    supabase.from('articles').select('*').eq('featured', true).order('featured_position', { ascending: true, nullsFirst: false }),
+    supabase.from('articles').select('*').eq('homeFeatured', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(1),
+    supabase.from('articles').select('*').eq('homeTopStory', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('homeLatest', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
+    supabase.from('articles').select('*').eq('homeTrending', true).order('featured_position', { ascending: true, nullsFirst: false }).order('date', { ascending: false }).order('id', { ascending: false }).limit(4),
     supabase.from('homepage_config').select('*').eq('id', 1).single(),
-    supabase.from('articles').select('*').in('category', ['tech', 'business', 'geopolitics', 'market', 'guides']).order('date', { ascending: false }),
+    supabase.from('articles').select('*').in('category', ['tech', 'business', 'geopolitics', 'market', 'guides']).order('date', { ascending: false }).order('id', { ascending: false }),
     supabase.from('trackers').select('*, updates:tracker_updates(id, content, published_at, linked_article_id)').eq('status', 'active').order('priority', { ascending: false }).order('updated_at', { ascending: false }),
-    supabase.from('daily_page_stats').select('path, views').gte('date', sevenDaysAgo.toISOString().split('T')[0]).like('path', '/articles/%'),
-    supabase.from('articles').select('*').order('date', { ascending: false }).limit(10)
+    supabase.from('daily_page_stats').select('path, views').gte('date', sevenDaysAgo.toISOString().split('T')[0]).like('path', '/articles/%')
   ]);
 
-  const featured = featuredArticles || [];
-  const heroArticle = featured.length > 0 ? featured[0] : null;
-  const sidebarArticles = featured.slice(1, 5);
+  const heroArticle = homeFeaturedData && homeFeaturedData.length > 0 ? homeFeaturedData[0] : null;
+  const sidebarArticles = homeTopStoryData || [];
   const trendingTags = config?.trending_tags || [];
   
-  // Group categories
+  // Group categories for grid fallback (the most recent 4 per category)
   const topCategoriesList = ['tech', 'business', 'geopolitics'];
   const bottomCategoriesList = ['market', 'guides'];
   
   const categorized = [...topCategoriesList, ...bottomCategoriesList].reduce((acc, cat) => {
-    acc[cat] = categoriesData?.filter(a => a.category === cat).slice(0, 4) || [];
+    acc[cat] = categoriesData?.filter(a => a.category === cat) || [];
     return acc;
   }, {} as Record<string, any[]>);
 
-  // Trending Now Logic
-  let trendingSlugs: string[] = [];
+  // Trending Now Logic (Analytics views logic preserved ONLY for displaying the view count text)
   let viewCountsMap: Record<string, number> = {};
   
   if (trendingStats && trendingStats.length > 0) {
@@ -72,32 +74,10 @@ export default async function HomePage() {
       acc[slug] = (acc[slug] || 0) + stat.views;
       return acc;
     }, {});
-    
-    // Sort and get top 6
-    trendingSlugs = Object.entries(viewCountsMap)
-      .sort((a: any, b: any) => b[1] - a[1])
-      .slice(0, 6)
-      .map(([slug]) => slug);
   }
   
-  let trendingArticles = [];
-  if (trendingSlugs.length > 0) {
-    const { data: trendingData } = await supabase
-      .from('articles')
-      .select('*')
-      .in('slug', trendingSlugs);
-      
-    if (trendingData) {
-      trendingArticles = trendingSlugs.map(slug => trendingData.find(a => a.slug === slug)).filter(Boolean);
-    }
-  }
-  
-  // Fallback if not enough data
-  if (trendingArticles.length < 6) {
-    trendingArticles = latestArticlesData?.slice(0, 6) || [];
-  }
-
-  const latestFeed = latestArticlesData || [];
+  const trendingArticles = homeTrendingData || [];
+  const latestFeed = homeLatestData || [];
 
   const formatViews = (views: number) => {
     if (views >= 1000) return (views / 1000).toFixed(1) + 'k reads this week';
@@ -111,8 +91,16 @@ export default async function HomePage() {
           const articles = categorized[cat];
           if (!articles || articles.length === 0) return null;
           
-          const catHero = articles[0];
-          const catOthers = articles.slice(1);
+          let featuredArticles = articles.filter(a => a.featured === true);
+          featuredArticles.sort((a, b) => {
+             const posA = a.featured_position != null ? a.featured_position : Infinity;
+             const posB = b.featured_position != null ? b.featured_position : Infinity;
+             if (posA === posB) return 0;
+             return posA - posB; 
+          });
+
+          const catHero = featuredArticles.length > 0 ? featuredArticles[0] : articles[0];
+          const catOthers = articles.filter(a => a.id !== catHero.id).slice(0, 3);
           
           return (
             <section key={cat}>

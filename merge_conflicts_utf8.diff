@@ -1,0 +1,3459 @@
+﻿diff --cc app/admin/articles/new/page.tsx
+index 6780a30,9304ff8..0000000
+--- a/app/admin/articles/new/page.tsx
++++ b/app/admin/articles/new/page.tsx
+@@@ -10,8 -10,16 +10,21 @@@ import "../../../../styles/admin/compon
+  
+  const AddArticlePage = () => {
+    const router = useRouter();
+++<<<<<<< HEAD
+ +  const searchParams = useSearchParams();
+ +  const isDraftRecovery = searchParams.get("draft") === "true";
+++=======
++ 
++   useEffect(() => {
++     const hasCookie = document.cookie.includes('admin-auth=true');
++     if (!hasCookie) {
++       router.push('/login');
++     }
++   }, [router]);
++ 
++ 
++ 
+++>>>>>>> origin/main
+  
+    const [article, setArticle] = useState({
+      title: "",
+@@@ -101,10 -63,10 +114,10 @@@
+          !article.title ||
+          !article.slug ||
+          !article.description ||
+-         !article.category||
++         !article.category ||
+          !article.specific
+        ) {
+ -        alert("Please fill in all required fields");
+ +        showTempMessage(setPublishError, "Please fill in all required fields (marked with *)");
+          setShowSaveModal(false);
+          return;
+        }
+@@@ -190,7 -103,22 +203,26 @@@
+    };
+  
+    const handlePreview = () => {
+++<<<<<<< HEAD
+ +    showTempMessage(setPreviewMessage, "Preview will be available after saving");
+++=======
++     // 1. Validate basic fields
++     if (!article.title) {
++       alert("Please enter at least a title to preview.");
++       return;
++     }
++ 
++     // 2. Save current state to localStorage
++     try {
++       localStorage.setItem("admin_preview_draft", JSON.stringify(article));
++ 
++       // 3. Open preview window
++       window.open("/admin/preview", "_blank");
++     } catch (error) {
++       console.error("Failed to save preview data:", error);
++       alert("Failed to launch preview. Please try again.");
++     }
+++>>>>>>> origin/main
+    };
+  
+    const titleLength = article.title?.length || 0;
+@@@ -210,27 -138,24 +242,48 @@@
+                Craft your next masterpiece. All fields marked with * are required.
+              </p>
+            </div>
+++<<<<<<< HEAD
+ +          <div className="header-actions" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+ +            <div style={{ display: 'flex', gap: '12px' }}>
+ +              <button
+ +                onClick={handleSaveDraft}
+ +                className="secondary-button"
+ +                disabled={loading}
+ +              >
+ +                <span className="button-icon">≡ƒÆ╛</span>
+ +                Save Draft
+ +              </button>
+ +              <button
+ +                onClick={handlePreview}
+ +                className="secondary-button"
+ +                disabled={loading}
+ +              >
+ +                <span className="button-icon">≡ƒæü∩╕Å</span>
+ +                Preview
+ +              </button>
+ +            </div>
+ +            {draftMessage && <span style={{ color: '#EF4444', fontSize: '12px', fontWeight: 500 }}>{draftMessage}</span>}
+ +            {previewMessage && <span style={{ color: '#EF4444', fontSize: '12px', fontWeight: 500 }}>{previewMessage}</span>}
+++=======
++           <div className="header-actions">
++             <button
++               onClick={handleSaveDraft}
++               className="secondary-button"
++               disabled={loading}
++             >
++               <span className="button-icon">≡ƒÆ╛</span>
++               Save Draft
++             </button>
++             <button
++               onClick={handlePreview}
++               className="preview-button-main"
++               disabled={loading}
++               title="Preview article in new tab"
++             >
++               <span className="button-icon">≡ƒæü∩╕Å</span>
++               Preview
++             </button>
+++>>>>>>> origin/main
+            </div>
+          </div>
+  
+diff --cc app/admin/articles/page.tsx
+index dc4a0a9,6599531..0000000
+--- a/app/admin/articles/page.tsx
++++ b/app/admin/articles/page.tsx
+@@@ -21,12 -27,33 +27,38 @@@ const ArticlesContent = () => 
+  
+    // =========== AUTH CHECK ===========
+    useEffect(() => {
+++<<<<<<< HEAD
+ +    // Auth is now handled by middleware.ts
+ +    setAuthChecking(false);
+++=======
++     const hasCookie = document.cookie.includes('admin-auth=true');
++ 
++     if (!hasCookie) {
++       router.push('/login');
++     } else {
++       setAuthChecking(false);
++     }
+++>>>>>>> origin/main
+    }, [router]);
+-   // =========== END AUTH CHECK ===========
+  
+-   // Load articles on mount (only if authenticated)
++   // Read URL Params on Load
++   useEffect(() => {
++     const categoryParam = searchParams.get('category');
++     const filterParam = searchParams.get('filter');
++     const sortByParam = searchParams.get('sortBy');
++ 
++     if (categoryParam) {
++       setCategoryFilter(categoryParam.toLowerCase());
++     }
++ 
++     if (filterParam) {
++       setActiveFilter(filterParam);
++     } else if (sortByParam === 'date') {
++       setActiveFilter('latest');
++     }
++   }, [searchParams]);
++ 
++   // Load articles on mount
+    useEffect(() => {
+      if (!authChecking) {
+        fetchArticles();
+@@@ -104,12 -177,14 +182,23 @@@
+        try {
+          // Get articles to delete
+          const articlesToDelete = articles.filter(a => selectedArticles.includes(a.slug));
+++<<<<<<< HEAD
+ +        
+ +        // Delete each article sequentially to prevent JSON file write race conditions
+ +        for (const article of articlesToDelete) {
+ +          await AdminService.deleteArticle(article.slug); 
+ +        }
+ +        
+++=======
++ 
++         // Delete each article
++         const deletePromises = articlesToDelete.map(async (article) => {
++           await AdminService.deleteArticle(article.slug);
++         });
++ 
++         await Promise.all(deletePromises);
++ 
+++>>>>>>> origin/main
+          // Update local state
+          setArticles(prev => prev.filter(article => !selectedArticles.includes(article.slug)));
+          setSelectedArticles([]);
+@@@ -187,9 -262,27 +276,27 @@@
+    };
+  
+    const handleNewArticle = () => {
+ -    router.push('/admin/articles/new');
+ +    router.push('/hq/articles/new');
+    };
+  
++   const handleToggleFlag = async (slug: string, field: keyof Article, value: boolean) => {
++     try {
++       // Optimistic update
++       setArticles(prev =>
++         prev.map(a => a.slug === slug ? { ...a, [field]: value } : a)
++       );
++ 
++       // Call API
++       await AdminService.updateArticle(slug, { [field]: value });
++ 
++     } catch (err) {
++       console.error('Error toggling flag:', err);
++       alert('Failed to update article status');
++       // Revert on error
++       fetchArticles();
++     }
++   };
++ 
+    const handleExport = () => {
+      const exportData = {
+        exportedAt: new Date().toISOString(),
+diff --cc app/admin/page.tsx
+index 1743b78,24531b9..0000000
+--- a/app/admin/page.tsx
++++ b/app/admin/page.tsx
+@@@ -90,16 -110,17 +110,27 @@@ const AdminDashboard = () => 
+        title: "Manage Categories",
+        icon: "/icons/admin/article.svg",
+        color: "purple",
+ -      path: "/admin/categories",
+ -      onClick: () => router.push("/admin/categories"),
+ +      path: "/hq/categories",
+ +      onClick: () => router.push("/hq/categories"),
+      },
+++<<<<<<< HEAD
+ +    {
+ +      title: "View Analytics",
+ +      icon: "/icons/admin/analytics.svg",
+ +      color: "blue",
+ +      path: "/hq/analytics",
+ +      onClick: () => alert("Analytics page coming soon!"),
+ +    },
+++=======
++     // Analytics Removed
++     // {
++     //   title: "View Analytics",
++     //   icon: "/icons/admin/analytics.svg", 
++     //   color: "blue",
++     //   path: "/admin/analytics",
++     //   onClick: () => alert("Analytics page coming soon!"),
++     // },
+++>>>>>>> origin/main
+      {
+        title: "Backup Data",
+        icon: "/icons/admin/backup.svg",
+@@@ -248,8 -328,52 +338,52 @@@
+      window.open(`/articles/${slug}`, "_blank");
+    };
+  
++   const handleDuplicateArticle = async (originalArticle: Article) => {
++     if (confirm('Duplicate this article?')) {
++       try {
++         const newArticle: Omit<Article, 'id'> & { category: string } = {
++           ...originalArticle,
++           title: `${originalArticle.title} (Copy)`,
++           slug: `${originalArticle.slug}-copy-${Date.now()}`,
++           date: new Date().toLocaleDateString('en-US', {
++             year: 'numeric',
++             month: 'long',
++             day: 'numeric'
++           }),
++           category: originalArticle.category
++         };
++ 
++         await AdminService.createArticle(newArticle);
++         fetchDashboardData(); // Refresh
++         alert('Article duplicated successfully!');
++       } catch (err) {
++         console.error('Error duplicating article:', err);
++         alert('Failed to duplicate article. Please try again.');
++       }
++     }
++   };
++ 
++   const handleToggleFlag = async (slug: string, field: keyof Article, value: boolean) => {
++     try {
++       // Optimistic update
++       setRecentArticles(prev =>
++         prev.map(a => a.slug === slug ? { ...a, [field]: value } : a)
++       );
++ 
++       // Call API
++       await AdminService.updateArticle(slug, { [field]: value });
++       // Refresh stats to reflect flag change
++       fetchDashboardData();
++ 
++     } catch (err) {
++       console.error('Error toggling flag:', err);
++       // Revert on error
++       fetchDashboardData();
++     }
++   };
++ 
+    const handleViewAllArticles = () => {
+ -    router.push("/admin/articles");
+ +    router.push("/hq/articles");
+    };
+  
+    // Get current date
+diff --cc app/api/admin/articles/route.ts
+index 5465f82,f93124c..0000000
+--- a/app/api/admin/articles/route.ts
++++ b/app/api/admin/articles/route.ts
+@@@ -1,22 -1,70 +1,88 @@@
+ -// app/api/admin/articles/route.ts - UPDATED FOR GITHUB
+  import { NextRequest, NextResponse } from 'next/server';
+++<<<<<<< HEAD
+ +import { getAllArticles, createArticle, sanitizeArticle } from '@/lib/json-utils';
+ +import { supabase } from '@/lib/supabase';
+++=======
++ import { GitHubStorage } from '@/lib/github-storage';
++ import { getCategoryFilename } from '@/lib/json-utils';
++ import { logNotification } from '@/lib/notifications';
+++>>>>>>> origin/main
+  
+  export async function GET(request: NextRequest) {
+    try {
+      const { searchParams } = new URL(request.url);
+      const category = searchParams.get('category');
+++<<<<<<< HEAD
+ +    
+ +    let query = supabase.from('articles').select('*').order('date', { ascending: false });
+ +    
+ +    if (category) {
+ +      query = query.eq('category', category.toLowerCase());
+ +    }
+ +    
+ +    const { data, error } = await query;
+ +    if (error) throw error;
+ +    
+ +    return NextResponse.json(data);
+++=======
++ 
++     // Read from GitHub in production, from files in development
++     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++       const githubStorage = new GitHubStorage();
++       const allArticles = [];
++ 
++       const categories = ['tech', 'business', 'markets', 'guides'];
++       for (const cat of categories) {
++         if (category && cat !== category.toLowerCase()) continue;
++ 
++         const filename = getCategoryFilename(cat);
++         try {
++           const data = await githubStorage.readJSONFile(`data/${filename}`);
++           allArticles.push(...data.articles || []);
++         } catch (error) {
++           console.error(`Error reading ${filename}:`, error);
++         }
++       }
++ 
++       return NextResponse.json(allArticles);
++     } else {
++       // Development: Read from local files
++       const fs = await import('fs/promises');
++       const path = await import('path');
++       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++ 
++       const allArticles = [];
++       const categories = category ? [category] : ['tech', 'business', 'markets', 'guides'];
++       const search = searchParams.get('search')?.toLowerCase();
++ 
++       for (const cat of categories) {
++         const filename = getCategoryFilename(cat);
++         const filePath = path.join(DATA_DIRECTORY, filename);
++ 
++         try {
++           const content = await fs.readFile(filePath, 'utf-8');
++           const data = JSON.parse(content);
++           let articles = data.articles || [];
++ 
++           // Filter by search query if present
++           if (search) {
++             articles = articles.filter((a: any) =>
++               a.title?.toLowerCase().includes(search) ||
++               a.description?.toLowerCase().includes(search) ||
++               a.category?.toLowerCase().includes(search)
++             );
++           }
++ 
++           allArticles.push(...articles);
++         } catch (error) {
++           console.error(`Error reading ${filename}:`, error);
++         }
++       }
++ 
++       return NextResponse.json(allArticles);
++     }
++ 
+++>>>>>>> origin/main
+    } catch (error: any) {
+      console.error('Error fetching articles:', error);
+      return NextResponse.json(
+@@@ -41,23 -89,73 +107,88 @@@ export async function POST(request: Nex
+        }
+      }
+  
+++<<<<<<< HEAD
+++=======
++     const category = articleData.category.toLowerCase();
++     const filename = getCategoryFilename(category);
++ 
++     let data: { articles: any[] };
++     let sha: string | null = null;
++ 
++     // READ: Get existing articles
++     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++       const githubStorage = new GitHubStorage();
++       data = await githubStorage.readJSONFile(`data/${filename}`);
++       sha = await githubStorage.getFileSHA(`data/${filename}`);
++     } else {
++       // Development: Read from local files
++       const fs = await import('fs/promises');
++       const path = await import('path');
++       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++       const filePath = path.join(DATA_DIRECTORY, filename);
++ 
++       try {
++         const content = await fs.readFile(filePath, 'utf-8');
++         data = JSON.parse(content);
++       } catch (error) {
++         data = { articles: [] };
++       }
++     }
++ 
+++>>>>>>> origin/main
+      // Check if slug already exists
+ -    if (data.articles.some((a: any) => a.slug === articleData.slug)) {
+ +    const { data: existing } = await supabase
+ +      .from('articles')
+ +      .select('id')
+ +      .eq('slug', articleData.slug)
+ +      .single();
+ +      
+ +    if (existing) {
+        return NextResponse.json(
+          { error: 'Article with this slug already exists' },
+          { status: 400 }
+        );
+      }
+  
+++<<<<<<< HEAD
+ +    // Create article
+ +    const newArticleData = sanitizeArticle(articleData);
+ +    const created = await createArticle(newArticleData as any);
+++=======
++     // Get next ID
++     const nextId = data.articles.length > 0
++       ? Math.max(...data.articles.map((a: any) => a.id)) + 1
++       : 1;
++ 
++     // Create article
++     const article = {
++       ...articleData,
++       id: nextId,
++       createdAt: new Date().toISOString(),
++       updatedAt: new Date().toISOString(),
++     };
++ 
++     // Add to array
++     data.articles.push(article);
++ 
++     // WRITE: Save back
++     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++       const githubStorage = new GitHubStorage();
++       await githubStorage.writeJSONFile(`data/${filename}`, data, sha || undefined);
++     } else {
++       // Development: Write to local files
++       const fs = await import('fs/promises');
++       const path = await import('path');
++       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++       const filePath = path.join(DATA_DIRECTORY, filename);
++ 
++       await fs.mkdir(DATA_DIRECTORY, { recursive: true });
++       await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
++     }
+++>>>>>>> origin/main
++ 
++     // Log notification
++     await logNotification(`New article "${article.title}" posted successfully`, 'success');
+  
+      return NextResponse.json({
+        success: true,
+@@@ -81,21 -179,97 +212,109 @@@ export async function PUT(request: Next
+    try {
+      const { searchParams } = new URL(request.url);
+      const slug = searchParams.get('slug');
+++<<<<<<< HEAD
+ +    if (!slug) return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
+ +    
+ +    const updateData = await request.json();
+ +    const { updateArticle } = await import('@/lib/json-utils');
+ +    const newArticleData = sanitizeArticle(updateData);
+ +    const updatedArticle = await updateArticle(slug, newArticleData);
+ +    
+ +    if (!updatedArticle) {
+ +      return NextResponse.json({ success: false, error: 'Article not found or update failed' }, { status: 404 });
+ +    }
+ +    
+ +    return NextResponse.json({ success: true, article: updatedArticle, message: 'Article updated successfully' });
+++=======
++     const articleData = await request.json();
++ 
++     if (!slug) {
++       return NextResponse.json(
++         { error: 'Slug is required' },
++         { status: 400 }
++       );
++     }
++ 
++     // Find which category the article belongs to
++     let targetCategory: string | null = null;
++     let targetFilename: string | null = null;
++     let allArticles: any[] = [];
++ 
++     const categories = ['tech', 'business', 'markets', 'guides'];
++ 
++     for (const cat of categories) {
++       const filename = getCategoryFilename(cat);
++       let data: { articles: any[] };
++ 
++       if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++         const githubStorage = new GitHubStorage();
++         data = await githubStorage.readJSONFile(`data/${filename}`);
++       } else {
++         const fs = await import('fs/promises');
++         const path = await import('path');
++         const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++         const filePath = path.join(DATA_DIRECTORY, filename);
++ 
++         try {
++           const content = await fs.readFile(filePath, 'utf-8');
++           data = JSON.parse(content);
++         } catch (error) {
++           continue;
++         }
++       }
++ 
++       const articleIndex = data.articles.findIndex((a: any) => a.slug === slug);
++       if (articleIndex !== -1) {
++         targetCategory = cat;
++         targetFilename = filename;
++         allArticles = data.articles;
++ 
++         // Update article
++         allArticles[articleIndex] = {
++           ...allArticles[articleIndex],
++           ...articleData,
++           updatedAt: new Date().toISOString(),
++         };
++         break;
++       }
++     }
++ 
++     if (!targetCategory || !targetFilename) {
++       return NextResponse.json(
++         { error: 'Article not found' },
++         { status: 404 }
++       );
++     }
++ 
++     // Save updated articles
++     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++       const githubStorage = new GitHubStorage();
++       const sha = await githubStorage.getFileSHA(`data/${targetFilename}`);
++       await githubStorage.writeJSONFile(`data/${targetFilename}`, { articles: allArticles }, sha || undefined);
++     } else {
++       const fs = await import('fs/promises');
++       const path = await import('path');
++       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++       const filePath = path.join(DATA_DIRECTORY, targetFilename);
++ 
++       await fs.writeFile(filePath, JSON.stringify({ articles: allArticles }, null, 2), 'utf-8');
++     }
++ 
++     const updatedArticle = allArticles.find((a: any) => a.slug === slug);
++ 
++     // Log notification
++     await logNotification(`Article "${updatedArticle.title}" updated successfully`, 'info');
++ 
++     return NextResponse.json({
++       success: true,
++       article: updatedArticle,
++       message: 'Article updated successfully'
++     });
++ 
+++>>>>>>> origin/main
+    } catch (error: any) {
+      console.error('Error updating article:', error);
+ -    return NextResponse.json(
+ -      { error: 'Failed to update article', details: error.message },
+ -      { status: 500 }
+ -    );
+ +    return NextResponse.json({ error: 'Failed to update article', details: error.message }, { status: 500 });
+    }
+  }
+  
+@@@ -103,56 -277,85 +322,133 @@@ export async function DELETE(request: N
+    try {
+      const { searchParams } = new URL(request.url);
+      const slug = searchParams.get('slug');
+++<<<<<<< HEAD
+ +    if (!slug) return NextResponse.json({ error: 'Slug is required' }, { status: 400 });
+ +    
+ +    const { deleteArticle, findArticleBySlug } = await import('@/lib/json-utils');
+ +    
+ +    // Fetch article first to get image URL for Cloudinary cleanup
+ +    const existing = await findArticleBySlug(slug);
+ +    
+ +    if (existing?.article?.image?.includes('cloudinary.com')) {
+ +      try {
+ +        const imageUrl = existing.article.image;
+ +        const parts = imageUrl.split('/upload/');
+ +        
+ +        if (parts.length > 1) {
+ +          let path = parts[1];
+ +          // Remove version string if present (e.g., v1723456789/)
+ +          if (path.match(/^v\d+\//)) {
+ +            path = path.substring(path.indexOf('/') + 1);
+ +          }
+ +          
+ +          // Remove file extension to get exact public_id
+ +          const lastDotIndex = path.lastIndexOf('.');
+ +          const publicId = lastDotIndex !== -1 ? path.substring(0, lastDotIndex) : path;
+ +          
+ +          // Initialize Cloudinary
+ +          const { v2: cloudinary } = await import('cloudinary');
+ +          cloudinary.config({
+ +            cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+ +            api_key: process.env.CLOUDINARY_API_KEY || process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+ +            api_secret: process.env.CLOUDINARY_API_SECRET,
+ +          });
+ +          
+ +          // Delete from Cloudinary
+ +          const result = await cloudinary.uploader.destroy(publicId);
+ +          console.log(`Deleted Cloudinary media [${publicId}]:`, result);
+ +        }
+ +      } catch (cloudinaryError) {
+ +        console.error('Failed to delete image from Cloudinary:', cloudinaryError);
+ +        // Continue with article deletion even if image deletion fails
+ +      }
+ +    }
+ +    
+ +    const success = await deleteArticle(slug);
+ +    
+ +    if (!success) {
+ +      return NextResponse.json({ success: false, error: `Article "${slug}" not found` }, { status: 404 });
+ +    }
+ +    
+ +    return NextResponse.json({ success: true, message: 'Article and associated media deleted successfully' });
+++=======
++ 
++     if (!slug) {
++       return NextResponse.json(
++         { error: 'Slug is required' },
++         { status: 400 }
++       );
++     }
++ 
++     // Find which category the article belongs to
++     let targetCategory: string | null = null;
++     let targetFilename: string | null = null;
++     let allArticles: any[] = [];
++ 
++     const categories = ['tech', 'business', 'markets', 'guides'];
++ 
++     for (const cat of categories) {
++       const filename = getCategoryFilename(cat);
++       let data: { articles: any[] };
++ 
++       if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++         const githubStorage = new GitHubStorage();
++         data = await githubStorage.readJSONFile(`data/${filename}`);
++       } else {
++         const fs = await import('fs/promises');
++         const path = await import('path');
++         const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++         const filePath = path.join(DATA_DIRECTORY, filename);
++ 
++         try {
++           const content = await fs.readFile(filePath, 'utf-8');
++           data = JSON.parse(content);
++         } catch (error) {
++           continue;
++         }
++       }
++ 
++       const articleIndex = data.articles.findIndex((a: any) => a.slug === slug);
++       if (articleIndex !== -1) {
++         targetCategory = cat;
++         targetFilename = filename;
++         allArticles = data.articles.filter((a: any) => a.slug !== slug);
++         break;
++       }
++     }
++ 
++     if (!targetCategory || !targetFilename) {
++       return NextResponse.json(
++         { error: 'Article not found' },
++         { status: 404 }
++       );
++     }
++ 
++     // Save updated articles (with deleted article removed)
++     if (process.env.GITHUB_TOKEN && process.env.NODE_ENV === 'production') {
++       const githubStorage = new GitHubStorage();
++       const sha = await githubStorage.getFileSHA(`data/${targetFilename}`);
++       await githubStorage.writeJSONFile(`data/${targetFilename}`, { articles: allArticles }, sha || undefined);
++     } else {
++       const fs = await import('fs/promises');
++       const path = await import('path');
++       const DATA_DIRECTORY = path.join(process.cwd(), 'data');
++       const filePath = path.join(DATA_DIRECTORY, targetFilename);
++ 
++       await fs.writeFile(filePath, JSON.stringify({ articles: allArticles }, null, 2), 'utf-8');
++     }
++ 
++     // Log notification
++     await logNotification(`Article deleted successfully`, 'warning');
++ 
++     return NextResponse.json({
++       success: true,
++       message: 'Article deleted successfully'
++     });
++ 
+++>>>>>>> origin/main
+    } catch (error: any) {
+      console.error('Error deleting article:', error);
+ -    return NextResponse.json(
+ -      { error: 'Failed to delete article', details: error.message },
+ -      { status: 500 }
+ -    );
+ +    return NextResponse.json({ error: 'Failed to delete article', details: error.message }, { status: 500 });
+    }
+  }
+diff --cc app/articles/[articleSlug]/article.module.css
+index aaccfa1,7e6ff98..0000000
+--- a/app/articles/[articleSlug]/article.module.css
++++ b/app/articles/[articleSlug]/article.module.css
+@@@ -474,18 -480,14 +480,18 @@@
+  
+  @media (max-width: 480px) {
+    .articleTitle {
+ -    font-size: 1.3rem;
+ +    font-size: 2rem;
+ +    line-height: 1.2;
+ +    margin-bottom: 1rem;
+    }
+-   
++ 
+    .articleMeta {
+ -    flex-direction: column;
+ +    flex-direction: row;
+      gap: 1rem;
+ +    flex-wrap: wrap;
+ +    margin-bottom: 1rem;
+    }
+-   
++ 
+    .contentWrapper {
+      font-size: 1rem;
+      max-width: 95%;
+@@@ -510,8 -512,7 +516,12 @@@
+    }
+  
+    .articleExcerpt {
+++<<<<<<< HEAD
+ +    margin-bottom: 1.5rem;
+ +    font-size: 1.1rem;
+++=======
++     margin-bottom: 0rem;
+++>>>>>>> origin/main
+    }
+  
+    .articleContent {
+diff --cc app/articles/[articleSlug]/page.tsx
+index fbead20,5c1a017..0000000
+--- a/app/articles/[articleSlug]/page.tsx
++++ b/app/articles/[articleSlug]/page.tsx
+@@@ -1,5 -1,6 +1,6 @@@
++ import StructuredData from "@/components/StructuredData";
+  import React from "react";
+ -import Image from "next/image";
+ +import AdaptiveImage from "@/components/AdaptiveImage";
+  import Link from "next/link";
+  import TechHeader from "@/components/tech/TechHeader";
+  import BusinessHeader from "@/components/business/BusinessHeader";
+@@@ -7,7 -8,8 +8,12 @@@ import MarketHeader from "@/components/
+  import GuidesHeader from "@/components/guides/GuidesHeader";
+  import styles from "./article.module.css";
+  import { Metadata } from "next";
+++<<<<<<< HEAD
+ +import { findArticleBySlug, getAllArticles } from "@/lib/json-utils";
+++=======
++ import { findArticleBySlug } from "@/lib/json-utils";
++ import ArticleRenderer from "@/components/ArticleRenderer";
+++>>>>>>> origin/main
+  
+  interface ContentSection {
+    type: 'paragraph' | 'heading' | 'quote';
+@@@ -39,27 -41,18 +45,27 @@@ interface Article 
+    metaDescription?: string;
+  }
+  
+ +// =========== SSG PARAMS ===========
+ +export async function generateStaticParams() {
+ +  const articles = await getAllArticles();
+ +  
+ +  return articles.map((article) => ({
+ +    articleSlug: article.slug,
+ +  }));
+ +}
+ +
+  // =========== ADD THIS SEO METADATA FUNCTION ===========
+- export async function generateMetadata({ params }: { 
++ export async function generateMetadata({ params }: {
+    params: Promise<{ articleSlug: string }>
+  }): Promise<Metadata> {
+    const { articleSlug } = await params;
+-   
++ 
+    try {
+      const result = await findArticleBySlug(articleSlug);
+-     
++ 
+      if (!result || !result.article) {
+        return {
+ -        title: "Article Not Found - Daily Instruct",
+ +        title: "Article Not Found",
+          description: "The article you're looking for doesn't exist.",
+        };
+      }
+@@@ -100,11 -97,9 +110,17 @@@
+  }
+  
+  // =========== MAIN PAGE COMPONENT ===========
+++<<<<<<< HEAD
+ +export const revalidate = 3600;
+ +
+ +export default async function ArticlePage({ 
+ +  params 
+ +}: { 
+++=======
++ export default async function ArticlePage({
++   params
++ }: {
+++>>>>>>> origin/main
+    params: Promise<{ articleSlug: string }>
+  }) {
+    const { articleSlug } = await params;
+@@@ -130,17 -125,17 +146,23 @@@
+  
+      // Fetch related articles
+      let relatedArticles: Article[] = [];
+-     
++ 
+      try {
+        // Import the functions we need
+++<<<<<<< HEAD
+ +      const { readJsonFile } = await import('@/lib/json-utils');
+ +      
+ +      const filename = `${category}-articles.json`;
+++=======
++       const { readJsonFile, getCategoryFilename } = await import('@/lib/json-utils');
++ 
++       const filename = getCategoryFilename(category);
+++>>>>>>> origin/main
+        const data = await readJsonFile<{ articles: Article[] }>(filename);
+-       
++ 
+        relatedArticles = data.articles
+-         .filter(a => 
+-           a.specific === article.specific && 
++         .filter(a =>
++           a.specific === article.specific &&
+            a.id !== article.id
+          )
+          .slice(0, 3);
+@@@ -149,185 -144,31 +171,199 @@@
+      }
+  
+      // Determine which header to use
+-     const HeaderComponent = article.category.toLowerCase() === "business" 
+-       ? BusinessHeader 
+-       : article.category.toLowerCase() === "markets" 
+-       ? MarketHeader 
+-       : article.category.toLowerCase() === "guides" 
+-       ? GuidesHeader 
+-       : TechHeader;
++     const HeaderComponent = article.category.toLowerCase() === "business"
++       ? BusinessHeader
++       : article.category.toLowerCase() === "markets"
++         ? MarketHeader
++         : article.category.toLowerCase() === "guides"
++           ? GuidesHeader
++           : TechHeader;
+  
+ +    const articleJsonLd = {
+ +      "@context": "https://schema.org",
+ +      "@type": "Article",
+ +      "headline": article.title,
+ +      "image": [article.image],
+ +      "datePublished": new Date(article.date).toISOString(),
+ +      "dateModified": new Date(article.date).toISOString(),
+ +      "author": [{
+ +          "@type": "Person",
+ +          "name": article.author
+ +      }],
+ +      "publisher": {
+ +        "@type": "Organization",
+ +        "name": "Daily Instruct",
+ +        "logo": {
+ +          "@type": "ImageObject",
+ +          "url": "https://www.dailyinstruct.com/og-image.png"
+ +        }
+ +      },
+ +      "mainEntityOfPage": {
+ +        "@type": "WebPage",
+ +        "@id": `https://www.dailyinstruct.com/articles/${article.slug}`
+ +      }
+ +    };
+ +
+ +    const breadcrumbJsonLd = {
+ +      "@context": "https://schema.org",
+ +      "@type": "BreadcrumbList",
+ +      "itemListElement": [
+ +        {
+ +          "@type": "ListItem",
+ +          "position": 1,
+ +          "name": "Home",
+ +          "item": "https://www.dailyinstruct.com/"
+ +        },
+ +        {
+ +          "@type": "ListItem",
+ +          "position": 2,
+ +          "name": article.category,
+ +          "item": `https://www.dailyinstruct.com/${article.category.toLowerCase()}`
+ +        },
+ +        {
+ +          "@type": "ListItem",
+ +          "position": 3,
+ +          "name": article.title,
+ +          "item": `https://www.dailyinstruct.com/articles/${article.slug}`
+ +        }
+ +      ]
+ +    };
+ +
+      return (
+++<<<<<<< HEAD
+ +      <div className={styles.articlePage}>
+ +        <script
+ +          type="application/ld+json"
+ +          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+ +        />
+ +        <script
+ +          type="application/ld+json"
+ +          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+ +        />
+ +        {/* <HeaderComponent /> */}
+ +        
+ +        {/* Article Hero Section */}
+ +        <section className={styles.articleHero}>
+ +          <div className="container">
+ +            <div className={styles.heroContent}>
+ +              <div className={styles.articleMeta}>
+ +                <span className={styles.category}>{article.category}</span>
+ +                <span className={styles.readTime}>{article.readTime}</span>
+ +              </div>
+ +              
+ +              <h1 className={styles.articleTitle}>{article.title}</h1>
+ +              <p className={styles.articleExcerpt}>{article.description}</p>
+ +              
+ +              <div className={styles.authorInfo}>
+ +                <div className={styles.authorDetails}>
+ +                  <span className={styles.authorName}>By {article.author}</span>
+ +                  <span className={styles.publishDate}>{article.date}</span>
+ +                </div>
+ +              </div>
+ +            </div>
+ +            
+ +            <div className={styles.heroImage}>
+ +              <AdaptiveImage
+ +                src={article.image}
+ +                alt={article.title}
+ +                width={800}
+ +                height={450}
+ +                className={styles.image}
+ +                sizes="(max-width: 768px) 100vw, 800px"
+ +                priority
+ +              />
+ +            </div>
+ +          </div>
+ +        </section>
+ +
+ +        {/* Article Content */}
+ +        <section className={styles.articleContent}>
+ +          <div className="container">
+ +            <div className={styles.contentWrapper}>
+ +              {article.content.map((section, index) => {
+ +                if (section.type === "paragraph") {
+ +                  return (
+ +                    <p key={index} className={styles.paragraph}>
+ +                      {section.text}
+ +                    </p>
+ +                  );
+ +                } else if (section.type === "heading") {
+ +                  return (
+ +                    <h2 key={index} className={styles.subheading}>
+ +                      {section.text}
+ +                    </h2>
+ +                  );
+ +                } else if (section.type === "quote") {
+ +                  return (
+ +                    <blockquote key={index} className={styles.quote}>
+ +                      <p>{section.text}</p>
+ +                      {section.author && (
+ +                        <cite>ΓÇö {section.author}</cite>
+ +                      )}
+ +                    </blockquote>
+ +                  );
+ +                }
+ +                return null;
+ +              })}
+ +            </div>
+ +          </div>
+ +        </section>
+ +
+ +        {/* Related Articles */}
+ +        {relatedArticles.length > 0 && (
+ +          <section className={styles.relatedArticles}>
+ +            <div className="container">
+ +              <h2 className={styles.relatedTitle}>Related Articles</h2>
+ +              <div className={styles.relatedGrid}>
+ +                {relatedArticles.map((relatedArticle) => (
+ +                  <Link 
+ +                    key={relatedArticle.id} 
+ +                    href={`/articles/${relatedArticle.slug}`}
+ +                    className={styles.relatedCard}
+ +                  >
+ +                    <div className={styles.relatedImage}>
+ +                      <AdaptiveImage
+ +                        src={relatedArticle.image}
+ +                        alt={relatedArticle.title}
+ +                        width={300}
+ +                        height={200}
+ +                        className={styles.image}
+ +                        sizes="(max-width: 768px) 100vw, 300px"
+ +                      />
+ +                    </div>
+ +                    <div className={styles.relatedContent}>
+ +                      <h3 className={styles.relatedCardTitle}>{relatedArticle.title}</h3>
+ +                      <p className={styles.relatedCardDescription}>{relatedArticle.description}</p>
+ +                      <div className={styles.relatedMeta}>
+ +                        <span className={styles.relatedAuthor}>{relatedArticle.author}</span>
+ +                        <span className={styles.relatedDate}>{relatedArticle.date}</span>
+ +                      </div>
+ +                    </div>
+ +                  </Link>
+ +                ))}
+ +              </div>
+ +            </div>
+ +          </section>
+ +        )}
+ +      </div>
+++=======
++       <>
++         <StructuredData
++           headline={article.title}
++           description={article.metaDescription || article.description}
++           image={article.image}
++           datePublished={article.date}
++           author={article.author}
++           slug={article.slug}
++         />
++         <ArticleRenderer article={article} relatedArticles={relatedArticles} />
++       </>
+++>>>>>>> origin/main
+      );
+-     
++ 
+    } catch (error) {
+      console.error("Error loading article:", error);
+-     
++ 
+      return (
+        <div className={styles.errorContainer}>
+          <h1>Error Loading Article</h1>
+diff --cc app/layout.tsx
+index 62135c2,c08272b..0000000
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@@ -3,8 -3,7 +3,12 @@@ import { Inter, DM_Serif_Display, Playf
+  import '../styles/globals.css';
+  import Navbar from '../components/Navbar';
+  import Footer from '../components/Footer';
+++<<<<<<< HEAD
+ +import AdminCSSInjector from './AdminCSSInjector';
+ +import Analytics from '../components/Analytics';
+++=======
++ // import AnalyticsTracker from '../components/AnalyticsTracker'; // REMOVED
+++>>>>>>> origin/main
+  import type { Metadata } from 'next';
+  
+  // Optimized font loading with next/font
+@@@ -45,14 -44,24 +49,24 @@@ export const metadata: Metadata = 
+      'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
+    authors: [{ name: 'Daily Instruct' }],
+    viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
+-   robots: 'index, follow',
++   robots: {
++     index: true,
++     follow: true,
++     googleBot: {
++       index: true,
++       follow: true,
++       'max-video-preview': -1,
++       'max-image-preview': 'large',
++       'max-snippet': -1,
++     },
++   },
+    alternates: {
+-     canonical: '/',
++     canonical: 'https://dailyinstruct.com',
+    },
+    openGraph: {
+ -    url: 'https://dailyinstruct.com',
+ -    title: 'Daily Instruct - Educational Platform',
+ -    description: 'Daily tutorials, how-to guides, and informative articles',
+ +    url: 'https://www.dailyinstruct.com',
+ +    title: 'Daily Instruct - Explainers & Analysis',
+ +    description: 'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairsΓÇödelivering the essential context professionals need to understand why things happen and what they mean.',
+      type: 'website',
+      images: [
+        {
+diff --cc app/login/page.tsx
+index 3fee737,eb9bde7..0000000
+--- a/app/login/page.tsx
++++ b/app/login/page.tsx
+@@@ -3,14 -3,12 +3,18 @@@
+  
+  export const dynamic = 'force-dynamic';
+  
+ -import { useState } from "react";
+ +import { useState, useEffect } from "react";
+  import { useRouter, useSearchParams } from "next/navigation";
+ +import { createClient } from "@/lib/supabase/client";
+  import "@/styles/admin/components.css";
+++<<<<<<< HEAD
+ +import "@/styles/admin/admin.css";
+++=======
++ import "@/styles/admin/login.css";
+++>>>>>>> origin/main
+  
+  export default function LoginPage() {
+ +  const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+diff --cc app/sitemap.ts
+index bdae862,e9260b1..0000000
+--- a/app/sitemap.ts
++++ b/app/sitemap.ts
+@@@ -3,59 -2,64 +3,105 @@@ import { supabase } from '@/lib/supabas
+  import { MetadataRoute } from 'next';
+  
+  export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+++<<<<<<< HEAD
+ +  const baseUrl = 'https://www.dailyinstruct.com'; // Γ£à Match canonical domain
+ +  
+++=======
++   const baseUrl = 'https://dailyinstruct.com';
++ 
++   // 1. Static Pages (Priority 0.6 - 1.0)
++   const staticRoutes = [
++     {
++       url: baseUrl,
++       lastModified: new Date(),
++       changeFrequency: 'daily' as const,
++       priority: 1.0,
++     },
++     {
++       url: `${baseUrl}/about`,
++       lastModified: new Date(),
++       changeFrequency: 'monthly' as const,
++       priority: 0.6,
++     },
++     {
++       url: `${baseUrl}/contact`,
++       lastModified: new Date(),
++       changeFrequency: 'monthly' as const,
++       priority: 0.6,
++     },
++     {
++       url: `${baseUrl}/privacy-policy`,
++       lastModified: new Date(),
++       changeFrequency: 'monthly' as const,
++       priority: 0.5,
++     },
++     {
++       url: `${baseUrl}/terms-of-service`,
++       lastModified: new Date(),
++       changeFrequency: 'monthly' as const,
++       priority: 0.5,
++     },
++   ];
++ 
++   // 2. Category Pages (Priority 0.9)
++   const categories = ['tech', 'business', 'markets', 'guides'];
++   const categoryRoutes = categories.map(category => ({
++     url: `${baseUrl}/${category}`,
++     lastModified: new Date(),
++     changeFrequency: 'daily' as const,
++     priority: 0.9,
++   }));
++ 
++   // 3. Articles (Priority 0.8)
++   let articleRoutes: MetadataRoute.Sitemap = [];
+++>>>>>>> origin/main
+    try {
+      const articles = await getAllArticles();
+-     
+-     const articleUrls = articles.map(article => ({
++     articleRoutes = articles.map(article => ({
+        url: `${baseUrl}/articles/${article.slug}`,
+        lastModified: new Date(article.date),
+        changeFrequency: 'weekly' as const,
+        priority: 0.8,
+      }));
+++<<<<<<< HEAD
+ +
+ +    const categoryUrls = ['tech', 'business', 'market', 'guides'].map(cat => ({
+ +      url: `${baseUrl}/${cat}`,
+ +      lastModified: new Date(),
+ +      changeFrequency: 'daily' as const,
+ +      priority: 0.9,
+ +    }));
+ +
+ +    const { data: trackers } = await supabase.from('trackers').select('slug, updated_at');
+ +    const trackerUrls = (trackers || []).map(tracker => ({
+ +      url: `${baseUrl}/trackers/${tracker.slug}`,
+ +      lastModified: new Date(tracker.updated_at),
+ +      changeFrequency: 'hourly' as const,
+ +      priority: 0.85,
+ +    }));
+ +
+ +    return [
+ +      {
+ +        url: baseUrl,
+ +        lastModified: new Date(),
+ +        changeFrequency: 'daily',
+ +        priority: 1,
+ +      },
+ +      {
+ +        url: `${baseUrl}/trackers`,
+ +        lastModified: new Date(),
+ +        changeFrequency: 'hourly',
+ +        priority: 0.9,
+ +      },
+ +      ...categoryUrls,
+ +      ...trackerUrls,
+ +      ...articleUrls,
+ +    ];
+++=======
+++>>>>>>> origin/main
+    } catch (error) {
+-     // Fallback if articles can't be fetched
+-     return [
+-       {
+-         url: baseUrl,
+-         lastModified: new Date(),
+-         changeFrequency: 'daily',
+-         priority: 1,
+-       },
+-     ];
++     console.error('Error generating article sitemap:', error);
+    }
++ 
++   return [...staticRoutes, ...categoryRoutes, ...articleRoutes];
+  }
+diff --cc components/HeroSection.tsx
+index 386863b,6ce870c..0000000
+--- a/components/HeroSection.tsx
++++ b/components/HeroSection.tsx
+@@@ -2,29 -4,94 +2,109 @@@ import React from 'react'
+  import styles from './HeroSection.module.css';
+  import Image from 'next/image';
+  import Link from 'next/link';
+ +import { getAllArticles, Article } from '../lib/json-utils';
+  
+++<<<<<<< HEAD
+ +const HeroSection = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    articles = await getAllArticles();
+ +  } catch (error) {
+ +    console.error('Error fetching hero articles:', error);
+ +  }
+++=======
++ interface Article {
++   id: number;
++   slug: string;
++   title: string;
++   description: string;
++   author: string;
++   date: string;
++   readTime: string;
++   image: string;
++   category: string;
++   specific: string;
++   trending: boolean;
++   featured: boolean;
++   topStory: boolean;
++   grid: boolean;
++   homeFeatured: boolean;
++   homeLatest: boolean;
++   homeTrending: boolean;
++   homeTopStory: boolean;
++   content: Array<{
++     type: 'paragraph' | 'heading' | 'quote';
++     text: string;
++     author?: string;
++   }>;
++ }
++ 
++ const HeroSection: React.FC = () => {
++   const [articles, setArticles] = useState<Article[]>([]);
++   const [loading, setLoading] = useState(true);
++ 
++   useEffect(() => {
++     const fetchAllArticles = async () => {
++       try {
++         const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
++           fetch('/api/github/articles?category=tech'),
++           fetch('/api/github/articles?category=business'),
++           fetch('/api/github/articles?category=markets'),
++           fetch('/api/github/articles?category=guides')
++         ]);
++ 
++         const [techData, businessData, marketData, guidesData] = await Promise.all([
++           techRes.json(),
++           businessRes.json(),
++           marketRes.json(),
++           guidesRes.json()
++         ]);
++ 
++         const allArticles = [
++           ...(techData.articles || []),
++           ...(businessData.articles || []),
++           ...(marketData.articles || []),
++           ...(guidesData.articles || [])
++         ];
++ 
++         setArticles(allArticles);
++       } catch (error) {
++         console.error('Error fetching hero articles:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchAllArticles();
++   }, []);
+++>>>>>>> origin/main
+  
+-   // Get featured article for homepage - get the most recent one
+    const featuredArticles = articles.filter(article => article.homeFeatured);
+-   const featuredArticle = featuredArticles.sort((a, b) => 
++   const featuredArticle = featuredArticles.sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+-   )[0]; // Get the first (most recent) one
+-   
+-   // Get top stories for homepage (limit to 4, sorted by date - latest first)
++   )[0];
++ 
+    const topStories = articles
+      .filter(article => article.homeTopStory)
+-     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+-     .slice(0, 4);
++     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
++     .slice(0, 3); // Limit to 3 for the bento sidebar
+  
+++<<<<<<< HEAD
+ +  // Fallback if no featured article
+++=======
++   if (loading) {
++     return (
++       <section className={styles.heroSection}>
++         <div className="container">
++           <div className={styles.loadingContainer}>
++             <div className={styles.loadingSpinner}></div>
++           </div>
++         </div>
++       </section>
++     );
++   }
++ 
+++>>>>>>> origin/main
+    if (!featuredArticle) {
+      return (
+        <section className={styles.heroSection}>
+diff --cc components/LatestArticles.tsx
+index a10658c,d59162d..0000000
+--- a/components/LatestArticles.tsx
++++ b/components/LatestArticles.tsx
+@@@ -2,21 -4,99 +2,71 @@@ import React from "react"
+  import styles from "./LatestArticles.module.css";
+  import Image from "next/image";
+  import Link from "next/link";
+ +import { getAllArticles, Article } from "../lib/json-utils";
+  
+ -interface Article {
+ -  id: number;
+ -  slug: string;
+ -  title: string;
+ -  description: string;
+ -  author: string;
+ -  date: string;
+ -  readTime: string;
+ -  image: string;
+ -  category: string;
+ -  specific: string;
+ -  trending: boolean;
+ -  featured: boolean;
+ -  topStory: boolean;
+ -  grid: boolean;
+ -  homeFeatured: boolean;
+ -  homeLatest: boolean;
+ -  homeTrending: boolean;
+ -  homeTopStory: boolean;
+ -  content: Array<{
+ -    type: 'paragraph' | 'heading' | 'quote';
+ -    text: string;
+ -    author?: string;
+ -  }>;
+ -}
+ +const LatestArticles = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    articles = await getAllArticles();
+ +  } catch (error) {
+ +    console.error('Error fetching latest articles:', error);
+ +  }
+  
+++<<<<<<< HEAD
+++=======
++ const LatestArticles: React.FC = () => {
++   const [articles, setArticles] = useState<Article[]>([]);
++   const [loading, setLoading] = useState(true);
++ 
++   useEffect(() => {
++     const fetchAllArticles = async () => {
++       try {
++         // Fetch from all categories
++         const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
++           fetch('/api/github/articles?category=tech'),
++           fetch('/api/github/articles?category=business'),
++           fetch('/api/github/articles?category=markets'),
++           fetch('/api/github/articles?category=guides')
++         ]);
++ 
++         const [techData, businessData, marketData, guidesData] = await Promise.all([
++           techRes.json(),
++           businessRes.json(),
++           marketRes.json(),
++           guidesRes.json()
++         ]);
++ 
++         // Combine all articles
++         const allArticles = [
++           ...(techData.articles || []),
++           ...(businessData.articles || []),
++           ...(marketData.articles || []),
++           ...(guidesData.articles || [])
++         ];
++ 
++         setArticles(allArticles);
++       } catch (error) {
++         console.error('Error fetching latest articles:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchAllArticles();
++   }, []);
++ 
++   // FIXED: Added sorting by date (newest first)
++   // FIXED: Added sorting by date (newest first)
+++>>>>>>> origin/main
+    const latestArticles = articles
+      .filter((article) => article.homeLatest)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+-     .slice(0, 6); // Show 6 latest articles
++     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
++     .slice(0, 7); // 1 hero + 6 grid
++ 
++   const heroArticle = latestArticles[0];
++   const gridArticles = latestArticles.slice(1);
+  
+ -  if (loading) {
+ -    return (
+ -      <section className={styles.latestArticles}>
+ -        <div className="container">
+ -          <h2 className={styles.sectionTitle}>Latest Articles</h2>
+ -          <div className={styles.loadingPlaceholder}>
+ -            <div className={styles.loadingSpinner}></div>
+ -            <p>Loading articles...</p>
+ -          </div>
+ -        </div>
+ -      </section>
+ -    );
+ -  }
+ -
+    if (latestArticles.length === 0) {
+      return (
+        <section className={styles.latestArticles}>
+diff --cc components/Navbar.module.css
+index 20519bd,86041c1..0000000
+--- a/components/Navbar.module.css
++++ b/components/Navbar.module.css
+@@@ -235,28 -286,24 +286,49 @@@
+    width: 100%;
+    display: flex;
+    align-items: center;
+++<<<<<<< HEAD
+ +  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(240, 240, 245, 0.1));
+ +  backdrop-filter: blur(24px) saturate(150%);
+ +  -webkit-backdrop-filter: blur(24px) saturate(150%);
+ +  border: 1px solid rgba(255, 255, 255, 0.8);
+ +  border-bottom: 1px solid rgba(220, 220, 225, 0.5);
+ +  border-right: 1px solid rgba(220, 220, 225, 0.5);
+ +  border-radius: 50px;
+ +  padding: 0.5rem 1rem;
+ +  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+ +  box-shadow: 
+ +    0 8px 24px rgba(149, 157, 165, 0.15),
+ +    inset 0 2px 4px rgba(255, 255, 255, 1),
+ +    inset 0 -1px 2px rgba(0, 0, 0, 0.02);
+ +}
+ +
+ +.searchInputWrapper:focus-within {
+ +  background: rgba(255, 255, 255, 0.8);
+ +  border-color: rgba(212, 175, 55, 0.6);
+ +  box-shadow: 
+ +    0 10px 30px rgba(212, 175, 55, 0.15),
+ +    inset 0 2px 5px rgba(255, 255, 255, 1);
+ +  transform: translateY(-2px);
+++=======
++   background: rgba(0, 0, 0, 0.03);
++   /* Subtle background */
++   border: 1px solid transparent;
++   /* Hidden border initially */
++   border-radius: 50px;
++   padding: 0.6rem 1.2rem;
++   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
++ }
++ 
++ .searchInputWrapper:hover {
++   background: rgba(0, 0, 0, 0.05);
++ }
++ 
++ .searchInputWrapper:focus-within {
++   background: var(--primary-white);
++   border-color: var(--accent-gold);
++   box-shadow: 0 4px 20px rgba(212, 175, 55, 0.15), 0 0 0 2px rgba(212, 175, 55, 0.05);
++   transform: translateY(-1px);
+++>>>>>>> origin/main
+  }
+  
+  /* Search Icon */
+diff --cc components/Navbar.tsx
+index a06487f,3d6889f..0000000
+--- a/components/Navbar.tsx
++++ b/components/Navbar.tsx
+@@@ -30,69 -31,17 +31,80 @@@ const Navbar: React.FC = () => 
+    const [isSearching, setIsSearching] = useState(false);
+    const [showSearchResults, setShowSearchResults] = useState(false);
+    const [recentSearches, setRecentSearches] = useState<string[]>([]);
+++<<<<<<< HEAD
+ +  const [popularSearches, setPopularSearches] = useState<string[]>([]);
+ +  
+++=======
++   const [popularSearches, setPopularSearches] = useState<string[]>([
++     'Technology', 'Business', 'AI', 'Startup', 'Investing', 'Crypto', 'Web3', 'Marketing'
++   ]);
++ 
+++>>>>>>> origin/main
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
+    const searchTimeoutRef = useRef<NodeJS.Timeout>();
+  
+++<<<<<<< HEAD
+ +  // Generate algorithmic popular searches based on available content
+ +  useEffect(() => {
+ +    const generatePopularSearches = async () => {
+ +      try {
+ +        const [techData, businessData, marketData, guidesData] = await Promise.all([
+ +          import('@/data/tech-articles.json'),
+ +          import('@/data/business-articles.json'),
+ +          import('@/data/markets-articles.json'),
+ +          import('@/data/guides-articles.json').catch(() => ({ articles: [] }))
+ +        ]);
+ +
+ +        const allArticles = [
+ +          ...(techData.articles || []),
+ +          ...(businessData.articles || []),
+ +          ...(marketData.articles || []),
+ +          ...(guidesData.articles || [])
+ +        ];
+ +
+ +        // Algorithm: weight categories and specific topics by trending status
+ +        const keywordScores: Record<string, number> = {};
+ +        
+ +        allArticles.forEach((article: any) => {
+ +          const weight = article.trending ? 3 : (article.topStory ? 2 : 1);
+ +          
+ +          if (article.category) {
+ +            keywordScores[article.category] = (keywordScores[article.category] || 0) + weight;
+ +          }
+ +          if (article.specific) {
+ +            keywordScores[article.specific] = (keywordScores[article.specific] || 0) + weight;
+ +          }
+ +        });
+ +
+ +        // Sort by score and take top 6
+ +        const topKeywords = Object.entries(keywordScores)
+ +          .sort((a, b) => b[1] - a[1])
+ +          .slice(0, 6)
+ +          .map(entry => {
+ +            // Capitalize first letter
+ +            return entry[0].charAt(0).toUpperCase() + entry[0].slice(1);
+ +          });
+ +
+ +        if (topKeywords.length > 0) {
+ +          setPopularSearches(topKeywords);
+ +        } else {
+ +          // Fallback if data loading fails
+ +          setPopularSearches(['Technology', 'Business', 'AI', 'Investing', 'Crypto', 'Markets']);
+ +        }
+ +      } catch (error) {
+ +        console.error('Failed to generate popular searches algo:', error);
+ +        setPopularSearches(['Technology', 'Business', 'AI', 'Investing', 'Crypto', 'Markets']);
+ +      }
+ +    };
+ +    
+ +    generatePopularSearches();
+ +  }, []);
+++=======
++ 
+++>>>>>>> origin/main
+  
+    // Load recent searches from localStorage
+    useEffect(() => {
+diff --cc components/TrendingSection.tsx
+index ab6ca61,2c10d29..0000000
+--- a/components/TrendingSection.tsx
++++ b/components/TrendingSection.tsx
+@@@ -2,89 -4,136 +2,150 @@@ import React from 'react'
+  import styles from './TrendingSection.module.css';
+  import Image from 'next/image';
+  import Link from 'next/link';
+ +import { getAllArticles, Article } from '../lib/json-utils';
+  
+++<<<<<<< HEAD
+ +const TrendingSection = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    articles = await getAllArticles();
+ +  } catch (error) {
+ +    console.error('Error fetching trending articles:', error);
+ +  }
+++=======
++ interface Article {
++   id: number;
++   slug: string;
++   title: string;
++   description: string;
++   author: string;
++   date: string;
++   readTime: string;
++   image: string;
++   category: string;
++   specific: string;
++   trending: boolean;
++   featured: boolean;
++   topStory: boolean;
++   grid: boolean;
++   homeFeatured: boolean;
++   homeLatest: boolean;
++   homeTrending: boolean;
++   homeTopStory: boolean;
++   content: Array<{
++     type: 'paragraph' | 'heading' | 'quote';
++     text: string;
++     author?: string;
++   }>;
++ }
++ 
++ const TrendingSection: React.FC = () => {
++   const [articles, setArticles] = useState<Article[]>([]);
++   const [loading, setLoading] = useState(true);
++ 
++   useEffect(() => {
++     const fetchAllArticles = async () => {
++       try {
++         const [techRes, businessRes, marketRes, guidesRes] = await Promise.all([
++           fetch('/api/github/articles?category=tech'),
++           fetch('/api/github/articles?category=business'),
++           fetch('/api/github/articles?category=markets'),
++           fetch('/api/github/articles?category=guides')
++         ]);
++ 
++         const [techData, businessData, marketData, guidesData] = await Promise.all([
++           techRes.json(),
++           businessRes.json(),
++           marketRes.json(),
++           guidesRes.json()
++         ]);
++ 
++         const allArticles = [
++           ...(techData.articles || []),
++           ...(businessData.articles || []),
++           ...(marketData.articles || []),
++           ...(guidesData.articles || [])
++         ];
++ 
++         setArticles(allArticles);
++       } catch (error) {
++         console.error('Error fetching trending articles:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchAllArticles();
++   }, []);
+++>>>>>>> origin/main
+  
+-   // FIXED: Added sorting by date (newest first)
+    const trendingArticles = articles
+      .filter(article => article.homeTrending)
+-     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
++     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 10);
+  
+-   if (trendingArticles.length === 0) {
+++<<<<<<< HEAD
+++=======
++   // Duplicate for infinite scroll
++   const marqueeArticles = [...trendingArticles, ...trendingArticles];
++ 
++   if (loading) {
+      return (
+        <section className={styles.trendingSection}>
+-         <div className="container">
+-           <h2 className={styles.sectionTitle}>Trending Now</h2>
+-           <p className={styles.sectionSubtitle}>Most popular articles this week</p>
+-           <div className={styles.noArticles}>
+-             <p>No trending articles at the moment.</p>
+-           </div>
++         <div className={styles.loadingPlaceholder}>
++           <div className={styles.loadingSpinner}></div>
+          </div>
+        </section>
+      );
+    }
+  
+++>>>>>>> origin/main
++   if (trendingArticles.length === 0) {
++     return null; // Hide if no trending articles
++   }
++ 
+    return (
+      <section className={styles.trendingSection}>
+-       <div className="container">
+-         <h2 className={styles.sectionTitle}>Trending Now</h2>
+-         <p className={styles.sectionSubtitle}>Most popular articles this week</p>
+-         
+-         <div className={styles.trendingGrid}>
+-           {trendingArticles.map((article, index) => (
+-             <Link 
+-               key={`${article.category}-${article.id}`} 
+-               href={`/articles/${article.slug}`}
+-               className={styles.trendingLink}
+-             >
+-               <article className={styles.trendingCard}>
+-                 <div className={styles.trendingNumber}>
+-                   {(index + 1).toString().padStart(2, '0')}
+-                 </div>
+-                 
+-                 <div className={styles.cardImage}>
+-                   <Image 
+-                     src={article.image}
+-                     alt={article.title}
+-                     width={300}
+-                     height={180}
+-                     className={styles.image}
+-                   />
+-                   <div className={styles.cardCategory}>{article.category}</div>
+-                 </div>
+-                 
+-                 <div className={styles.cardContent}>
+-                   <h3 className={styles.cardTitle}>{article.title}</h3>
+-                   
+-                   {/* Desktop meta - shown on larger screens */}
+-                   <div className={styles.cardMeta}>
+-                     <span className={styles.cardAuthor}>{article.author}</span>
+-                     <span className={styles.separator}>ΓÇó</span>
+-                     <span className={styles.cardDate}>{article.date}</span>
+-                   </div>
+-                   
+-                   {/* Mobile-only meta - shown only on mobile */}
+-                   <div className={styles.mobileMeta}>
+-                     <div className={styles.mobileAuthor}>{article.author}</div>
+-                     <div className={styles.mobileDate}>{article.date}</div>
++       <div className={styles.container}>
++         <div className={styles.sectionHeader}>
++           <h2 className={styles.sectionTitle}>Trending Now</h2>
++           <p className={styles.sectionSubtitle}>Most Popular Stories</p>
++         </div>
++ 
++         <div className={styles.marqueeContainer}>
++           <div className={styles.marqueeTrack}>
++             {marqueeArticles.map((article, index) => (
++               <Link
++                 key={`${article.category}-${article.id}-${index}`}
++                 href={`/articles/${article.slug}`}
++                 className={styles.trendingLink}
++               >
++                 <article className={styles.trendingCard}>
++                   <div className={styles.cardImage}>
++                     <Image
++                       src={encodeURI(article.image.trim())}
++                       alt={article.title}
++                       fill
++                       className={styles.image}
++                     />
++                     <span className={styles.trendingNumber}>
++                       {index < 10 ? `0${(index % 10) + 1}` : (index % 10) + 1}
++                     </span>
+                    </div>
+-                   
+-                   <div className={styles.cardStats}>
+-                     <span className={styles.readTime}>{article.readTime}</span>
+-                     {article.trending && <span className={styles.views}>Trending</span>}
++ 
++                   <div className={styles.cardContent}>
++                     <span className={styles.cardCategory}>{article.category}</span>
++                     <h3 className={styles.cardTitle}>{article.title}</h3>
++ 
++                     <div className={styles.cardMeta}>
++                       <span>{article.author}</span>
++                       <span>{article.readTime}</span>
++                     </div>
+                    </div>
+-                 </div>
+-               </article>
+-             </Link>
+-           ))}
++                 </article>
++               </Link>
++             ))}
++           </div>
+          </div>
+        </div>
+      </section>
+diff --cc components/admin/AdminHeader.tsx
+index 3d0b19e,d6afd09..0000000
+--- a/components/admin/AdminHeader.tsx
++++ b/components/admin/AdminHeader.tsx
+@@@ -1,113 -1,93 +1,196 @@@
+  'use client';
+  
+ -import React, { useState } from 'react';
+ +import React, { useState, useEffect, useRef } from 'react';
+  import { useRouter } from 'next/navigation';
+ +import { createClient } from '@/lib/supabase/client';
+  import '../../styles/admin/components.css';
+  
+++<<<<<<< HEAD
+ +// Premium SVG Icons
+ +const Icons = {
+ +  Bell: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>,
+ +  Search: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>,
+ +  Zap: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>,
+ +  ChevronDown: () => <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>,
+ +  User: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>,
+ +  Lock: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>,
+ +  Moon: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>,
+ +  LogOut: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+ +};
+ +
+ +const getRelativeTime = (timestamp: any, fallback: string | undefined) => {
+ +  const ts = Number(timestamp);
+ +  if (!ts || isNaN(ts)) return fallback || 'Just now';
+ +  
+ +  const secondsDifference = Math.round((ts - Date.now()) / 1000);
+ +  const absDiff = Math.abs(secondsDifference);
+ +  
+ +  if (absDiff < 60) return 'Just now';
+ +  
+ +  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+ +  if (absDiff < 3600) return rtf.format(Math.round(secondsDifference / 60), 'minute');
+ +  if (absDiff < 86400) return rtf.format(Math.round(secondsDifference / 3600), 'hour');
+ +  return rtf.format(Math.round(secondsDifference / 86400), 'day');
+ +};
+++=======
++ import { AdminService } from '../../services/admin-service';
+++>>>>>>> origin/main
+  
+  const AdminHeader = () => {
+    const router = useRouter();
+    const [notifications, setNotifications] = useState<any[]>([]);
+++<<<<<<< HEAD
+ +  
+ +  const loadNotifications = () => {
+ +    try {
+ +      const stored = localStorage.getItem('admin_notifications');
+ +      if (stored) {
+ +        setNotifications(JSON.parse(stored));
+ +      } else {
+ +        // Initial empty state or welcome message
+ +        setNotifications([{ id: 'welcome', text: 'Welcome to DailyInstruct Admin!', time: new Date().toLocaleTimeString(), read: false }]);
+ +      }
+ +    } catch (e) {
+ +      console.error(e);
+ +    }
+ +  };
+ +
+ +  useEffect(() => {
+ +    loadNotifications();
+ +    window.addEventListener('admin_notifications_updated', loadNotifications);
+ +    // Also sync across tabs
+ +    window.addEventListener('storage', (e) => {
+ +      if (e.key === 'admin_notifications') loadNotifications();
+ +    });
+ +    return () => {
+ +      window.removeEventListener('admin_notifications_updated', loadNotifications);
+ +    };
+ +  }, []);
+ +  
+ +  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+ +  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+ +  
+ +  const notificationsRef = useRef<HTMLDivElement>(null);
+ +  const userMenuRef = useRef<HTMLDivElement>(null);
+ +
+ +  useEffect(() => {
+ +    const handleClickOutside = (event: MouseEvent) => {
+ +      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+ +        setIsNotificationsOpen(false);
+ +      }
+ +      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+ +        setIsUserMenuOpen(false);
+ +      }
+ +    };
+ +    document.addEventListener('mousedown', handleClickOutside);
+ +    return () => document.removeEventListener('mousedown', handleClickOutside);
+++=======
++ 
++   // Search State
++   const [searchQuery, setSearchQuery] = useState('');
++   const [searchResults, setSearchResults] = useState<any[]>([]);
++   const [isSearching, setIsSearching] = useState(false);
++   const [showResults, setShowResults] = useState(false);
++ 
++   // Debounce search
++   React.useEffect(() => {
++     const delayDebounceFn = setTimeout(async () => {
++       if (searchQuery.length > 1) {
++         setIsSearching(true);
++         try {
++           const results = await AdminService.getArticles(undefined, searchQuery);
++           setSearchResults(results.slice(0, 5)); // Limit to 5 results
++           setShowResults(true);
++         } catch (error) {
++           console.error('Search error:', error);
++         } finally {
++           setIsSearching(false);
++         }
++       } else {
++         setSearchResults([]);
++         setShowResults(false);
++       }
++     }, 300);
++ 
++     return () => clearTimeout(delayDebounceFn);
++   }, [searchQuery]);
++ 
++   const handleSearch = (query: string) => {
++     setSearchQuery(query);
++   };
++ 
++   // Fetch notifications
++   const fetchNotifications = async () => {
++     try {
++       const res = await fetch('/api/admin/notifications');
++       if (res.ok) {
++         const data = await res.json();
++         setNotifications(data);
++       }
++     } catch (error) {
++       console.error('Failed to fetch notifications', error);
++     }
++   };
++ 
++   // Poll for notifications
++   React.useEffect(() => {
++     fetchNotifications();
++     const interval = setInterval(fetchNotifications, 60000); // Poll every 60s
++     return () => clearInterval(interval);
+++>>>>>>> origin/main
+    }, []);
+  
+    const unreadCount = notifications.filter(n => !n.read).length;
+  
+++<<<<<<< HEAD
+ +  const markAllAsRead = () => {
+ +    const updated = notifications.map(n => ({ ...n, read: true }));
+ +    setNotifications(updated);
+ +    localStorage.setItem('admin_notifications', JSON.stringify(updated));
+++=======
++   const markAllAsRead = async () => {
++     try {
++       await fetch('/api/admin/notifications', {
++         method: 'POST',
++         headers: { 'Content-Type': 'application/json' },
++         body: JSON.stringify({ action: 'markRead' }),
++       });
++       // specific update local state
++       setNotifications(notifications.map(n => ({ ...n, read: true })));
++     } catch (error) {
++       console.error('Failed to mark notifications read', error);
++     }
+++>>>>>>> origin/main
+ +  };
+ +
+ +  const clearAllNotifications = () => {
+ +    setNotifications([]);
+ +    localStorage.removeItem('admin_notifications');
+ +  };
+ +
+ +  const markAsRead = (id: any) => {
+ +    const updated = notifications.map(n => 
+ +      n.id === id ? { ...n, read: true } : n
+ +    );
+ +    setNotifications(updated);
+ +    localStorage.setItem('admin_notifications', JSON.stringify(updated));
+    };
+  
+ -  // =========== ADD LOGOUT FUNCTION ===========
+ +  // =========== SUPABASE LOGOUT FUNCTION ===========
+    const handleLogout = async () => {
+      try {
+++<<<<<<< HEAD
+ +      const supabase = createClient();
+ +      await supabase.auth.signOut();
+ +      
+++=======
++       // Clear the cookie on client side
++       document.cookie = 'admin-auth=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
++ 
++       // Also call API to clear server-side
++       await fetch("/api/admin/auth", { method: "DELETE" });
++ 
+++>>>>>>> origin/main
+        router.push("/login");
+        router.refresh();
+      } catch (error) {
+@@@ -129,15 -110,80 +212,80 @@@
+        {/* Right Side Controls */}
+        <div className="header-controls">
+          {/* Search */}
+-         <div className="search-container">
+-           <input 
+-             type="text" 
+-             className="search-input" 
++         {/* Search */}
++         <div className="search-container" style={{ position: 'relative' }}>
++           <input
++             type="text"
++             className="search-input"
+              placeholder="Search articles, categories..."
++             value={searchQuery}
++             onChange={(e) => handleSearch(e.target.value)}
++             onFocus={() => {
++               if (searchQuery.length > 1) setShowResults(true);
++             }}
+            />
+            <button className="search-button">
+ -            <span className="search-icon">≡ƒöì</span>
+ +            <span className="search-icon"><Icons.Search /></span>
+            </button>
++ 
++           {/* Search Results Dropdown */}
++           {showResults && (
++             <div className="search-dropdown" style={{
++               position: 'absolute',
++               top: '100%',
++               left: 0,
++               width: '100%',
++               background: 'rgba(10, 10, 10, 0.95)',
++               border: '1px solid rgba(212, 175, 55, 0.2)',
++               borderRadius: '8px',
++               marginTop: '8px',
++               backdropFilter: 'blur(10px)',
++               zIndex: 1000,
++               maxHeight: '400px',
++               overflowY: 'auto',
++               boxShadow: '0 4px 20px rgba(0,0,0,0.5)'
++             }}>
++               {isSearching ? (
++                 <div style={{ padding: '12px', color: '#888', textAlign: 'center' }}>Searching...</div>
++               ) : searchResults.length > 0 ? (
++                 <div>
++                   {searchResults.map(article => (
++                     <div
++                       key={article.id}
++                       onClick={() => {
++                         router.push(`/admin/articles/edit/${article.slug}`);
++                         setShowResults(false);
++                         setSearchQuery('');
++                       }}
++                       style={{
++                         padding: '12px 16px',
++                         borderBottom: '1px solid rgba(255,255,255,0.05)',
++                         cursor: 'pointer',
++                         transition: 'background 0.2s'
++                       }}
++                       onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)'}
++                       onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
++                     >
++                       <div style={{ color: '#fff', fontSize: '14px', fontWeight: 500 }}>{article.title}</div>
++                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#666', marginTop: '4px' }}>
++                         <span>{article.category}</span>
++                         <span>{article.date}</span>
++                       </div>
++                     </div>
++                   ))}
++                 </div>
++               ) : (
++                 <div style={{ padding: '12px', color: '#888', textAlign: 'center' }}>No results found</div>
++               )}
++             </div>
++           )}
++           {/* Overlay to close on click outside */}
++           {showResults && (
++             <div
++               style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999 }}
++               onClick={() => setShowResults(false)}
++             />
++           )}
+          </div>
+  
+          {/* Notifications */}
+@@@ -154,62 -194,47 +302,88 @@@
+                <span className="notification-badge">{unreadCount}</span>
+              )}
+            </button>
+-           
++ 
+            {/* Notifications Dropdown */}
+++<<<<<<< HEAD
+ +          {isNotificationsOpen && (
+ +            <div className="notifications-dropdown" style={{ display: 'block' }}>
+ +              <div className="notifications-header">
+ +                <h3 className="notifications-title">Notifications</h3>
+ +                <div style={{ display: 'flex', gap: '10px' }}>
+ +                  <button 
+ +                    className="notifications-mark-read"
+ +                    onClick={markAllAsRead}
+ +                  >
+ +                    Mark read
+ +                  </button>
+ +                  <button 
+ +                    className="notifications-mark-read"
+ +                    onClick={clearAllNotifications}
+ +                    style={{ color: '#ef4444' }}
+ +                  >
+ +                    Clear
+ +                  </button>
+++=======
++           <div className="notifications-dropdown">
++             <div className="notifications-header">
++               <h3 className="notifications-title">Notifications</h3>
++               <button
++                 className="notifications-mark-read"
++                 onClick={markAllAsRead}
++               >
++                 Mark all as read
++               </button>
++             </div>
++             <div className="notifications-list">
++               {notifications.map((notification) => (
++                 <div
++                   key={notification.id}
++                   className={`notification-item ${!notification.read ? 'unread' : ''}`}
++                 >
++                   <div className="notification-content">
++                     <p className="notification-text">{notification.text}</p>
++                     <span className="notification-time">{notification.time}</span>
++                   </div>
++                   {!notification.read && (
++                     <div className="notification-indicator"></div>
++                   )}
+++>>>>>>> origin/main
+                  </div>
+ -              ))}
+ -            </div>
+ -            <div className="notifications-footer">
+ -              <button className="notifications-view-all">View All Notifications</button>
+ +              </div>
+ +              <div className="notifications-list">
+ +                {notifications.map((notification) => (
+ +                  <div 
+ +                    key={notification.id} 
+ +                    className={`notification-item ${!notification.read ? 'unread' : ''}`}
+ +                    onClick={() => markAsRead(notification.id)}
+ +                    style={{ cursor: 'pointer' }}
+ +                  >
+ +                    <div className="notification-content">
+ +                      <p className="notification-text">{notification.text}</p>
+ +                      <span className="notification-time">
+ +                        {getRelativeTime(notification.timestamp || notification.id, notification.time)}
+ +                      </span>
+ +                    </div>
+ +                    {!notification.read && (
+ +                      <div className="notification-indicator"></div>
+ +                    )}
+ +                  </div>
+ +                ))}
+ +              </div>
+ +              <div className="notifications-footer">
+ +                <button className="notifications-view-all">View All Notifications</button>
+ +              </div>
+              </div>
+ -          </div>
+ +          )}
+          </div>
+  
+          {/* Quick Actions */}
+          <div className="quick-actions">
+-           <button 
++           <button
+              className="quick-action-button gold-glow"
+ -            onClick={() => router.push('/admin/articles/new')}
+ +            onClick={() => router.push('/hq/articles/new')}
+            >
+ -            <span className="action-icon">ΓÜí</span>
+ +            <span className="action-icon"><Icons.Zap /></span>
+              <span className="action-text">Quick Publish</span>
+            </button>
+          </div>
+@@@ -227,46 -246,44 +401,73 @@@
+                <span className="avatar-text">AD</span>
+              </div>
+              <span className="user-name">Admin</span>
+ -            <span className="user-arrow">Γû╝</span>
+ +            <span className="user-arrow"><Icons.ChevronDown /></span>
+            </button>
+-           
++ 
+            {/* User Dropdown */}
+ -          <div className="user-dropdown">
+ -            <div className="user-dropdown-header">
+ -              <div className="dropdown-avatar">
+ -                <span className="avatar-text">AD</span>
+ +          {isUserMenuOpen && (
+ +            <div className="user-dropdown" style={{ display: 'block' }}>
+ +              <div className="user-dropdown-header">
+ +                <div className="dropdown-avatar">
+ +                  <span className="avatar-text">AD</span>
+ +                </div>
+ +                <div className="dropdown-user-info">
+ +                  <span className="dropdown-user-name">Admin User</span>
+ +                  <span className="dropdown-user-email">admin@dailyinstruct.com</span>
+ +                </div>
+                </div>
+ -              <div className="dropdown-user-info">
+ -                <span className="dropdown-user-name">Admin User</span>
+ -                <span className="dropdown-user-email">admin@dailyinstruct.com</span>
+ +              <div className="user-dropdown-menu">
+ +                <button className="dropdown-item">
+ +                  <span className="dropdown-icon"><Icons.User /></span>
+ +                  <span className="dropdown-text">Profile Settings</span>
+ +                </button>
+ +                <button className="dropdown-item">
+ +                  <span className="dropdown-icon"><Icons.Lock /></span>
+ +                  <span className="dropdown-text">Security</span>
+ +                </button>
+ +                <button className="dropdown-item">
+ +                  <span className="dropdown-icon"><Icons.Moon /></span>
+ +                  <span className="dropdown-text">Dark Mode</span>
+ +                </button>
+ +                <div className="dropdown-divider"></div>
+ +                {/* UPDATED LOGOUT BUTTON */}
+ +                <button 
+ +                  className="dropdown-item logout"
+ +                  onClick={handleLogout}
+ +                >
+ +                  <span className="dropdown-icon"><Icons.LogOut /></span>
+ +                  <span className="dropdown-text">Logout</span>
+ +                </button>
+                </div>
+              </div>
+++<<<<<<< HEAD
+ +          )}
+++=======
++             <div className="user-dropdown-menu">
++               <button className="dropdown-item">
++                 <span className="dropdown-icon">≡ƒæñ</span>
++                 <span className="dropdown-text">Profile Settings</span>
++               </button>
++               <button className="dropdown-item">
++                 <span className="dropdown-icon">≡ƒöÆ</span>
++                 <span className="dropdown-text">Security</span>
++               </button>
++               <button className="dropdown-item">
++                 <span className="dropdown-icon">≡ƒîÖ</span>
++                 <span className="dropdown-text">Dark Mode</span>
++               </button>
++               <div className="dropdown-divider"></div>
++               {/* UPDATED LOGOUT BUTTON */}
++               <button
++                 className="dropdown-item logout"
++                 onClick={handleLogout}
++               >
++                 <span className="dropdown-icon">≡ƒÜ¬</span>
++                 <span className="dropdown-text">Logout</span>
++               </button>
++             </div>
++           </div>
+++>>>>>>> origin/main
+          </div>
+        </div>
+      </header>
+diff --cc components/admin/AdminSidebar.tsx
+index ed487b7,4d405f5..0000000
+--- a/components/admin/AdminSidebar.tsx
++++ b/components/admin/AdminSidebar.tsx
+@@@ -81,23 -29,23 +81,31 @@@ const AdminSidebar = () => 
+      },
+      {
+        title: 'Categories',
+ -      icon: '≡ƒôü',
+ -      path: '/admin/categories',
+ -      badge: '4',
+ +      icon: <Icons.Categories />,
+ +      path: '/hq/categories',
+ +      badge: '5',
+      },
+++<<<<<<< HEAD
+ +    {
+ +      title: 'Analytics',
+ +      icon: <Icons.Analytics />,
+ +      path: '/hq/analytics',
+ +    },
+++=======
++     // {
++     //   title: 'Analytics',
++     //   icon: '≡ƒôê',
++     //   path: '/admin/analytics',
++     // },
+++>>>>>>> origin/main
+      {
+        title: 'Utilities',
+ -      icon: '≡ƒöº',
+ -      path: '/admin/utilities',
+ +      icon: <Icons.Utilities />,
+ +      path: '/hq/utilities',
+        subItems: [
+ -        { title: 'Backup & Restore', path: '/admin/utilities/backup' },
+ -        { title: 'SEO Tools', path: '/admin/utilities/seo' },
+ -        { title: 'Cleanup', path: '/admin/utilities/cleanup' },
+ +        { title: 'Backup & Restore', path: '/hq/utilities/backup' },
+ +        { title: 'SEO Tools', path: '/hq/utilities/seo' },
+ +        { title: 'Cleanup', path: '/hq/utilities/cleanup' },
+        ],
+      },
+      {
+@@@ -111,8 -55,60 +119,61 @@@
+      },
+    ];
+  
++   const sidebarRef = React.useRef<HTMLElement>(null);
++ 
++   // Handle window resize to determine if we are on mobile
++   // We need to know if we are on mobile to disable hover effects
++   const [isMobile, setIsMobile] = useState(false);
++ 
++   useEffect(() => {
++     const handleResize = () => {
++       const mobile = window.innerWidth <= 768;
++       setIsMobile(mobile);
++       if (mobile) {
++         setCollapsed(true);
++       } else {
++         // Default to collapsed on desktop too for the "hover to expand" effect
++         setCollapsed(true);
++       }
++     };
++ 
++     // Set initial state
++     handleResize();
++ 
++     window.addEventListener('resize', handleResize);
++     return () => window.removeEventListener('resize', handleResize);
++   }, []);
++ 
++   // Handle click outside to close sidebar on all screens
++   useEffect(() => {
++     const handleClickOutside = (event: MouseEvent) => {
++       // Check if click is outside sidebar and sidebar is NOT collapsed (expanded)
++       if (
++         !collapsed &&
++         sidebarRef.current &&
++         !sidebarRef.current.contains(event.target as Node)
++       ) {
++         setCollapsed(true);
++       }
++     };
++ 
++     const handleEscKey = (event: KeyboardEvent) => {
++       if (event.key === 'Escape' && !collapsed) {
++         setCollapsed(true);
++       }
++     };
++ 
++     document.addEventListener('mousedown', handleClickOutside);
++     document.addEventListener('keydown', handleEscKey);
++ 
++     return () => {
++       document.removeEventListener('mousedown', handleClickOutside);
++       document.removeEventListener('keydown', handleEscKey);
++     };
++   }, [collapsed]);
++ 
+    const isActive = (path: string) => {
+ +    if (path === '/hq') return pathname === '/hq';
+      return pathname === path || pathname?.startsWith(`${path}/`);
+    };
+  
+@@@ -125,7 -139,23 +204,27 @@@
+        {/* Logo */}
+        <div className="sidebar-header">
+          <div className="sidebar-logo" onClick={() => setCollapsed(!collapsed)}>
+++<<<<<<< HEAD
+ +          <div className="logo-icon"><Icons.Logo /></div>
+++=======
++           <div className="logo-icon">
++             <svg width="24" height="24" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
++               <rect width="40" height="40" rx="10" fill="url(#bg-gradient)" fillOpacity="0.2" />
++               <path d="M12 10H19C24.5228 10 29 14.4772 29 20C29 25.5228 24.5228 30 19 30H12V10Z" stroke="url(#logo-gradient)" strokeWidth="3" />
++               <path d="M15 10V30" stroke="url(#logo-gradient)" strokeWidth="3" />
++               <defs>
++                 <linearGradient id="bg-gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
++                   <stop stopColor="#D4AF37" />
++                   <stop offset="1" stopColor="#000" />
++                 </linearGradient>
++                 <linearGradient id="logo-gradient" x1="12" y1="10" x2="29" y2="30" gradientUnits="userSpaceOnUse">
++                   <stop stopColor="#D4AF37" />
++                   <stop offset="1" stopColor="#FFF" />
++                 </linearGradient>
++               </defs>
++             </svg>
++           </div>
+++>>>>>>> origin/main
+            {!collapsed && (
+              <div className="logo-text">
+                <span className="logo-primary">Daily Instruct</span>
+@@@ -163,12 -190,10 +262,12 @@@
+                  </>
+                )}
+                {item.subItems && !collapsed && (
+ -                <span className="nav-arrow">Γû╝</span>
+ +                <span className="nav-arrow">
+ +                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+ +                </span>
+                )}
+              </Link>
+-             
++ 
+              {/* Sub Items */}
+              {item.subItems && !collapsed && (
+                <div className="sub-nav">
+diff --cc components/admin/ArticleForm.tsx
+index 88bfa8e,f016222..0000000
+--- a/components/admin/ArticleForm.tsx
++++ b/components/admin/ArticleForm.tsx
+@@@ -765,77 -515,21 +765,77 @@@ PARAGRAPH: Continue writing...`
+          <div className="form-group">
+            <label className="form-label">
+              SEO Keywords
+ -            <span className="label-hint">Separate with commas</span>
+ +            <span className="label-hint">Press Enter to add</span>
+            </label>
+ -          <input
+ -            type="text"
+ -            value={article.keywords || ""}
+ -            onChange={(e) => handleChange("keywords", e.target.value)}
+ -            className="form-input"
+ -            placeholder="javascript, web development, coding tutorial"
+ -          />
+ +          <div className="form-input keywords-container" style={{ 
+ +            display: 'flex', 
+ +            flexWrap: 'wrap', 
+ +            gap: '6px', 
+ +            padding: '6px 12px', 
+ +            height: 'auto',
+ +            minHeight: '42px',
+ +            alignItems: 'center'
+ +          }}>
+ +            {(article.keywords ? article.keywords.split(',').map(k => k.trim()).filter(Boolean) : []).map((keyword, index) => (
+ +              <span key={index} className="keyword-tag" style={{
+ +                display: 'flex',
+ +                alignItems: 'center',
+ +                gap: '6px',
+ +                background: 'rgba(212, 175, 55, 0.15)',
+ +                border: '1px solid rgba(212, 175, 55, 0.3)',
+ +                color: '#D4AF37',
+ +                padding: '4px 10px',
+ +                borderRadius: '6px',
+ +                fontSize: '13px',
+ +                fontWeight: 500
+ +              }}>
+ +                {keyword}
+ +                <button 
+ +                  type="button" 
+ +                  onClick={() => removeKeyword(keyword)}
+ +                  style={{
+ +                    background: 'transparent',
+ +                    border: 'none',
+ +                    color: '#D4AF37',
+ +                    cursor: 'pointer',
+ +                    display: 'flex',
+ +                    alignItems: 'center',
+ +                    padding: '2px',
+ +                    opacity: 0.7,
+ +                    fontSize: '14px',
+ +                    lineHeight: 1
+ +                  }}
+ +                  onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
+ +                  onMouseOut={(e) => e.currentTarget.style.opacity = '0.7'}
+ +                >
+ +                  ├ù
+ +                </button>
+ +              </span>
+ +            ))}
+ +            <input
+ +              type="text"
+ +              value={keywordInput}
+ +              onChange={(e) => setKeywordInput(e.target.value)}
+ +              onKeyDown={handleKeywordKeyDown}
+ +              placeholder={!article.keywords ? "Type keyword & press Enter..." : ""}
+ +              style={{
+ +                flex: 1,
+ +                minWidth: '150px',
+ +                background: 'transparent',
+ +                border: 'none',
+ +                outline: 'none',
+ +                color: 'white',
+ +                fontSize: '14px',
+ +                padding: '4px'
+ +              }}
+ +            />
+ +          </div>
+            <div className="input-hint">
+              <span className="hint-text">3-5 keywords people search for</span>
+ -            <span className="hint-count">{(article.keywords || "").length}/200</span>
+ +            <span className="hint-count">{(article.keywords ? article.keywords.split(',').filter(Boolean).length : 0)}/10 tags</span>
+            </div>
+          </div>
+-         
++ 
+          <div className="form-group">
+            <label className="form-label">
+              Meta Description
+@@@ -1054,9 -722,9 +1055,15 @@@
+              </div>
+            </div>
+  
+++<<<<<<< HEAD
+ +          <div className="manual-url-section" style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+ +            <label className="url-input-label" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600, color: 'var(--text-light)' }}>
+ +              Or enter image URL manually:
+++=======
++           <div className="manual-url-section">
++             <label className="url-input-label">
++               Enter Image URL:
+++>>>>>>> origin/main
+              </label>
+              <div className="url-input-group">
+                <input
+@@@ -1064,9 -732,16 +1071,9 @@@
+                  value={article.image || ""}
+                  onChange={(e) => handleChange("image", e.target.value)}
+                  className="form-input image-url-input"
+-                 placeholder="/images/category/filename.png"
++                 placeholder="https://res.cloudinary.com/..."
+                  disabled={uploading}
+                />
+ -              <button
+ -                type="button"
+ -                className="url-help-btn"
+ -                title="Image URLs should be relative paths starting with /images/"
+ -              >
+ -                ?
+ -              </button>
+              </div>
+              <div className="url-hint"></div>
+            </div>
+@@@ -1139,19 -800,17 +1146,30 @@@
+          <div className="flags-grid">
+            {["trending", "featured", "topStory", "grid", "homeFeatured", "homeLatest", "homeTrending", "homeTopStory"].map((flag) => (
+              <div key={flag} className="flag-group">
+++<<<<<<< HEAD
+ +              <label className="glossy-toggle-label">
+++=======
++               <label className="flag-label">
++                 <span className="flag-text">
++                   {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
++                 </span>
+++>>>>>>> origin/main
+                  <input
+                    type="checkbox"
+                    checked={Boolean(article[flag as keyof Article]) || false}
+                    onChange={(e) => handleChange(flag as keyof Article, e.target.checked)}
+ -                  className="flag-checkbox"
+ +                  className="hidden-checkbox"
+                  />
+++<<<<<<< HEAD
+ +                <div className="glossy-toggle-track">
+ +                  <div className="glossy-toggle-thumb"></div>
+ +                </div>
+ +                <span className="flag-text">
+ +                  {flag.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}
+ +                </span>
+++=======
++                 <div className="toggle-switch"></div>
+++>>>>>>> origin/main
+                </label>
+              </div>
+            ))}
+diff --cc components/admin/ArticleTable.tsx
+index e664b39,56e11d7..0000000
+--- a/components/admin/ArticleTable.tsx
++++ b/components/admin/ArticleTable.tsx
+@@@ -82,15 -97,16 +97,16 @@@ const ArticleTable: React.FC<ArticleTab
+                <div className="empty-icon">≡ƒô¥</div>
+                <h3 className="empty-title">No articles found</h3>
+                <p className="empty-description">
+-                 Try adjusting your search or filter to find what you're looking
+-                 for.
++                 Try adjusting your search or filter to find what you're looking for.
+                </p>
+ -              <Link href="/admin/articles/new" className="empty-action">
+ +              <Link href="/hq/articles/new" className="empty-action">
+                  Create your first article
+                </Link>
+-               <button onClick={onRefresh} className="empty-refresh">
+-                 Γå╗ Refresh
+-               </button>
++               {onRefresh && (
++                 <button onClick={onRefresh} className="empty-refresh">
++                   Γå╗ Refresh
++                 </button>
++               )}
+              </div>
+            ) : (
+              articles.map((article) => (
+@@@ -138,72 -188,76 +188,94 @@@
+                  </div>
+  
+                  {/* Status */}
+-                 <div className="table-cell status-cell">
+-                   <span className={`status-badge published`}>Published</span>
+-                 </div>
++                 {showStatus && (
++                   <div className="table-cell status-cell">
++                     <span className={`status-badge published`}>Published</span>
++                   </div>
++                 )}
+  
+                  {/* Actions */}
+++<<<<<<< HEAD
+ +                <div className="table-cell actions-cell extra">
+ +                  <div className="action-buttons">
+ +                    <Link
+ +                      href={`/hq/articles/edit/${article.slug}`}
+ +                      className="action-button edit"
+ +                      title="Edit"
+ +                    >
+ +                      <Image
+ +                        src="/icons/edit.svg"
+ +                        alt="Edit"
+ +                        width={18}
+ +                        height={18}
+ +                        className="icon"
+ +                      />
+ +                    </Link>
+++=======
++                 {showActions && (
++                   <div className="table-cell actions-cell extra">
++                     <div className="action-buttons">
++                       <Link
++                         href={`/admin/articles/edit/${article.slug}`}
++                         className="action-button edit"
++                         title="Edit"
++                       >
++                         <Image
++                           src="/icons/edit.svg"
++                           alt="Edit"
++                           width={18}
++                           height={18}
++                           className="icon"
++                         />
++                       </Link>
+++>>>>>>> origin/main
+  
+-                     <button
+-                       onClick={() => handleDuplicate(article)}
+-                       className="action-button duplicate"
+-                       title="Duplicate"
+-                     >
+-                       <Image
+-                         src="/icons/duplicate.svg"
+-                         alt="Edit"
+-                         width={18}
+-                         height={18}
+-                         className="icon"
+-                       />
+-                     </button>
+-                     <button
+-                       onClick={() =>
+-                         handleDelete(article.slug, article.category)
+-                       }
+-                       className="action-button delete"
+-                       title="Delete"
+-                     >
+-                       <Image
+-                         src="/icons/delete.svg"
+-                         alt="Edit"
+-                         width={18}
+-                         height={18}
+-                         className="icon"
+-                       />
+-                     </button>
+-                     <a
+-                       href={`/articles/${article.slug}`}
+-                       target="_blank"
+-                       rel="noopener noreferrer"
+-                       className="action-button preview"
+-                       title="Preview"
+-                     >
+-                       <Image
+-                         src="/icons/view.svg"
+-                         alt="Edit"
+-                         width={18}
+-                         height={18}
+-                         className="icon"
+-                       />
+-                     </a>
++                       <button
++                         onClick={() => handleDuplicate(article)}
++                         className="action-button duplicate"
++                         title="Duplicate"
++                       >
++                         <Image
++                           src="/icons/duplicate.svg"
++                           alt="Edit"
++                           width={18}
++                           height={18}
++                           className="icon"
++                         />
++                       </button>
++                       <button
++                         onClick={() =>
++                           handleDelete(article.slug, article.category)
++                         }
++                         className="action-button delete"
++                         title="Delete"
++                       >
++                         <Image
++                           src="/icons/delete.svg"
++                           alt="Edit"
++                           width={18}
++                           height={18}
++                           className="icon"
++                         />
++                       </button>
++                       <a
++                         href={`/articles/${article.slug}`}
++                         target="_blank"
++                         rel="noopener noreferrer"
++                         className="action-button preview"
++                         title="Preview"
++                       >
++                         <Image
++                           src="/icons/view.svg"
++                           alt="Edit"
++                           width={18}
++                           height={18}
++                           className="icon"
++                         />
++                       </a>
++                     </div>
+                    </div>
+-                 </div>
++                 )}
+                </div>
+              ))
+            )}
+diff --cc components/markets/FeaturedMarketStory.tsx
+index 579a2c6,3747f1e..0000000
+--- a/components/markets/FeaturedMarketStory.tsx
++++ b/components/markets/FeaturedMarketStory.tsx
+@@@ -4,26 -5,74 +4,44 @@@ import Image from 'next/image'
+  import Link from 'next/link';
+  import styles from './FeaturedMarketStory.module.css';
+  
+ -interface Article {
+ -  id: number;
+ -  slug: string;
+ -  title: string;
+ -  description: string;
+ -  author: string;
+ -  date: string;
+ -  readTime: string;
+ -  image: string;
+ -  category: string;
+ -  specific: string;
+ -  trending: boolean;
+ -  featured: boolean;
+ -  topStory: boolean;
+ -  grid: boolean;
+ -  homeFeatured: boolean;
+ -  homeLatest: boolean;
+ -  homeTrending: boolean;
+ -  homeTopStory: boolean;
+ -  content: Array<{
+ -    type: 'paragraph' | 'heading' | 'quote';
+ -    text: string;
+ -    author?: string;
+ -  }>;
+ -}
+  
+ -const FeaturedMarketStory: React.FC = () => {
+ -  const [articles, setArticles] = useState<Article[]>([]);
+ -  const [loading, setLoading] = useState(true);
+ +const FeaturedMarketStory = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    const data = await readJsonFile<{ articles: Article[] }>('markets-articles.json');
+ +    articles = data.articles || [];
+ +  } catch (error) {
+ +    console.error('Error fetching articles:', error);
+ +  }
+  
+++<<<<<<< HEAD
+++=======
++   useEffect(() => {
++     const fetchMarketArticles = async () => {
++       try {
++         const response = await fetch('/api/github/articles?category=markets');
++         const data = await response.json();
++         setArticles(data.articles || []);
++       } catch (error) {
++         console.error('Error fetching market articles:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchMarketArticles();
++   }, []);
+++>>>>>>> origin/main
+  
+    // Get the first featured article
+    // Get the most recent featured article
+- const featuredArticles = articles.filter(article => article.featured);
+- const featuredArticle = featuredArticles.length > 0 
+-   ? featuredArticles.sort((a, b) => 
++   const featuredArticles = articles.filter(article => article.featured);
++   const featuredArticle = featuredArticles.length > 0
++     ? featuredArticles.sort((a, b) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+      )[0]
+-   : undefined;
++     : undefined;
+  
+ -  if (loading) {
+ -    return (
+ -      <section className={styles.featuredTechStory1}>
+ -        <div className="container">
+ -          <div className={styles.loadingPlaceholder}>
+ -            <div className={styles.loadingSpinner}></div>
+ -            <p>Loading featured market story...</p>
+ -          </div>
+ -        </div>
+ -      </section>
+ -    );
+ -  }
+ -
+    // If no featured article, use the first one as fallback
+    if (!featuredArticle) {
+      if (articles.length > 0) {
+diff --cc components/markets/MarketArticlesGrid.tsx
+index b51d411,43a5da3..0000000
+--- a/components/markets/MarketArticlesGrid.tsx
++++ b/components/markets/MarketArticlesGrid.tsx
+@@@ -4,23 -5,72 +4,41 @@@ import Image from 'next/image'
+  import Link from 'next/link';
+  import styles from './MarketArticlesGrid.module.css';
+  
+ -interface Article {
+ -  id: number;
+ -  slug: string;
+ -  title: string;
+ -  description: string;
+ -  author: string;
+ -  date: string;
+ -  readTime: string;
+ -  image: string;
+ -  category: string;
+ -  specific: string;
+ -  trending: boolean;
+ -  featured: boolean;
+ -  topStory: boolean;
+ -  grid: boolean;
+ -  homeFeatured: boolean;
+ -  homeLatest: boolean;
+ -  homeTrending: boolean;
+ -  homeTopStory: boolean;
+ -  content: Array<{
+ -    type: 'paragraph' | 'heading' | 'quote';
+ -    text: string;
+ -    author?: string;
+ -  }>;
+ -}
+  
+ -const MarketArticlesGrid: React.FC = () => {
+ -  const [articles, setArticles] = useState<Article[]>([]);
+ -  const [loading, setLoading] = useState(true);
+ +const MarketArticlesGrid = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    const data = await readJsonFile<{ articles: Article[] }>('markets-articles.json');
+ +    articles = data.articles || [];
+ +  } catch (error) {
+ +    console.error('Error fetching articles:', error);
+ +  }
+  
+++<<<<<<< HEAD
+++=======
++   useEffect(() => {
++     const fetchMarketArticles = async () => {
++       try {
++         const response = await fetch('/api/github/articles?category=markets');
++         const data = await response.json();
++         setArticles(data.articles || []);
++       } catch (error) {
++         console.error('Error fetching market articles:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchMarketArticles();
++   }, []);
+++>>>>>>> origin/main
+  
+    // Get only articles that should appear in the grid (limit to 6 for homepage)
+    const gridArticles = articles
+-   .filter(article => Boolean(article.grid))
+-   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+-   .slice(0, 6); // Show only 6 articles on homepage
++     .filter(article => Boolean(article.grid))
++     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
++     .slice(0, 6); // Show only 6 articles on homepage
+  
+ -  if (loading) {
+ -    return (
+ -      <section className={styles.techArticlesGrid3}>
+ -        <div className="container">
+ -          <h2 className={styles.sectionTitle3}>Latest in Markets</h2>
+ -          <div className={styles.loadingPlaceholder}>
+ -            <div className={styles.loadingSpinner}></div>
+ -            <p>Loading market articles...</p>
+ -          </div>
+ -        </div>
+ -      </section>
+ -    );
+ -  }
+ -
+    if (gridArticles.length === 0) {
+      return (
+        <section className={styles.techArticlesGrid3}>
+diff --cc components/markets/TrendingInMarket.tsx
+index f81a3cd,e392064..0000000
+--- a/components/markets/TrendingInMarket.tsx
++++ b/components/markets/TrendingInMarket.tsx
+@@@ -4,23 -5,75 +4,41 @@@ import Image from 'next/image'
+  import Link from 'next/link';
+  import styles from './TrendingInMarket.module.css';
+  
+ -interface Article {
+ -  id: number;
+ -  slug: string;
+ -  title: string;
+ -  description: string;
+ -  author: string;
+ -  date: string;
+ -  readTime: string;
+ -  image: string;
+ -  category: string;
+ -  specific: string;
+ -  trending: boolean;
+ -  featured: boolean;
+ -  topStory: boolean;
+ -  grid: boolean;
+ -  homeFeatured: boolean;
+ -  homeLatest: boolean;
+ -  homeTrending: boolean;
+ -  homeTopStory: boolean;
+ -  content: Array<{
+ -    type: 'paragraph' | 'heading' | 'quote';
+ -    text: string;
+ -    author?: string;
+ -  }>;
+ -}
+  
+ -const TrendingInMarket: React.FC = () => {
+ -  const [articles, setArticles] = useState<Article[]>([]);
+ -  const [loading, setLoading] = useState(true);
+ +const TrendingInMarket = async () => {
+ +  let articles: Article[] = [];
+ +  try {
+ +    const data = await readJsonFile<{ articles: Article[] }>('markets-articles.json');
+ +    articles = data.articles || [];
+ +  } catch (error) {
+ +    console.error('Error fetching articles:', error);
+ +  }
+  
+++<<<<<<< HEAD
+++=======
++   useEffect(() => {
++     const fetchMarketArticles = async () => {
++       try {
++         const response = await fetch('/api/github/articles?category=markets');
++         const data = await response.json();
++         setArticles(data.articles || []);
++       } catch (error) {
++         console.error('Error fetching market articles for trending:', error);
++       } finally {
++         setLoading(false);
++       }
++     };
++ 
++     fetchMarketArticles();
++   }, []);
+++>>>>>>> origin/main
+  
+    // Filter only trending articles
+    const trendingArticles = articles
+-   .filter(article => Boolean(article.trending))
+-   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
+-   .slice(0, 6); // Limit to 6 trending articles
++     .filter(article => Boolean(article.trending))
++     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) // Sort by date, newest first
++     .slice(0, 6); // Limit to 6 trending articles
+  
+ -  if (loading) {
+ -    return (
+ -      <section className={styles.trendingInTech6}>
+ -        <div className="container">
+ -          <div className={styles.sectionHeader6}>
+ -            <h2 className={styles.sectionTitle6}>Trending in Markets</h2>
+ -            <p className={styles.sectionSubtitle6}>Most popular market stories this week</p>
+ -          </div>
+ -          <div className={styles.loadingPlaceholder}>
+ -            <div className={styles.loadingSpinner}></div>
+ -            <p>Loading trending market articles...</p>
+ -          </div>
+ -        </div>
+ -      </section>
+ -    );
+ -  }
+ -
+    if (trendingArticles.length === 0) {
+      return (
+        <section className={styles.trendingInTech6}>
+diff --cc services/admin-service.ts
+index 16df003,6fae449..0000000
+--- a/services/admin-service.ts
++++ b/services/admin-service.ts
+@@@ -153,31 -122,10 +153,35 @@@ if (typeof window !== 'undefined' && pr
+  export const AdminService = {
+    // UTF-8 Sanitizer (export for use elsewhere if needed)
+    sanitizeArticleData,
+++<<<<<<< HEAD
+ +  
+ +  // Real-time Notifications
+ +  addNotification(text: string) {
+ +    if (typeof window === 'undefined') return;
+ +    try {
+ +      const stored = localStorage.getItem('admin_notifications');
+ +      const notifications = stored ? JSON.parse(stored) : [];
+ +      const newNotification = {
+ +        id: Date.now(),
+ +        text,
+ +        timestamp: Date.now(),
+ +        read: false
+ +      };
+ +      
+ +      const updated = [newNotification, ...notifications].slice(0, 50);
+ +      localStorage.setItem('admin_notifications', JSON.stringify(updated));
+ +      window.dispatchEvent(new Event('admin_notifications_updated'));
+ +    } catch (e) {
+ +      console.error("Failed to add notification", e);
+ +    }
+ +  },
+ +  
+++=======
++ 
+++>>>>>>> origin/main
+    async createArticle(articleData: Omit<Article, 'id'>): Promise<Article> {
+      console.log('Original article data:', JSON.stringify(articleData).substring(0, 200));
+-     
++ 
+      // SANITIZE UTF-8 CHARACTERS BEFORE SENDING
+      const sanitizedData = sanitizeArticleData(articleData);
+      console.log('Sanitized article data:', JSON.stringify(sanitizedData).substring(0, 200));
+@@@ -195,10 -143,10 +199,14 @@@
+        const error = await response.text();
+        throw new Error(`Failed to create article: ${error}`);
+      }
+-     
++ 
+      const data = await response.json();
+      console.log('Article created successfully:', data.article?.slug);
+++<<<<<<< HEAD
+ +    this.addNotification(`Published new article: "${sanitizedData.title}"`);
+++=======
++ 
+++>>>>>>> origin/main
+      return data.article;
+    },
+  
+@@@ -248,10 -199,9 +259,10 @@@
+        const error = await response.text();
+        throw new Error(`Failed to update article: ${error}`);
+      }
+-     
++ 
+      const data = await response.json();
+      console.log('Article updated successfully:', data.article?.slug);
+ +    this.addNotification(`Updated article: "${sanitizedData.title}"`);
+      return data.article;
+    },
+  
+@@@ -267,9 -217,7 +278,13 @@@
+        const error = await response.text();
+        throw new Error(`Failed to delete article: ${error}`);
+      }
+++<<<<<<< HEAD
+ +    
+ +    console.log('Article deleted successfully:', slug);
+ +    this.addNotification(`Deleted article: /${slug}`);
+++=======
++ 
+++>>>>>>> origin/main
+      return await response.json();
+    },
+  
+@@@ -343,74 -291,8 +358,81 @@@
+        console.error('Error checking article encoding:', error);
+      }
+    },
+++<<<<<<< HEAD
+ +  
+ +  // ================== TRACKERS API ==================
+ +  
+ +  async getAllTrackers(): Promise<Tracker[]> {
+ +    const res = await fetch(`${API_BASE}/trackers`, { cache: 'no-store' });
+ +    if (!res.ok) throw new Error('Failed to fetch trackers');
+ +    return res.json();
+ +  },
+ +
+ +  async getTracker(slug: string): Promise<Tracker> {
+ +    const res = await fetch(`${API_BASE}/trackers/${slug}`, { cache: 'no-store' });
+ +    if (!res.ok) throw new Error('Failed to fetch tracker');
+ +    return res.json();
+ +  },
+ +
+ +  async createTracker(tracker: Partial<Tracker>): Promise<Tracker> {
+ +    const res = await fetch(`${API_BASE}/trackers`, {
+ +      method: 'POST',
+ +      headers: { 'Content-Type': 'application/json' },
+ +      body: JSON.stringify(tracker),
+ +    });
+ +    if (!res.ok) throw new Error('Failed to create tracker');
+ +    return res.json();
+ +  },
+ +
+ +  async updateTracker(slug: string, tracker: Partial<Tracker>): Promise<Tracker> {
+ +    const res = await fetch(`${API_BASE}/trackers/${slug}`, {
+ +      method: 'PUT',
+ +      headers: { 'Content-Type': 'application/json' },
+ +      body: JSON.stringify(tracker),
+ +    });
+ +    if (!res.ok) throw new Error('Failed to update tracker');
+ +    return res.json();
+ +  },
+ +
+ +  async deleteTracker(slug: string): Promise<void> {
+ +    const res = await fetch(`${API_BASE}/trackers/${slug}`, {
+ +      method: 'DELETE',
+ +    });
+ +    if (!res.ok) throw new Error('Failed to delete tracker');
+ +    this.addNotification(`Deleted tracker: ${slug}`);
+ +  },
+ +
+ +  async createTrackerUpdate(update: Partial<TrackerUpdate>): Promise<TrackerUpdate> {
+ +    const res = await fetch(`${API_BASE}/trackers/updates`, {
+ +      method: 'POST',
+ +      headers: { 'Content-Type': 'application/json' },
+ +      body: JSON.stringify(update),
+ +    });
+ +    if (!res.ok) throw new Error('Failed to create tracker update');
+ +    
+ +    this.addNotification(`Added update to tracker`);
+ +    return res.json();
+ +  },
+ +
+ +  async getHomepageConfig(): Promise<HomepageConfig> {
+ +    const res = await fetch(`${API_BASE}/config/homepage`, { cache: 'no-store' });
+ +    if (!res.ok) return { id: 1, trending_tags: [] };
+ +    return res.json();
+ +  },
+ +
+ +  async updateHomepageConfig(config: Partial<HomepageConfig>): Promise<HomepageConfig> {
+ +    const res = await fetch(`${API_BASE}/config/homepage`, {
+ +      method: 'PUT',
+ +      headers: { 'Content-Type': 'application/json' },
+ +      body: JSON.stringify(config),
+ +    });
+ +    if (!res.ok) throw new Error('Failed to update homepage config');
+ +    return res.json();
+ +  }
+++=======
++ 
++   // Analytics Methods
++   // Analytics Removed
++   // async getAnalyticsStats() { ... }
+++>>>>>>> origin/main
+  };
+diff --cc styles/admin/components.css
+index 735e664,3a78d77..0000000
+--- a/styles/admin/components.css
++++ b/styles/admin/components.css
+@@@ -5655,63 -5755,132 +5753,194 @@@
+  
+  /* Animation for success message */
+  @keyframes successPulse {
+++<<<<<<< HEAD
+ +  0%, 100% { transform: scale(1); }
+ +  50% { transform: scale(1.05); }
+ +}
+ +
+ +/* SEO Optimize Glassmorphism Button */
+ +.seo-optimize-btn {
+ +  display: flex;
+ +  align-items: center;
+ +  gap: 8px;
+ +  margin-left: 10px;
+ +  padding: 0 16px;
+ +  height: 42px;
+ +  background: rgba(255, 255, 255, 0.05);
+ +  backdrop-filter: blur(12px);
+ +  -webkit-backdrop-filter: blur(12px);
+ +  border: 1px solid rgba(255, 255, 255, 0.1);
+ +  border-radius: 8px;
+ +  color: rgba(255, 255, 255, 0.9);
+ +  font-family: 'Inter', sans-serif;
+ +  font-size: 14px;
+ +  font-weight: 600;
+ +  letter-spacing: 0.3px;
+ +  cursor: pointer;
+ +  white-space: nowrap;
+ +  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ +  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+ +}
+ +
+ +.seo-optimize-btn:hover:not(:disabled) {
+ +  background: rgba(212, 175, 55, 0.15); /* Premium Gold Glass */
+ +  border-color: rgba(212, 175, 55, 0.5);
+ +  color: #D4AF37; /* Bright gold for text */
+ +  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+ +  transform: translateY(-1px);
+ +}
+ +
+ +.seo-optimize-btn:active:not(:disabled) {
+ +  transform: translateY(0);
+ +  background: rgba(212, 175, 55, 0.15);
+ +}
+ +
+ +.seo-optimize-btn:disabled {
+ +  opacity: 0.6;
+ +  cursor: not-allowed;
+ +}
+ +
+ +.seo-optimize-btn .btn-icon {
+ +  display: flex;
+ +  align-items: center;
+ +  justify-content: center;
+ +}
+ +
+ +.seo-optimize-btn .spinner {
+ +  animation: seo-spin 1s linear infinite;
+ +}
+ +
+ +@keyframes seo-spin {
+ +  from { transform: rotate(0deg); }
+ +  to { transform: rotate(360deg); }
+++=======
++ 
++   0%,
++   100% {
++     transform: scale(1);
++   }
++ 
++   50% {
++     transform: scale(1.05);
++   }
++ }
++ 
++ /* ===== PREMIUM PREVIEW BUTTON ===== */
++ .preview-button-main {
++   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
++   border: 1px solid rgba(255, 255, 255, 0.2);
++   color: #fff;
++   padding: 10px 24px;
++   border-radius: 8px;
++   font-size: 14px;
++   font-weight: 600;
++   cursor: pointer;
++   display: flex;
++   align-items: center;
++   gap: 8px;
++   transition: all 0.3s ease;
++   backdrop-filter: blur(10px);
++   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
++ }
++ 
++ .preview-button-main:hover {
++   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
++   border-color: rgba(255, 255, 255, 0.4);
++   transform: translateY(-2px);
++   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
++ }
++ 
++ .preview-button-main:active {
++   transform: translateY(0);
++ }
++ 
++ .preview-button-main .button-icon {
++   font-size: 16px;
++ }
++ 
++ /* ===== LUXURY TOGGLE SWITCHES ===== */
++ .flags-grid {
++   display: grid;
++   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
++   gap: 16px;
++   margin-top: 16px;
++ }
++ 
++ .flag-group {
++   background: rgba(255, 255, 255, 0.02);
++   border: 1px solid rgba(255, 255, 255, 0.05);
++   border-radius: 12px;
++   padding: 12px 16px;
++   transition: all 0.3s ease;
++ }
++ 
++ .flag-group:hover {
++   background: rgba(255, 255, 255, 0.04);
++   border-color: rgba(212, 175, 55, 0.2);
++ }
++ 
++ .flag-label {
++   display: flex;
++   align-items: center;
++   justify-content: space-between;
++   cursor: pointer;
++   width: 100%;
++ }
++ 
++ .flag-text {
++   font-size: 14px;
++   font-weight: 500;
++   color: rgba(255, 255, 255, 0.7);
++   transition: all 0.3s ease;
++ }
++ 
++ /* Hidden Native Checkbox */
++ .flag-checkbox {
++   display: none;
++ }
++ 
++ /* Custom Toggle Track */
++ .toggle-switch {
++   position: relative;
++   width: 44px;
++   height: 24px;
++   background: rgba(0, 0, 0, 0.4);
++   border-radius: 20px;
++   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
++   border: 1px solid rgba(255, 255, 255, 0.1);
++   flex-shrink: 0;
++ }
++ 
++ /* Toggle Knob */
++ .toggle-switch::after {
++   content: '';
++   position: absolute;
++   top: 2px;
++   left: 2px;
++   width: 18px;
++   height: 18px;
++   background: #666;
++   border-radius: 50%;
++   transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
++   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
++ }
++ 
++ /* Checked State */
++ .flag-checkbox:checked+.toggle-switch {
++   background: rgba(212, 175, 55, 0.2);
++   border-color: rgba(212, 175, 55, 0.6);
++   box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
++ }
++ 
++ .flag-checkbox:checked+.toggle-switch::after {
++   transform: translateX(20px);
++   background: linear-gradient(135deg, #D4AF37, #B8860B);
++   box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
++ }
++ 
++ /* Active Label Text */
++ .flag-checkbox:checked~.flag-text {
++   color: #fff;
++   text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+++>>>>>>> origin/main
+  }

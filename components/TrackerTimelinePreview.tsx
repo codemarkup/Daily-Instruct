@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const TrackerTimelinePreview = ({ tracker }: { tracker: any }) => {
   const updates = tracker.updates 
     ? [...tracker.updates]
-        .filter((u: any) => u.linked_article_id || u.articles)
+        .filter((update: any) => !!update.linked_article_id)
         .sort((a: any, b: any) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime()) 
     : [];
   const topUpdates = updates.slice(0, 4);

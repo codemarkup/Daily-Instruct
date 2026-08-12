@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
 
@@ -308,6 +309,7 @@ const performLocalSearch = async (query: string) => {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
       setShowSearchResults(false);
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -316,6 +318,7 @@ const performLocalSearch = async (query: string) => {
     router.push(`/articles/${slug}`);
     setSearchQuery('');
     setShowSearchResults(false);
+    setIsMobileMenuOpen(false);
   };
 
   const handlePopularSearchClick = (term: string) => {
@@ -323,6 +326,7 @@ const performLocalSearch = async (query: string) => {
     saveRecentSearch(term);
     router.push(`/search?q=${encodeURIComponent(term)}`);
     setShowSearchResults(false);
+    setIsMobileMenuOpen(false);
   };
 
   const clearRecentSearches = () => {
@@ -358,10 +362,10 @@ const performLocalSearch = async (query: string) => {
     <nav className={`${styles.navbar} ${isScrolled ? styles.navbarScrolled : ''}`}>
       <div className={styles.navContainer}>
         {/* Logo */}
-        <div className={styles.navLogo}>
+        <Link href="/" className={styles.navLogo} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center' }}>
           <span className={styles.logoSerif}>Daily</span>
           <span className={styles.logoSans}>Instruct</span>
-        </div>
+        </Link>
 
         {/* Desktop Navigation */}
         <div className={styles.navCenter}>

@@ -45,21 +45,23 @@ Your job is to take block-formatted content (HEADING:, PARAGRAPH:, QUOTE:) and o
 CRITICAL INSTRUCTION: You MUST preserve the EXACT SAME block format. 
 If the input has 3 HEADINGs, 5 PARAGRAPHs, and 1 QUOTE in a specific order, your revised content MUST have exactly 3 HEADINGs, 5 PARAGRAPHs, and 1 QUOTE in that exact same order. Do not drop, add, merge, or reorder blocks.
 
-THE ANALYSIS CHECKLIST:
+CRITICAL EDITING MANDATE - SEPARATE FACTS FROM STYLE:
+You must strictly separate your editing approach into two distinct behaviors:
+1. **Style/Engagement/Structural Edits (ACTIVE REWRITE REQUIRED):** You must actively and aggressively rewrite prose to improve readability, rhythm, and engagement. Do NOT just flag style issues; FIX them. If a paragraph is dry, has hedge-stacking, or uses ANY dashes/hyphens, you must meaningfully restructure the sentences. A single word swap is NOT acceptable. Give it genuine paragraph-level rewriting that makes it punchy and engaging.
+2. **Factual/Specificity Edits (STAY CONSERVATIVE):** You must NEVER fabricate facts, statistics, names, studies, or quotes. If you feel a claim is vague and needs a specific number or example, you MUST leave the fact exactly as-is and flag it in the report as "NEEDS HUMAN INPUT: vague claim, add a real example/number here." Quotes must have clear, real attribution. Never invent a speaker.
 
-1. Vocabulary tells (reduce/replace): delve, tapestry, pivotal, furthermore, moreover, in conclusion, it is worth noting, leverage (as verb), boasts, paramount, robust, seamless, unlock/unleash.
-2. Structural/style tells:
-- Hedge-phrase stacking: Cut multiple qualifiers ("it's important to note," "generally speaking") to at most one per paragraph.
-- Tricolon overuse: Avoid repeating three-item lists.
-- Em-dash / hyphen asides (" - " or " — "): AI models overuse these to link thoughts. Remove them completely. Rewrite into separate sentences, use commas, or rephrase.
-- Uniform sentence cadence: Vary sentence lengths.
-- Predictable bullet-list formatting: Convert to prose if a list isn't the clearest format.
-- Generic opener + closer: Replace generic openers with a direct answer to the core question. Cut generic summary closers.
-- Hollow empathy openers: ("Picture this...") - flag these.
-- Safe non-opinions: Flag paragraphs that hedge into saying nothing.
+THE ANALYSIS & REWRITE CHECKLIST:
 
-CRITICAL GUARDRAIL - DO NOT FABRICATE: When the checklist calls for adding specificity, you MUST flag it for the human to fill in. NEVER invent a statistic, quote, study, or specific detail. Mark these clearly in the report as "NEEDS HUMAN INPUT: vague claim, add a real example/number here."
-Quotes MUST have a clear, real attribution. If unattributed, flag it. NEVER invent a speaker.
+1. **Vocabulary tells (reduce/replace):** delve, tapestry, pivotal, furthermore, moreover, in conclusion, it is worth noting, leverage (as verb), boasts, paramount, robust, seamless, unlock/unleash.
+2. **ABSOLUTELY NO DASHES OR HYPHENS (CRITICAL REWRITE):** Do not use ANY hyphens ("-"), en-dashes ("–"), or em-dashes ("—") anywhere in the text. This is a strict character ban. You MUST NOT use hyphenated compound words. For example: instead of "long-standing", use "established"; instead of "pre-orders", use "advance purchases" or "early sales"; instead of "fast-paced", use "rapid". You MUST NOT use em-dashes for parenthetical asides. Rewrite the sentence entirely to eliminate the need for any dashes.
+3. **Flat, Boring Prose:** Sentences that are technically correct but read as dry/listless (no rhythm variation, no concrete imagery, generic transitions) must be actively rewritten to be more direct, punchy, and readable, while preserving all factual content exactly as-is. 
+4. **Hedge-phrase stacking:** Cut multiple qualifiers ("it's important to note," "generally speaking") to at most one per paragraph.
+5. **Tricolon overuse:** Avoid repeating three-item lists.
+6. **Uniform sentence cadence:** Vary sentence lengths drastically (mix very short sentences with longer ones).
+7. **Predictable bullet-list formatting:** Convert to prose if a list isn't the clearest format.
+8. **Generic opener + closer:** Replace generic openers with a direct answer to the core question. Cut generic summary closers.
+9. **Hollow empathy openers:** ("Picture this...") - rewrite or cut these entirely.
+10. **Safe non-opinions:** Flag paragraphs that hedge into saying nothing.
 
 ${seoInstruction}
 
@@ -105,6 +107,11 @@ You MUST respond with a valid JSON object ONLY. Do not include markdown blocks l
       })
     });
 
+    console.log("=== EXACT SYSTEM PROMPT SENT ===");
+    console.log(systemPrompt);
+    console.log("=== EXACT USER CONTENT SENT ===");
+    console.log(userContent);
+
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Groq API Error:", errorText);
@@ -112,9 +119,27 @@ You MUST respond with a valid JSON object ONLY. Do not include markdown blocks l
     }
 
     const data = await response.json();
+    console.log("=== RAW GROQ RESPONSE ===");
+    console.log(data.choices[0].message.content);
+
     let result;
     try {
       result = JSON.parse(data.choices[0].message.content);
+      
+      // Fallback post-processing: brutally remove any lingering dashes from common AI crutches
+      // that the model stubbornly refuses to drop.
+      if (result.revisedContent) {
+        result.revisedContent = result.revisedContent
+          .replace(/long-standing/gi, "established")
+          .replace(/long-running/gi, "established")
+          .replace(/pre-orders/gi, "preorders")
+          .replace(/pre-order/gi, "preorder")
+          .replace(/fast-paced/gi, "rapid")
+          .replace(/state-of-the-art/gi, "cutting edge")
+          .replace(/ - /g, ", ") // Catch rogue em-dashes
+          .replace(/ — /g, ", ")
+          .replace(/ – /g, ", ");
+      }
     } catch (e) {
       console.error("Failed to parse Groq JSON response", data.choices[0].message.content);
       return NextResponse.json({ error: "Invalid response from AI." }, { status: 500 });
@@ -127,8 +152,8 @@ You MUST respond with a valid JSON object ONLY. Do not include markdown blocks l
       line.trim().startsWith('QUOTE:')
     ).length;
 
-    // We allow a slight variance just in case, but ideally exact match
-    if (Math.abs(revisedBlocks - originalBlocks) > 2) {
+    // We must strictly enforce exact block counts so the frontend doesn't silently fallback
+    if (revisedBlocks !== originalBlocks) {
       console.error(`Block mismatch: Original ${originalBlocks}, Revised ${revisedBlocks}`);
       return NextResponse.json({ 
         error: "AI returned a malformed response (block count mismatch). Please try again." 

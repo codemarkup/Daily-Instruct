@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import AdminCSSInjector from './AdminCSSInjector';
 import Analytics from '../components/Analytics';
 import type { Metadata } from 'next';
+import CanonicalTag from "@/components/CanonicalTag";
 
 // Optimized font loading with next/font
 const inter = Inter({
@@ -41,14 +42,9 @@ export const metadata: Metadata = {
   },
   description:
     'Daily Instruct provides durable explainers and in-depth analysis across tech, business, markets, and global affairs—delivering the essential context professionals need to understand why things happen and what they mean.',
-  keywords:
-    'technology news, business news, market analysis, financial markets, global trends, economic analysis, emerging technologies, digital innovation, corporate strategy, investment insights, global economy, industry analysis, market intelligence',
   authors: [{ name: 'Daily Instruct' }],
   viewport: 'width=device-width, initial-scale=1, maximum-scale=5',
   robots: 'index, follow',
-  alternates: {
-    canonical: '/',
-  },
   openGraph: {
     url: 'https://www.dailyinstruct.com',
     title: 'Daily Instruct - Explainers & Analysis',
@@ -137,6 +133,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <CanonicalTag />
       </head>
       <body>
         <script
