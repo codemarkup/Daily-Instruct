@@ -47,13 +47,13 @@ If the input has 3 HEADINGs, 5 PARAGRAPHs, and 1 QUOTE in a specific order, your
 
 CRITICAL EDITING MANDATE - SEPARATE FACTS FROM STYLE:
 You must strictly separate your editing approach into two distinct behaviors:
-1. **Style/Engagement/Structural Edits (ACTIVE REWRITE REQUIRED):** You must actively and aggressively rewrite prose to improve readability, rhythm, and engagement. Do NOT just flag style issues; FIX them. If a paragraph is dry, has hedge-stacking, or overuses em-dashes, you must meaningfully restructure the sentences. A single word swap is NOT acceptable. Give it genuine paragraph-level rewriting that makes it punchy and engaging.
+1. **Style/Engagement/Structural Edits (ACTIVE REWRITE REQUIRED):** You must actively and aggressively rewrite prose to improve readability, rhythm, and engagement. Do NOT just flag style issues; FIX them. If a paragraph is dry, has hedge-stacking, or uses ANY dashes/hyphens, you must meaningfully restructure the sentences. A single word swap is NOT acceptable. Give it genuine paragraph-level rewriting that makes it punchy and engaging.
 2. **Factual/Specificity Edits (STAY CONSERVATIVE):** You must NEVER fabricate facts, statistics, names, studies, or quotes. If you feel a claim is vague and needs a specific number or example, you MUST leave the fact exactly as-is and flag it in the report as "NEEDS HUMAN INPUT: vague claim, add a real example/number here." Quotes must have clear, real attribution. Never invent a speaker.
 
 THE ANALYSIS & REWRITE CHECKLIST:
 
 1. **Vocabulary tells (reduce/replace):** delve, tapestry, pivotal, furthermore, moreover, in conclusion, it is worth noting, leverage (as verb), boasts, paramount, robust, seamless, unlock/unleash.
-2. **Em-dash Overuse (CRITICAL REWRITE):** Any paragraph using em-dash parenthetical asides (" - " or " — ") more than once MUST have them rewritten into normal sentence structure (use commas, a period and new sentence, or restructure entirely). Do not just reduce frequency; actually rewrite the sentence to eliminate the crutch.
+2. **ABSOLUTELY NO DASHES OR HYPHENS (CRITICAL REWRITE):** Do not use ANY hyphens ("-"), en-dashes ("–"), or em-dashes ("—") anywhere in the text. This is a strict character ban. You MUST NOT use hyphenated compound words. For example: instead of "long-standing", use "established"; instead of "pre-orders", use "advance purchases" or "early sales"; instead of "fast-paced", use "rapid". You MUST NOT use em-dashes for parenthetical asides. Rewrite the sentence entirely to eliminate the need for any dashes.
 3. **Flat, Boring Prose:** Sentences that are technically correct but read as dry/listless (no rhythm variation, no concrete imagery, generic transitions) must be actively rewritten to be more direct, punchy, and readable, while preserving all factual content exactly as-is. 
 4. **Hedge-phrase stacking:** Cut multiple qualifiers ("it's important to note," "generally speaking") to at most one per paragraph.
 5. **Tricolon overuse:** Avoid repeating three-item lists.
@@ -125,6 +125,21 @@ You MUST respond with a valid JSON object ONLY. Do not include markdown blocks l
     let result;
     try {
       result = JSON.parse(data.choices[0].message.content);
+      
+      // Fallback post-processing: brutally remove any lingering dashes from common AI crutches
+      // that the model stubbornly refuses to drop.
+      if (result.revisedContent) {
+        result.revisedContent = result.revisedContent
+          .replace(/long-standing/gi, "established")
+          .replace(/long-running/gi, "established")
+          .replace(/pre-orders/gi, "preorders")
+          .replace(/pre-order/gi, "preorder")
+          .replace(/fast-paced/gi, "rapid")
+          .replace(/state-of-the-art/gi, "cutting edge")
+          .replace(/ - /g, ", ") // Catch rogue em-dashes
+          .replace(/ — /g, ", ")
+          .replace(/ – /g, ", ");
+      }
     } catch (e) {
       console.error("Failed to parse Groq JSON response", data.choices[0].message.content);
       return NextResponse.json({ error: "Invalid response from AI." }, { status: 500 });

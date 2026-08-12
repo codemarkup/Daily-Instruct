@@ -114,6 +114,19 @@ export default async function ArticlePage({
     const result = await findArticleBySlug(articleSlug);
     
     if (!result || !result.article) {
+      // Check for redirect before showing 404
+      const { supabase } = await import('@/lib/supabase');
+      const { data: redirectData } = await supabase
+        .from('slug_redirects')
+        .select('new_slug')
+        .eq('old_slug', articleSlug)
+        .single();
+
+      if (redirectData?.new_slug) {
+        const { permanentRedirect } = await import('next/navigation');
+        permanentRedirect(`/articles/${redirectData.new_slug}`);
+      }
+
       return (
         <div className={styles.notFoundContainer}>
           <h1>Article Not Found</h1>
@@ -159,14 +172,21 @@ export default async function ArticlePage({
 
     const articleJsonLd = {
       "@context": "https://schema.org",
-      "@type": "Article",
+      "@type": "NewsArticle",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": `https://www.dailyinstruct.com/articles/${article.slug}`
+      },
       "headline": article.title,
-      "image": [article.image],
+      "image": [
+        article.image.startsWith('http') ? article.image : `https://www.dailyinstruct.com${article.image.startsWith('/') ? '' : '/'}${article.image}`
+      ],
       "datePublished": new Date(article.date).toISOString(),
       "dateModified": new Date(article.date).toISOString(),
       "author": [{
           "@type": "Person",
-          "name": article.author
+          "name": article.author,
+          "url": "https://www.dailyinstruct.com/about"
       }],
       "publisher": {
         "@type": "Organization",
@@ -175,10 +195,6 @@ export default async function ArticlePage({
           "@type": "ImageObject",
           "url": "https://www.dailyinstruct.com/og-image.png"
         }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": `https://www.dailyinstruct.com/articles/${article.slug}`
       }
     };
 

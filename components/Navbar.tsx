@@ -309,6 +309,7 @@ const performLocalSearch = async (query: string) => {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
       setShowSearchResults(false);
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -317,6 +318,7 @@ const performLocalSearch = async (query: string) => {
     router.push(`/articles/${slug}`);
     setSearchQuery('');
     setShowSearchResults(false);
+    setIsMobileMenuOpen(false);
   };
 
   const handlePopularSearchClick = (term: string) => {
@@ -324,6 +326,7 @@ const performLocalSearch = async (query: string) => {
     saveRecentSearch(term);
     router.push(`/search?q=${encodeURIComponent(term)}`);
     setShowSearchResults(false);
+    setIsMobileMenuOpen(false);
   };
 
   const clearRecentSearches = () => {

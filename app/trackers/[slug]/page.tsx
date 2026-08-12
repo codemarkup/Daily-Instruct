@@ -64,15 +64,32 @@ export default async function TrackerPage({ params }: Props) {
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "NewsArticle",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://www.dailyinstruct.com/trackers/${tracker.slug}`
+    },
     "headline": tracker.title,
     "description": tracker.summary,
-    "image": tracker.cover_image_url,
-    "datePublished": tracker.created_at,
-    "dateModified": tracker.updated_at,
-    "author": {
+    "image": [
+      tracker.cover_image_url && tracker.cover_image_url.startsWith('http') 
+        ? tracker.cover_image_url 
+        : `https://www.dailyinstruct.com${tracker.cover_image_url && tracker.cover_image_url.startsWith('/') ? '' : '/'}${tracker.cover_image_url || 'og-image.png'}`
+    ],
+    "datePublished": new Date(tracker.created_at).toISOString(),
+    "dateModified": new Date(tracker.updated_at).toISOString(),
+    "author": [{
       "@type": "Organization",
-      "name": "Daily Instruct"
+      "name": "Daily Instruct",
+      "url": "https://www.dailyinstruct.com"
+    }],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Daily Instruct",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.dailyinstruct.com/og-image.png"
+      }
     }
   };
 
