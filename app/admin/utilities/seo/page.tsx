@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import AdminHeader from '@/components/admin/AdminHeader';
-import styles from '@/styles/admin/dashboard.module.css';
+import '@/styles/admin/components.css'; // Use global admin styles instead
 
 export default function SEOAuditPage() {
   const [titlesLoading, setTitlesLoading] = useState(false);
@@ -108,14 +108,14 @@ export default function SEOAuditPage() {
   };
 
   return (
-    <div className={styles.adminLayout}>
+    <div className="dashboard-container">
       <AdminHeader />
-      <div className={styles.dashboardGrid}>
+      <div className="dashboard-content">
         
         {/* TITLE LENGTH AUDIT */}
-        <div className={styles.dashboardCard} style={{ gridColumn: '1 / -1' }}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>Title Length Auditor</h3>
+        <div className="dashboard-section" style={{ gridColumn: '1 / -1' }}>
+          <div className="section-header">
+            <h3 className="section-title">Title Length Auditor</h3>
             <button 
               className="btn-primary" 
               onClick={handleAuditTitles}
@@ -125,7 +125,7 @@ export default function SEOAuditPage() {
             </button>
           </div>
           
-          <div className={styles.cardContent}>
+          <div>
             <p style={{ marginBottom: '1rem', color: '#64748b' }}>
               Scans all existing articles for titles over 60 characters and uses AI to suggest shorter, punchy replacements.
             </p>
@@ -160,9 +160,9 @@ export default function SEOAuditPage() {
         </div>
 
         {/* SLUG REDIRECT TOOL */}
-        <div className={styles.dashboardCard} style={{ gridColumn: '1 / -1' }}>
-          <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitle}>Slug Redirect Tool</h3>
+        <div className="dashboard-section" style={{ gridColumn: '1 / -1' }}>
+          <div className="section-header">
+            <h3 className="section-title">Slug Redirect Tool</h3>
             <button 
               className="btn-primary" 
               onClick={handleAuditSlugs}
@@ -172,7 +172,7 @@ export default function SEOAuditPage() {
             </button>
           </div>
           
-          <div className={styles.cardContent}>
+          <div>
             <p style={{ marginBottom: '1rem', color: '#64748b' }}>
               Scans all existing articles for unoptimized slugs (too long, contains stop words) and uses AI to generate an old-slug → proposed-new-slug map.
             </p>
